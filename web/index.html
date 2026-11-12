@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sodalis</title>
+    <meta name="description" content="Prove you work there. Never say who you are. A NEAR guild where an email from an approved domain earns a DAO seat, one mailbox buys one seat, and the chain never learns which mailbox." />
+    <meta property="og:title" content="Sodalis" />
+    <meta property="og:description" content="Prove you work there. Never say who you are." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Fragment+Mono&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <svg class="ring" viewBox="0 0 400 400" aria-hidden="true">
+          <g class="spin"><circle cx="200" cy="200" r="190" fill="none" stroke="var(--gold)" stroke-width=".6" stroke-dasharray="2 6" /></g>
+          <g class="spin rev">
+            <circle cx="200" cy="200" r="150" fill="none" stroke="var(--rule-strong)" stroke-width=".6" />
+            <path id="arc" d="M200 200 m-128 0 a128 128 0 1 1 256 0 a128 128 0 1 1 -256 0" fill="none" />
+            <text font-family="Fragment Mono" font-size="9.5" letter-spacing="4" fill="var(--text-3)"><textPath href="#arc">ONE MAILBOX · ONE SEAT · NO NAME · ONE MAILBOX · ONE SEAT · NO NAME ·</textPath></text>
+          </g>
+          <circle cx="200" cy="200" r="96" fill="none" stroke="var(--gold)" stroke-width=".8" opacity=".6" />
+        </svg>
+        <div class="wrap">
+          <p class="eyebrow">NEAR · OutLayer TEE · Sputnik DAO</p>
+          <h1 class="hero-title" aria-label="Sodalis"><span style="--i:0">S</span><span style="--i:1">O</span><span style="--i:2">D</span><span style="--i:3">A</span><span style="--i:4">L</span><span style="--i:5">I</span><span style="--i:6">S</span></h1>
+          <p class="hero-claim">Prove you work there. Never say who you are.</p>
+          <p class="lead">A guild treasury on NEAR. An email from an approved domain earns a seat in its DAO, one mailbox buys one seat, and the chain never learns which mailbox.</p>
+          <div class="btns">
+            <a class="btn solid" href="/proof/">Re-verify it live <span class="arrow">→</span></a>
+            <a class="btn" href="/judges/">Try to break it <span class="arrow">→</span></a>
+          </div>
+        </div>
+        <div class="scroll-cue wrap">scroll</div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <p class="eyebrow reveal">The failure</p>
+          <h2 class="h-section reveal">Communities pay people they cannot verify.</h2>
+          <p class="lead reveal">Grants, guilds and alumni funds want to pay real members of a company or a community. Today they pick one of two bad options.</p>
+          <div class="trio">
+            <div class="reveal" style="--i:0"><span class="n">01</span><h3>Verify, and dox everyone</h3><p>A form, a spreadsheet and a council that now knows every member's name and employer.</p></div>
+            <div class="reveal" style="--i:1"><span class="n">02</span><h3>Stay anonymous, and get farmed</h3><p>One person, ten wallets, ten votes. The treasury pays whoever made the most accounts.</p></div>
+            <div class="reveal" style="--i:2"><span class="n">03</span><h3>Trust a gatekeeper</h3><p>Someone checks the emails by hand. Now that someone can be bribed, breached or subpoenaed.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <p class="eyebrow reveal">The mechanism</p>
+          <h2 class="h-section reveal">A sealed letter, opened only inside an enclave.</h2>
+          <div class="mech">
+            <div class="mech-stage">
+              <svg class="diagram" viewBox="0 0 320 560" aria-hidden="true">
+                <g fill="none" stroke="var(--gold)" stroke-width="1.2">
+                  <line class="wire" data-w="0" x1="160" y1="92" x2="160" y2="140" />
+                  <line class="wire" data-w="1" x1="160" y1="202" x2="160" y2="250" />
+                  <line class="wire" data-w="2" x1="160" y1="312" x2="160" y2="360" />
+                  <line class="wire" data-w="3" x1="160" y1="422" x2="160" y2="470" />
+                </g>
+                <g class="node" data-n="0"><rect x="96" y="30" width="128" height="62" rx="2" fill="var(--bg-2)" stroke="var(--rule-strong)" /><text class="label" x="160" y="58" text-anchor="middle">challenge</text><text x="160" y="77" text-anchor="middle" font-family="Fragment Mono" font-size="10" fill="var(--gold)">bg2 3fa9…c41 · exp</text></g>
+                <g class="node" data-n="1"><rect x="96" y="140" width="128" height="62" rx="2" fill="var(--bg-2)" stroke="var(--rule-strong)" /><path d="M110 152 l50 26 l50 -26" fill="none" stroke="var(--text-2)" stroke-width="1" /><text class="label" x="160" y="194" text-anchor="middle">signed email</text></g>
+                <g class="node" data-n="2"><rect x="96" y="250" width="128" height="62" rx="2" fill="var(--bg-2)" stroke="var(--rule-strong)" /><rect x="150" y="262" width="20" height="16" rx="2" fill="none" stroke="var(--gold)" /><path d="M154 262 v-5 a6 6 0 0 1 12 0 v5" fill="none" stroke="var(--gold)" /><text class="label" x="160" y="301" text-anchor="middle">sealed letter</text></g>
+                <g class="node" data-n="3"><rect x="76" y="360" width="168" height="62" rx="2" fill="var(--gold-soft)" stroke="var(--gold)" /><text x="160" y="387" text-anchor="middle" font-family="Cinzel" font-size="14" letter-spacing="3" fill="var(--text)">ENCLAVE</text><text class="label" x="160" y="407" text-anchor="middle">intel tdx · outlayer</text></g>
+                <g class="node" data-n="4"><rect x="96" y="470" width="128" height="62" rx="2" fill="var(--bg-2)" stroke="var(--verdigris)" /><path d="M128 484 h64 M132 484 v26 M148 484 v26 M172 484 v26 M188 484 v26 M124 510 h72" fill="none" stroke="var(--verdigris)" stroke-width="1" /><text class="label" x="160" y="524" text-anchor="middle">dao seat</text></g>
+              </svg>
+            </div>
+            <div class="mech-steps">
+              <div class="mech-step" data-s="0"><span class="n">I · Challenge</span><h3>A subject line that names no one</h3><p>Your fresh wallet gets a one-line subject: a hash of the guild, your wallet and a random salt, plus an expiry. It points at your wallet without saying so.</p></div>
+              <div class="mech-step" data-s="1"><span class="n">II · Signed email</span><h3>Your mail host vouches for you</h3><p>You send that subject from your work mailbox to any other address. Your company's mail server signs it with DKIM, the same signature that fights spoofing everywhere.</p></div>
+              <div class="mech-step" data-s="2"><span class="n">III · Sealed</span><h3>Encrypted in your browser</h3><p>The page drops every unsigned header and seals the email to the guild's inbox key. The key was derived inside the enclave; nobody outside it can open the letter.</p></div>
+              <div class="mech-step" data-s="3"><span class="n">IV · Enclave</span><h3>Checked where no one can watch</h3><p>The guild contract asks OutLayer to run its pinned verifier in an Intel TDX enclave. It checks the signature against a key the DAO approved, the domain, the subject and the expiry, and returns one thing: a fingerprint of the mailbox under a secret nobody has seen.</p></div>
+              <div class="mech-step" data-s="4"><span class="n">V · Seat</span><h3>One mailbox, one seat, same transaction</h3><p>If the fingerprint is new, the guild seats your wallet in the DAO tier for your domain: staff may approve payouts, public may propose them. A second wallet from the same mailbox is refused.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <p class="eyebrow reveal">Live, from testnet</p>
+          <h2 class="h-section reveal">Read off the chain as you load this page.</h2>
+          <div class="stats">
+            <div class="stat reveal" style="--i:0"><div class="v" data-k="seats">—</div><div class="k">seats held</div></div>
+            <div class="stat reveal" style="--i:1"><div class="v" data-k="domains">—</div><div class="k">approved domains</div></div>
+            <div class="stat reveal" style="--i:2"><div class="v" data-k="attacks">—</div><div class="k">attacks refused on chain</div></div>
+            <div class="stat reveal" style="--i:3"><div class="v">0</div><div class="k">email addresses on chain</div></div>
+          </div>
+          <div class="btns" style="margin-top:34px"><a class="btn" href="/proof/">See every check <span class="arrow">→</span></a></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <p class="eyebrow reveal">Why NEAR</p>
+          <h2 class="h-section reveal">Remove any piece and the guild stops working.</h2>
+          <div class="prims">
+            <div class="prim reveal" style="--i:0"><h3>OutLayer · yield and resume</h3><p>The contract itself calls the enclave and acts on its answer in the same transaction. No backend sits between the proof and the seat.</p></div>
+            <div class="prim reveal" style="--i:1"><h3>OutLayer · attested secrets</h3><p>The guild's master secret was generated inside the keystore and is released only to one verifier build, only on runs the guild requests. The guild account owns it.</p></div>
+            <div class="prim reveal" style="--i:2"><h3>Sputnik DAO · roles</h3><p>Tiers are DAO roles. The guild holds a gatekeeper role that can only add or remove members; spending stays with the DAO's own rules.</p></div>
+            <div class="prim reveal" style="--i:3"><h3>NEP-366 · meta-transactions</h3><p>The member is whoever calls join, not whoever pays gas, so a relayer can sponsor a brand-new wallet with no funding trail of its own.</p></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./src/home.js"></script>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sodalis · How it works</title>
+    <meta name="description" content="How Sodalis turns a DKIM-signed email into an unlinkable DAO seat, who you must trust, and what is not done yet." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Fragment+Mono&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="page-head">
+        <p class="eyebrow">Architecture · trust · limits</p>
+        <h1>How It Works</h1>
+        <p class="lead">Three contracts and one enclave program. Here is what each does, who you have to trust, and what this build does not do yet.</p>
+      </header>
+
+      <section style="padding-top:60px">
+        <h2 class="h-section reveal">One join, end to end</h2>
+        <div class="flow">
+          <div class="reveal"><h3>The page prepares a challenge</h3><p>Subject <code>bg2 sha256(guild:wallet:salt) expiry</code>. The salt stays in your browser, so the subject reveals nothing on its own.</p></div>
+          <div class="reveal"><h3>You send it from your mailbox</h3><p>To any other address. Your mail host signs it with DKIM. Mail to yourself is not signed by Gmail, so it would not work.</p></div>
+          <div class="reveal"><h3>The page seals it</h3><p>Unsigned headers are dropped, then the email and salt are encrypted (X25519, HKDF-SHA256, ChaCha20-Poly1305) to the guild's inbox key.</p></div>
+          <div class="reveal"><h3><code>sodalis.testnet</code> calls OutLayer</h3><p><code>join</code> forwards the sealed letter with the DKIM key the DAO pinned for that domain, the joining wallet, and the hash of the verifier build it trusts. The transaction yields until the enclave answers.</p></div>
+          <div class="reveal"><h3>The verifier runs in Intel TDX</h3><p>It refuses unless the run came from the guild and holds exactly the guild's secret. It opens the letter and checks the RSA-2048+ signature, that From, To and Subject are signed, domain alignment, a single mailbox, no role address, the subject's commitment to this wallet and guild, and expiry. It returns the domain and an HMAC of the mailbox under the guild master.</p></div>
+          <div class="reveal"><h3>The guild decides, the DAO seats</h3><p>In the callback the guild rejects a reused fingerprint, records the member, then proposes and approves the seat with its gatekeeper role. It reads the DAO's status back before counting the seat as held.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="h-section reveal">Who you trust</h2>
+        <div class="table-wrap reveal">
+          <table>
+            <thead><tr><th>Party</th><th>What they could do</th><th>What stops them</th></tr></thead>
+            <tbody>
+              <tr><td>Your mail host</td><td>Sign an email for any address on its domain.</td><td>Nothing. DKIM means trusting the domain's mail host, as email does today.</td></tr>
+              <tr><td>OutLayer operator</td><td>Withhold or delay a run.</td><td>It cannot forge one with an approved worker image: Intel's quote binds the code, the input and the output, and the proof page checks it.</td></tr>
+              <tr><td>OutLayer's register owner</td><td>Approve a malicious worker image, which could then forge results.</td><td>The approved list is public on <code>worker.outlayer.testnet</code>; the proof page shows which approved image ran. This is the deepest trust assumption.</td></tr>
+              <tr><td>The DAO council</td><td>Add or remove an approved domain, change the DAO policy.</td><td>Every change is a public proposal. Once the issuer list is sealed, no key can be added at all.</td></tr>
+              <tr><td>The builder</td><td>Redeploy the guild while its account still has a key.</td><td>Deleting that key is the last step before submission. The guild already owns its secret, so after that nobody can change the code or the master.</td></tr>
+              <tr><td>Anyone reading the chain</td><td>See the domain, the wallet and a fingerprint.</td><td>The fingerprint is keyed by a master that never leaves the enclave, so a guessed address cannot be tested against it.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="h-section reveal">What is real today</h2>
+        <div class="table-wrap reveal">
+          <table>
+            <thead><tr><th>Claim</th><th>State</th><th>Where to check</th></tr></thead>
+            <tbody>
+              <tr><td>A real DKIM email from an approved domain earns a DAO seat</td><td><span class="state chain">On chain</span></td><td><a href="/proof/">Proof</a>, three admissions</td></tr>
+              <tr><td>One mailbox, one seat</td><td><span class="state chain">On chain</span></td><td><a href="/judges/">Break it</a>, attack 01</td></tr>
+              <tr><td>Only staff approve payouts; public members only propose</td><td><span class="state chain">On chain</span></td><td><a href="/proof/">Proof</a>, payout</td></tr>
+              <tr><td>The enclave run is attested and bound to code, input and output</td><td><span class="state chain">On chain</span></td><td>Checked in your browser on every page load</td></tr>
+              <tr><td>A relayer can pay gas for a brand-new wallet</td><td><span class="state tests">In tests</span></td><td>Contract and verifier tests; no relayer is deployed</td></tr>
+              <tr><td>A member's wallet cannot be linked to their email</td><td><span class="state design">Designed</span></td><td>The demo members are the builder's own accounts</td></tr>
+              <tr><td>Independent people govern a real treasury</td><td><span class="state not">Not done</span></td><td>Both members here belong to the builder</td></tr>
+              <tr><td>Guild code frozen, issuer list sealed</td><td><span class="state not">Not done</span></td><td>Held until the final review</td></tr>
+              <tr><td>Forward secrecy for sealed letters</td><td><span class="state not">Not done</span></td><td>Letters stay on chain; a future leak of the master would open them</td></tr>
+              <tr><td>Recovering a seat after losing a wallet</td><td><span class="state not">Not done</span></td><td>A spent mailbox cannot rejoin</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="h-section reveal">Compared with the usual answers</h2>
+        <div class="table-wrap reveal">
+          <table>
+            <thead><tr><th>Approach</th><th>Proves membership</th><th>Keeps identity private</th><th>Stops one person holding many seats</th></tr></thead>
+            <tbody>
+              <tr><td>Form, spreadsheet and a multisig</td><td>Only as far as whoever reads the form</td><td>No: the council sees everyone</td><td>By hand</td></tr>
+              <tr><td>Council vote on each member</td><td>Social trust</td><td>No</td><td>By hand</td></tr>
+              <tr><td>Enrolled mailbox plus a ZK proof</td><td>Yes, for an enrolled address</td><td>Partly: the enrolment is tied to a known account</td><td>Only if enrolment is policed</td></tr>
+              <tr><td>Sodalis</td><td>Yes: a signed email from an approved domain, checked in an attested enclave</td><td>Yes: the chain sees a domain and a keyed fingerprint</td><td>Yes: the fingerprint can admit one wallet, ever</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="../src/shell.js"></script>
+  </body>
+</html>

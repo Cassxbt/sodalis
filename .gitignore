@@ -1,0 +1,11 @@
+.keys/
+.secrets/
+node_modules/
+target/
+live/
+dist/
+review/
+.vercel/
+*.eml
+.DS_Store
+.vercel

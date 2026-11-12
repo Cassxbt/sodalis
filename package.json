@@ -1,0 +1,23 @@
+{
+  "name": "sodalis",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@noble/ciphers": "2.4.0",
+    "@noble/curves": "2.4.0",
+    "@noble/hashes": "2.4.0",
+    "@phala/dcap-qvl-web": "0.3.3",
+    "near-api-js": "7.2.0"
+  },
+  "scripts": {
+    "dev": "vite web",
+    "build": "vite build web --outDir ../dist --emptyOutDir",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "vite": "8.3.5"
+  }
+}

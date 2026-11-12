@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sodalis · Break it</title>
+    <meta name="description" content="Seven real attacks against the live Sodalis guild, each refused on chain, each re-checked in your browser." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Fragment+Mono&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="page-head">
+        <p class="eyebrow">For judges · attack lab</p>
+        <h1>Break It</h1>
+        <p class="lead">These are real transactions against the live guild, not simulations. Each card reads its transaction now and shows which layer refused it and with what words. If a card stops saying refused, the claim is false.</p>
+      </header>
+
+      <section style="padding-top:60px">
+        <div class="toolbar reveal">
+          <button id="recheck" class="btn solid">Re-read every attempt <span class="arrow">↻</span></button>
+          <span class="hint" id="score">reading the chain…</span>
+        </div>
+        <div class="attacks" id="attacks"></div>
+      </section>
+
+      <section>
+        <h2 class="h-section reveal">Try one yourself</h2>
+        <p class="sub reveal">Each command below reproduces an attempt from a fresh clone, with no keys of ours. The refusal you see should match the card.</p>
+        <div class="card reveal">
+          <pre class="mono" style="margin:0;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--text-2)">git clone https://github.com/Cassxbt/sodalis &amp;&amp; cd sodalis &amp;&amp; npm ci
+npm test            # re-reads every admission, refusal and the payout from testnet
+cd contract &amp;&amp; cargo test   # the same attacks against the contract, offline</pre>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="../src/judges.js"></script>
+  </body>
+</html>

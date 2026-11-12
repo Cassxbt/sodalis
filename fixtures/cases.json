@@ -1,0 +1,682 @@
+[
+ {
+  "name": "valid challenge",
+  "expect": "ok",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "folded subject and headers",
+  "expect": "ok",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=LLy94Lq3qaWDwXPHyLdgvzG2+1jg4M0iEOZL0TB+9W3Bsqlpvc3YO+mkRXx4YWGVyFUFO\r\n y9SE18KOANDmfXc2bRHQWUVgpvYiXIEu/d6NoFD5B7YzO/504wNq3VCDBWR2XaFGzf0Gv8b\r\n mLNVmj8MyuX25TtTn2kZf9Iw2Q5O/IchwyYIZksqUyTaMrYRmyxBHhyAqrg3Uga3trnunPF\r\n 05f8uP6L+0pzpK4DqKCw+qyuQdk2ng5zeeIke9VhKiVEcb5gu1Z2Z37rnQoIUfp5aQDAd+9\r\n BUhS82TDVPvG79dTOZC7hGijjJp+K/inWtv3fMCR4hd5M8WM3xNdyW6SGqwQ==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2\r\n f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a   1794000600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\nX-Note: a\r\n\tb\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "stolen sealed letter replayed by another wallet",
+  "expect": "bound to a different wallet or guild",
+  "dkimpy_says_valid": true,
+  "wallet": "attacker.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "attacker.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "sealed letter replayed into another guild",
+  "expect": "does not open with this guild's inbox key",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "other.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "same letter re-sealed by its owner for another guild",
+  "expect": "bound to a different wallet or guild",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "other.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "other.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "salt swapped to fit attacker wallet",
+  "expect": "bound to a different wallet or guild",
+  "dkimpy_says_valid": true,
+  "wallet": "attacker.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "2a7e01e30e016f7a65511cd758cb81cc37b8605eca83f25e0023427427aded21"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "attacker.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "short salt refused",
+  "expect": "salt must be 32 random bytes",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=TYb24ypHS5BNbb7kIqaREWmZaDMDz2oJMxo7un1MWeSifOFtDYRsg3E6vhbgby1q/Oib8\r\n cC9+QRWCH69eC9NibEHVWSM2SUKkqhSFeKpPg12fSgUPbzj+Amc7wBHx+BI1zEJC4jgCk4w\r\n W5jX8LUxuRKC42TpA6XYTWJ7sYczdGaWvvvvOxjTNMqU9TwJgx1HUb+Qhrn6wF62broyGoQ\r\n 7BjY/ArTEJct9ySHadTkt6kN+d5kq3jO+ViV+3o7uoTounkzWCr7MRtOEQLeaT/zMdjVsr5\r\n JNxeEdIilDBPSXbgUdzxc94Rfu3BwmZ4EnUpiAfYl5dRBWsrjvX2Z5hZIx/A==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 42e128cdbce51ae67c004ded4bfb8d291228f2c4c9c416c4e15879b007071d70 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "ab"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "tampered subject",
+  "expect": "signature invalid",
+  "dkimpy_says_valid": false,
+  "wallet": "attacker.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 79c3e07deba9da6a306968befdeb28e0ee365d5cf78a153ecec4352ca96a1a56 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "attacker.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "tampered body",
+  "expect": "body hash mismatch",
+  "dkimpy_says_valid": false,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nLeaving.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "expired challenge",
+  "expect": "challenge expired",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=mLW55bmUwIizFVaWTUvobTRfFK31IMoVGExtIXEsQRxqWs7SvxXw8muLrEcnKrTLAwE1i\r\n 3YJ8uBIlBQgFuqBdBde7AIjlHXulF6uRADDJ+LxV6Lh81tC2rlVTo3Jm6kpKG6ErJChzhvk\r\n 3xuA/wEE0nDCwUzf4AxdZ4rcshMYEdXxx6QFE8uzghp6K8lrMwTVmCY8y3s5SPnd9fsdfJq\r\n 7Ezrk2OEg3JN4bALLAkilfcxUbd3Ikj9tX/2GW5u0ZVusEIHn5utuPanBhouIJy9WAR1T6f\r\n mzU9vjMk2Tkb5Li9IPL5JVoyFe8IBW9erD1XRmdjDvEbX5vPaRc5c+mS+lkA==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1793999940\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "challenge lifetime over 24h",
+  "expect": "exceeds 24h",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=dVhjVFfUZhLcEB8uSg57u4TiFYEk+DO2V7XyfZlXd46XbuL9k7qxnVY4el9XGK980Nbzb\r\n Io0MIh6IzEcRjrDvNT3qpohRjqfYWDSf1U8vHx/yvVwon2o+9WrDJSpyxg0vUOiR5HqRRim\r\n w/c9pvYpFCVj1LonyP/9TZLRoGy9VFLdNGT0/FQ+GZyW8YDELFzRX3Cn7F8UWU775E2Je8Y\r\n JZHKxr5X5930HanOUOWkymLGN5fwyQodQJF4Gm2TqcdTkC++fybqxh4BtK5htnOUzNQF94g\r\n vdEQ9JJmlGJ/yU7NTvYCUyK8qnEKFjy3jxy6POl/xpHY/MQaKcfVfVW5uplw==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794090000\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "signed by another company's key",
+  "expect": "signature invalid",
+  "dkimpy_says_valid": false,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=other-corp.org;\r\n i=@other-corp.org; q=dns/txt; s=s1; t=1794488208; h=from : to :\r\n subject : date : message-id;\r\n bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=dwbn/g6VBJuxNZue8H3Rb2uZ1aWY43YC5TJeIRJwE9AAnfM7B9sNC9zQjJgwJ9Y0DMryH\r\n FROZ5owRityhWSSxEPoe0kFGdqi6paXudPmqJgh43U34KaNT59bxKEkioeky/jARwOX0wHy\r\n NF0OKwqKCzNCwLdRG5gMTvb3goRnZkhPLN6Kg6isW+YstuG69/CD6yccapUIdOCOMzsySVA\r\n dvKfHHNlStwGO/E9mqVXac25tEsgfYJyb5AJ47XBJ7ep6gjdmPuFn4MFP6NgVWS9mORbzwB\r\n wVNTn7QBKfF1B1Tc0o6if66Zf7TAGovD/gr6YxImWfwmygsJkhd0i8AKy3kw==\r\nFrom: eve@other-corp.org\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "other company, its own real key",
+  "expect": "pinned domain key",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=other-corp.org;\r\n i=@other-corp.org; q=dns/txt; s=s1; t=1794488208; h=from : to :\r\n subject : date : message-id;\r\n bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=dwbn/g6VBJuxNZue8H3Rb2uZ1aWY43YC5TJeIRJwE9AAnfM7B9sNC9zQjJgwJ9Y0DMryH\r\n FROZ5owRityhWSSxEPoe0kFGdqi6paXudPmqJgh43U34KaNT59bxKEkioeky/jARwOX0wHy\r\n NF0OKwqKCzNCwLdRG5gMTvb3goRnZkhPLN6Kg6isW+YstuG69/CD6yccapUIdOCOMzsySVA\r\n dvKfHHNlStwGO/E9mqVXac25tEsgfYJyb5AJ47XBJ7ep6gjdmPuFn4MFP6NgVWS9mORbzwB\r\n wVNTn7QBKfF1B1Tc0o6if66Zf7TAGovD/gr6YxImWfwmygsJkhd0i8AKy3kw==\r\nFrom: eve@other-corp.org\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuD/34ikgsHDCF9ILt9AKtgBOHnURswpAUX41qXxzaYzLaH9D0JeE7ydpeGT4PFkTnkEO5uqxrbt2x3CEXhFmw6x+Sa3LuoUcoRj8JjcZi7ZbuyIXtOIxm+5U2Co2u2Azj0ZT3GBfddWIfff0P4V20n3A3+3cFKXeEYk7RYAJPPf5xSKKhg5tzrmpnCRm7yKLqBluldXS8DBsZfY1EnylckN9SeQlo9pPjhu5tWflowwh4XEjfcKcOTey+c8RT8sMdg1XqhA4CdViGLVZ0t9j40QjqJmQmkv/hgio/9irWBQ9v/5M5clMhOgopSF0tI60BP6I4+PoV7kbUM2hv/v3YQIDAQAB"
+  }
+ },
+ {
+  "name": "selector differs from the pinned one",
+  "expect": "pinned domain key",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s2; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=l+/hq1dYyb4ZKm7jtRDvCSeGk9oOHyWLB78FF0sqHD7M5uUEvkiBHczmAv4NST8XexkrV\r\n LhyVmC8ducBYcShapCAJhDIHIaAt848or1cnrYxGi+1dexn1horkXQUTNbpB0+aCsN6Xolu\r\n 4kl67785zZFzYv9f7B41pcoRiz+WyuEfmEqitjRpWOZ/GX2C65Pk0Fgnf1wEkUXOgSQgJAr\r\n JYqovDDcxvWsFsjjaic5hzNfKOCelvF0ch+n01e2zRwc5zihwkTOmtQt7a6G/HTV0SBTImo\r\n EkWwEtqqlE1PyQE4l10/W/OSpaisD1CtoH3Tec27hAUGjiYzLUxgT3VmmF4Q==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "subject not signed",
+  "expect": "subject header is not covered",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : date;\r\n bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=lRbcaSk2e8a8X9W6VLZRKuFCwgiBY3dFB4o+Y/JGMVlDM/dMtAMXMA9fkgw0PWA+3h3gg\r\n o52E4Cc7+oXiOlks4dFqmeGJY0esyPpnuvj/6IL7QyAyGWRPx51o71WzIrzm1qOMT4YODEG\r\n 2I9M2m3A2HlY/wtHNLUiLXkTTebmZHeOhAykpKgmAz7GpZo6oJXAzWnJwW5MxhpanIh2pI7\r\n ScuhIDlWAoaMU3fSGQrpDAoOqGHk0+GpzbhhUrofY12brcY/QYWEGzJidftbNZClk4gXCfZ\r\n vpbKnjo+GubvXXNejXSQRalO63wQGpOsKrMhP6kxTNSrpKNG51L9K1QcsG/A==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "From misaligned with d=",
+  "expect": "not aligned",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=IXa6smMOl+kkyjsfsYOF/lTTF4ze9L4F3G0xUrM9um51rd4aCWJNWUAjv1gOxki4oM9vB\r\n lPXEwFIbVRgoSmIqp0Da9ge3F6CCCYLa1dQHIeYHATWq//tW+cV7YU5fWxdbjYRGSngdtK0\r\n TmTlsHmhwVirA2bonbHp2rlh7Ph5ir/Wmo1mROXYi0afhcjrqgW7oedW2Ey5W3yakszNxIf\r\n NMlez4SxmQiASSBB+OjohwyEZCE76k1aZuCy3j3ZrUVh6wdmEaR3XOoAm/WktmV/z4PTpPB\r\n IJoam4KC0Fj/m3DnfE3JMysTWaPmGsF52IjSuyNIFJ7D/LnwQav+DKPrt77w==\r\nFrom: dana@gmail.com\r\nTo: dana@gmail.com\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "From comment hides a second address",
+  "expect": "plain mailbox",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=AZWeymhOIIFXkI5UDL0fNAll9bfOq0+NxLgK7rqrzv1yW633PsP9+Wu5rql1JqNUz+KLd\r\n MvMkbn/yxCMXNJAsGMVG/UiELp9Rx0dt5jfw1hjargGZBdfkQFwgFrO3OG93ckFvaF4my+e\r\n rEzRthsV2E8BfzwSghFXjG8aZA08XNbP5Zfj1WycJ8yUbyPtgmEv5g7pctJA9R/VWmD5HdN\r\n hNzeoMR/9GgCwwEKjlSwmUGprhO0Iunax3Az7BcQ0UP/ysELZrN94G3K8TPG5oSJZKJRP+0\r\n JHuTz+scJmaiB1LV5bxYYkasI5uOJlGm/3GuBQmaqZg3OW8YDNkMSR99KRIw==\r\nFrom: dana@acme-test.org (<ceo@acme-test.org>)\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "quoted display name with an address",
+  "expect": "display name may not contain an address",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=h2gDxYss+CToBUAB8I5dprTyFwBzjPpDkbtOj6G/AOWfoilx7oTBjsdXWqs4C7xrZ747O\r\n hIpQiAF0KOLbWNunpJEG4bOJxiGfIPobgyu3/6Hbwq4MQF079wfs3/90wWn8ejY7OdvU2kU\r\n JkIsyI1WUT+RMmO+NwSaEYNwCNs7M70q0omSN32ondKshnA4RxlSVtZVCeIwfHDBoz/iv+6\r\n UkBJPWll3pGwaQiMKwiA8IG5AcghakAw6VmYw371x3sYTnOs2kH7iDADkwsSDOYorgVU7Yr\r\n x6Y4ehvtQrg/YBdD6x6+WOjqdqXXbjsTK5W4Ss19JYfiUXR3ldd4Ng9hDhHw==\r\nFrom: \"ceo@acme-test.org\" <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "two addresses in From",
+  "expect": "plain mailbox",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=lS7FcWgrtD2WRLtJd3xRpSFFs79oskkkyzqF1fDiVisQKiVEzJjK+X52U5ld2NeNEatB2\r\n Si0uqqpBjJywA0FHlmQLEi4YY9rBzZ4bfhLpiwCcFMdN1zDRUSgrjBq+5sWpLMjmoXDkWsN\r\n FrlcwbR+6hT9OI57gOsydnaUM38LSpuIUhzMZNmA1fOinwdoN3qnAGZXI2ii9jnWR3/owV+\r\n +Rc72NEXS9mkNuBj/BvCU+a+68wAx7EiQ+Dv0qOMyBq0eYSFT+UtMGCOLFDOgU0jhFHf/ZQ\r\n nRcT+rjBMwGXaVSdQsHYQ3YWDR+obQ4WtHsSaFhGAohrSyQ7qGyNhSYJoEKg==\r\nFrom: dana@acme-test.org, ceo@acme-test.org\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "sent to another mailbox",
+  "expect": "ok",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=Nj0JyluakS+iv6GgHgZlq25QJbzpR2RN4WUbIy8gibfNB8Uggal4fswcsTbJa34q+6grj\r\n apmLV+inCHwWGWBNdqDXZoS51iN24o35fja9aYHFwZpjCszcKpcCzlVfcE8tKze6jTCu3T1\r\n 9Un1t5Ak24vr26TpXKysHtE+sx8l5dOz4Djx2X6ZWXJNR04febce+PBQNBTsAbwkzokWdU5\r\n 6srTva0BxQnp6ztV+wERaF0Nb3KPzaY50Ma6DfIRm5FV/0lzl0eeap3KragV61luZPRXsdD\r\n lj8ldaxDHVuq9bCRWRdxxEgNKTUnhNuBYcFPaRTadp+EFXMuXJp8DyhSqfRQ==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana.home@proton.me\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "To with a quoted address as display name (Proton)",
+  "expect": "ok",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=BVwIeDWlMcmLcKLXtn9Qd4+rFJTkf+3KFNY1hQb3N5b1QYAec5W/0xYzG7cw2y7oT9qXo\r\n h5Ttm0hfGb6Mi2VcTGJqUW5e0vXLH9o+eO2nVaeS4PeIo52kjgdT65xoEe0AXsU1Toi4Ucn\r\n MLmckYGYqA4PstGCFBRFOMzi/Ir/R1KZK5LbJBMgfk9NJ+/nq5WVqJcXMRWhzVZNxBTE3D9\r\n Kx4eMVI73unpiTqT8tYwQJ1/Ib0P6WfeqmX4W/6aNyMkKWct2uxl5obV+Bkg8wiLMeeuuRL\r\n ztd26y3LcSrArfBji2QLtD2UXIaywcQ9qGJ78ynQbHPbWMW815+VUDYppxhw==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: \"dana.home@proton.me\" <dana.home@proton.me>\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "quoted To hiding a second recipient",
+  "expect": "plain mailbox",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=LQM/VRNytT9reWzElABynLetTWd/wdreMxNvkNP4cr5OUD+JxaWRBoYwZANukdUSl5KDa\r\n zyf+ihEt0Y5c20Dua8ZjveBxjdb0ItbLNE2nTnvJJdkW35x1eeJ3FeRKVO+j+qwbGe+Dn1P\r\n Cmuqm5967JOMVu0hd8WUMp3DbTMYWDd6KPlj7GO4ThgPrQSxc2NQoP+4WaFvP2JTYULg8vH\r\n 3HCftWKBq2DxHphORPLnMhYOnZpOwqyYELuw+3O4GTO7L4j3QY65c/tR8LmEKCw8uChEfG3\r\n 1YVZIFlqkwG5x2JlgELWIXbkrY+SDYsZMstEUleOh9D8La58Y6412GXY+Eyg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: \"x\" <a@b.org>, c@d.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "role mailbox echo (support@)",
+  "expect": "role and no-reply",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=TZpWW8X2iGfUleuRMywt8t0gR0NiMixzdOSN2SKUEuDbovsgmvXpHfBa4cc12en/aotPW\r\n SSZ1SgBP1vFkQSf2uf71PDei4QB5o3uO2wKBoQC42JfWwF4GAdMQMEstpdN0SrakOmVrlbl\r\n PlYLoFydevpzPfFRALgsFA+Ba4ME6Tgg0rMZ0CRpqCVXbKHfzVbmJ+HetbpYe46PdgY98sg\r\n pR18+uz8iLyGKkWjKnm/ToR2efd9bV8rl/Rdw3vI3DowoqB8/zVIK0JXcktnqt87hVzWSRL\r\n qtsmOMNEH471XxvRhCcTQfFBCuLO0kb+Kb8h0QxKnCBTrqdEoFVnWxkqaZvg==\r\nFrom: Support <support@acme-test.org>\r\nTo: eve@evil.example\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "role mailbox via +tag (No-Reply+x@)",
+  "expect": "role and no-reply",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=bwiqkKZQTDgCGYddWMrGUiYav7w7ZU1fD0v9+kvX31okwNEupJJ+aE13e4htkB3OaRucO\r\n d66HP015q2B5UAQs0f5wAomHYa0fJt6TQlBDLRNRjwwiT64shjheO69q2dXdhAXO1YRqtdL\r\n oRXPMhr8CX/sniZ+R0EjVacERg58octg+QkAQFDpBRruj7XQoBbqZ9eDznusMPtgMX9rlug\r\n k3scZquNt9qhgATQOKFELUTW02jJ43+4/Pbe7v/O3UII3/NWHWexNzSSoayfJGhoI0A6KL4\r\n Cf3Kfn9GWjF109z/kn4dGctAIfZFwD7ZlO5k3i/+JW6EBCYQR7y/WPqvnvIQ==\r\nFrom: No-Reply+x@acme-test.org\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "two addresses in To",
+  "expect": "plain mailbox",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=hvhh5KFOwJbv2CBuUT7D9JU57IGh4K9f/qDv55dGShhaKrS9NcfWjXUPrhydlEzxBUI3z\r\n R+TsiW6cLcdqM29U8+AbQ6oROE6i2OU7fyJbdoQe6TDSe/blHFJIDObjWQSBMo8vlwC5ELA\r\n BkI0lPJIUbIDjDcOCzRSlqArN9Dq8V0y7HiNkH4m6QEQWHrLvqST1dmnopZwdFAQjINX9zY\r\n lITpEOYFe942J51T3rmHEBMcK6yGL1gDwkqiykvcBg0svr/CPwSRm+9zUCyoDTTAP9wDBuh\r\n aYBK8j43eesn0UlzrG7HOuWNyCjufdZBA0zjXPLin7tr9K4vIvG9032KPe2A==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org, ceo@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "To not covered by signature",
+  "expect": "to header is not covered",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : subject :\r\n date; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=TUWNx73UqpxQpu9KF88M8IHDZkWqGtMrTG0uZU3knXfAHGW8smvNYHI6/lH29HoL9ewGD\r\n 91pFb3kamX7f8LGJnX4uzpxjjOQctXw6cy8lXP3Yw7vjB9vTlDmZJWIWfbeDPLKEB6KNQ2F\r\n NGlub2AqGIPVdzHbAtrfHbNzQJMCF1qoFx0z6y+4AJ/+D8duQI8FHz+KD2TBPLZH9sIVp6+\r\n WqjpRzvrEybSoWA26AVgRV89tmoDPM/pNe3DJgtHRbK7sy4z9/xQ+G35A2C/sLUiQRmw1wN\r\n ShwUtXqG8Mzc/+cHsdzxIEtgTi4BeXgpFSVoHvt/rKeHNM+z+v/MuFjVg0/g==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "1024-bit pinned key refused",
+  "expect": "shorter than 2048",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=OHo7GQFgQaduuMBLF53lRGjYowcXwfEDFiSzWjA0PsL+q8SLfaJ+gRzluYvRICyqCnuPX\r\n VAA0CZa0A4TtZkCblheXUTXuTfE5xsvOpPAaPm9U0idd7N0b2PaUoCAAZcAq85iBgYjsfny\r\n TYTrIWIxvrYlm2lSIROqP/cdTid2Ydc=\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDT8w5TdSocfl8UibFdMhcHC963OGfO7qKkXRvcoqC0IUOpDLGRczQkS1jIoXe5vo43+xrX6P/BUpHQ483pYN8WEPLTo3Yo9z8BXviOTtmQbohI57XMyGhZ2q5VwPbN4Dz642BgHv3GuvheI6OXBsoc5m55j9PVRG0J0ysLK4uodQIDAQAB"
+  }
+ },
+ {
+  "name": "oversized a= is not echoed",
+  "expect": "algorithm refused",
+  "dkimpy_says_valid": false,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "second From injected",
+  "expect": "exactly one from header",
+  "dkimpy_says_valid": false,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "From: ceo@acme-test.org\r\nDKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488208; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=i22ZQaeLph27Ile/aMP0zuVGVEPznDN6TQWnsFccHL1Hq+CrWrHp+jHOIJB3kP+HBgnk8\r\n X+MLPVTx0uXzy0oB5BxidH7f5EJHnOL5jX7gYM1emW8aNAb8CeBW7uCyvUnZpz6/zfUFJXy\r\n AWC3Xz1eGMT1jRXqnfPjuyjiN/5GinoIvbT0DhcZ7aBdtjIykzmzu+3wQCspc9KGSzM2Vmr\r\n kkbQ3mOjNh1bJtTJLEP4INkxGPpWPxTsXZOTDDBAfrCo7GK6bw6H3BlACvWEUoZUwvZJO6t\r\n vexKUGKeUYhuuJRbabcrmppGHSoJQe0yxw39C8HD4E4cDM6NjGzTrMVWDkFg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "rsa-sha1 refused",
+  "expect": "only rsa-sha256",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=8fkFc4430I7RBGvre3Pe6ad+F0g=;\r\n b=Q4C/MtW+QKEIeVxwlydKimwX1o5R7k+oVTalZubKQ7eaqicxPcxOJ0ryr8GfEx1b6DIXg\r\n lDonVnlKqrY9wpGL5JJTg/2zixj9GIlmpuYYXuh5kNt8/YlrnWt/2z7pZwepniJHwxQibhv\r\n bGSg9uIY4tsho0HYPb2txpLDrXUKH6GkIhPT+/ufwDcav1RTTcpKGSly3vS1GddrJd3q4mS\r\n E5B3ITNBLEgl2lAlcgs940O1kvj4yg7LW5Tu64VZcSxNyxlQneg34Aa9B2Jsdb+Km4CPRp9\r\n d+gorrVgz615DlOnvIVEfjnlyij+yxrhcHm2k6n0pJ20C+Li/3J0HGHNOe5A==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "l= tag refused",
+  "expect": "l= body length limit refused",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; l=10; q=dns/txt; s=s1; t=1794488209; h=from : to :\r\n subject : date : message-id;\r\n bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=MaoPcUZZgo/UTyK6A+hd5d93RziiNhfhcE4RWNpTDiW89M3+6oBKphazTshOrVlQqNXGF\r\n Q+yO/I1bqDqM3od/MawBbQ2Dy8LLKL8h3yToi1OrN1vbI7YEkWxplx0QNJEFwaox52bxKLo\r\n 1ROkDNM2/L8MQiHC1n2sykluNEhCuKeFsjrHN2dW9GanLjB6eNDbPYmJGFWLDHP09vKLtcs\r\n hZL7STI8+5LCYbYHtsWik/+7t34ni2J07cksjYOJpWraWOvNYdHZSI1B1hKex131ezSSt6Q\r\n muo56j+MMLFj1PkHp9+imi/gtYatlOU3dRZKMZOe2cw/cJNzmQYFT92MdZFQ==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 f710f2f3217a30d28c7512d7345e7af797b76490f38c609a946bf820d9a7b52a 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "v1 subject format refused",
+  "expect": "not a blind-guild v2 challenge",
+  "dkimpy_says_valid": true,
+  "wallet": "anon-7f3a.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=cyxLZvwjD6OZ4NshH//BSBunp4ufPG9mxmWoO1yeWn7LJl1apg4EJls1f3p57LXmT1aRV\r\n njxwmCVePIaZDD/KOhRS1FFV97ylcndqV+Ca6rb9FA6D6A5lml+eFUDKfhGSDvhGjmWpjGf\r\n 9J3l9FApDjT3IwVhsrMWFtrV7RcSKcldp3u+eGmbk23TSt0op6SHXL096omEX8L+7X2P3ac\r\n 5d3kO+J4yuu3Ufvq7ITo+Pw4nivoLbOEiQpjmy4N4xgwCct+LC9OpxhVVCuSju+DZkdAlLx\r\n 8FgeQYw6l7BlyaIzTnhV8gdpMMtBX0dzTd96DnhdyymOEtpqco23UPSKlTlQ==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: blind-guild v1 bg.guild.testnet anon-7f3a.testnet 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "6da57631ffb23ab3f449c91436e30c2679041e7ba511c464f13e70f0768c94de"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "anon-7f3a.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "same mailbox via +tag, third wallet (Sybil)",
+  "expect": "ok",
+  "dkimpy_says_valid": true,
+  "wallet": "third.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=dXLf1d6sIXYhD0SwjiNy04soPVZsd2EMC5m3dbd2FjJTwJIv44UPWKMA9t+52RQWciVzl\r\n aC3DaFBx5WZ8BdCkWF3uPkSlOaMg9JgGfflcNfBHJvVevKORY1kcwFYmTWb9EgkyZ19ASBp\r\n nQzXSBDHvWUKJaFhUSJFfaHmHq1IosDcAHvvQbimVtoxwMt3+NIq2xEtU+R7Kf8Mki93PCo\r\n 7UBl+tr7Ws0mOVdulACWRuuLB6hdL5bPcBb3tknDzXiYDFA+uACCxgHU7ef64GAjODxZVV6\r\n 6sLGwVjs80c/KTgU0r+hqpscPGRmPFX7pDUTYM0IMlpQIxbAcWW5WIjBBPog==\r\nFrom: Dana <Dana+guild@acme-test.org>\r\nTo: dana+x@acme-test.org\r\nSubject: bg2 7087378a1c7f9011ba2c5a4213352277d9d745e92ca070ba236f011ccceca1da 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "adbf0334d44e79160e36f3714da75d16881283cd1d6db07b317dcfa38635dcf4"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "third.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ },
+ {
+  "name": "same person, second wallet (Sybil)",
+  "expect": "ok",
+  "dkimpy_says_valid": true,
+  "wallet": "second.testnet",
+  "now": 1794000000,
+  "seal_to": "bg.guild.testnet",
+  "letter": {
+   "eml": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acme-test.org;\r\n i=@acme-test.org; q=dns/txt; s=s1; t=1794488209; h=from : to : subject\r\n : date : message-id; bh=lle8JtPCxIsrObPDZRP/51DS+UKLRZWIqMQv4NYASs0=;\r\n b=KO9Za7xbCdvjP5pEAVaaIFlkJInmXNML0Ulcjxf7rTJE+Ylyqaoi64vcJYr45XuYxwJDW\r\n Eq7UCGbV4/l+0Vr4jnb5nyll5Lbdp6PaEQF8BThKMGonMSQ25HsdJ4y/wCjLAlWleLxEvqb\r\n WiUXWVzFTO/ptviXV5YYORHclImiyXoi3CR2JfSAE2gTAiKaTCWydtcdAyTx5/QZ/IxIaIM\r\n QLG693q21VE760GqMrhJo4o2hjQEx9XRb5qpnB6O7xikwAyW9JxbLl4X8jC/tDPIj/7otwb\r\n NX+C6V7PI86Srw6FkGm15BTIpFsAwmmQNypIOegFdsNSVNEhziiM6aMxG1Xg==\r\nFrom: Dana Ruiz <dana@acme-test.org>\r\nTo: dana@acme-test.org\r\nSubject: bg2 8d4e123a6ef611ef29d59f735bec9b25cd2a2250a7b9e4333fe5f1e482ea41f5 1794003600\r\nDate: Tue, 10 Nov 2026 06:00:00 +0000\r\nMessage-ID: <a1@acme-test.org>\r\n\r\nJoining.\r\n",
+   "salt": "5ca64c27bb64cc4d2d44fd3c09769d942460f69c1d52c42f16567d797b0c872c"
+  },
+  "input": {
+   "action": "verify",
+   "guild": "bg.guild.testnet",
+   "wallet": "second.testnet",
+   "domain": "acme-test.org",
+   "selector": "s1",
+   "key_p": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmQyJxd+j04eJAhWnTPkiAMyfzbfvS+uW2PLmnMTOg1ZVM5TsS8iLvExcVXugAwRpYEDtXtLtPRz/RZrO0gpk+BM6rgC7nTHgZN91/hema1mUc52uADgYeWYFe5bEldBrRAt5vacVSsB1laeCBcy/sAbza5Ic3Ku3a8r0CGPa1qFWS+kDHjcID4W4K2oulnpM91cAhBuE5chpMXf8XlkpmkF6Q0w01sZhsR9e1bOjS42aLvdobnn9CRITRbLPATJT8W6bQMFmGQR3BUVrbBito2cVCaLsyY0iJ2Bh3lGxqCR2rEwAEHuzHf2gYEd7FPpdzIeUG1Fdr9qphAeEJuqtJQIDAQAB"
+  }
+ }
+]

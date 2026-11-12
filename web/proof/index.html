@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sodalis · Proof</title>
+    <meta name="description" content="Re-verify every Sodalis admission and payout from public data, in your browser." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Fragment+Mono&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="page-head">
+        <p class="eyebrow">Proof · nothing pre-computed</p>
+        <h1>The Ledger</h1>
+        <p class="lead">Every check below runs now, in your browser, against NEAR testnet, OutLayer's attestation service and Intel's collateral. No wallet, no login, no server of ours.</p>
+      </header>
+
+      <section style="padding-top:60px">
+        <h2 class="h-section reveal">The roll</h2>
+        <p class="sub reveal">Read live from <code>sodalis.testnet</code> and <code>sodalis.sputnik-v2.testnet</code>.</p>
+        <div class="roster-grid">
+          <div class="card reveal" style="--i:0" id="tiers"><h3>Who may join</h3><p class="loading">reading guild…</p></div>
+          <div class="card reveal" style="--i:1" id="seats"><h3>Who holds a seat</h3><p class="loading">reading DAO…</p></div>
+          <div class="card reveal" style="--i:2" id="config"><h3>What is fixed</h3><p class="loading">reading config…</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="h-section reveal">Three admissions</h2>
+        <p class="sub reveal"><em>Execution</em>: Intel signed a quote for exactly this run of exactly the verifier the guild asked for. <em>Admission</em>: the guild admitted the wallet the verifier checked. <em>Seat</em>: the DAO approved that seat.</p>
+        <div class="toolbar reveal">
+          <button id="verify-all" class="btn solid">Re-verify everything <span class="arrow">↻</span></button>
+          <button id="tamper" class="btn danger">Forge one byte</button>
+          <span class="hint" id="tamper-hint">Flips one byte of the enclave's output in your browser. The ledger should turn red.</span>
+        </div>
+        <ol class="ledger" id="joins"></ol>
+      </section>
+
+      <section>
+        <h2 class="h-section reveal">One payout, two hands</h2>
+        <p class="sub reveal">Public members may ask; only staff may approve. The DAO enforces it, not this page.</p>
+        <ol class="ledger" id="payout"></ol>
+      </section>
+    </main>
+    <script type="module" src="../src/proof.js"></script>
+  </body>
+</html>
