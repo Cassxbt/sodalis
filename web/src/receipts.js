@@ -7,6 +7,7 @@ export const REPO = 'https://github.com/Cassxbt/sodalis';
 
 const M1 = 'm1.kibble-pf-03c8a9.testnet';
 const M2 = 'm2.kibble-pf-03c8a9.testnet';
+const BROWSER = '54607a20b449611cb00929830d9f2da11a79457844e538deb5aff803bc53e75d';
 const OUTSIDER = 'eve.sodalis-council.testnet';
 const FORMER_OWNER = 'sodalis-council.testnet';
 
@@ -24,6 +25,13 @@ export const JOINS = [
     note: 'A real Proton email, delivered to a Gmail inbox (d=proton.me, s=protonmail2).',
     tx: 'B4aqUCYVAytpX6Tv25YcFQhNc7UMSedmb5YED6CRifkL',
     signer: M2,
+  },
+  {
+    id: 'browser',
+    title: 'A seat taken on this site, from a browser',
+    note: 'A fresh key made by the Join page, funded by the guild drip, with a Gmail-signed email (d=gmail.com, s=20260707). No wallet, no script.',
+    tx: 'CyJABomVCPUED5nBGaDXx6y2kXG4mWejYWsyrtLxkRoY',
+    signer: BROWSER,
   },
   {
     id: 'v1',

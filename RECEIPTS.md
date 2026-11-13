@@ -137,3 +137,15 @@ The verifier build (`9c0ef7f3…`) and the guild-owned secret (`sodalis-v3`) did
 | The former owner (`sodalis-council.testnet`) pins a key after handing the guild to the DAO | Refused: `owner only` | FvyF4rdu6NweHTG5VPQi4SuXX8aaUQh2eRWWriCfxCa1 |
 
 While the attacks ran, OutLayer testnet gave no answer to four consecutive guild runs (88RynFVf…, DrqXxqrM…, Feq2nUTn…, 2HWSePWb…). Each one was refunded and admitted nobody. A run without a secret, and a guild run from another account, answered minutes later, and the retries above succeeded.
+
+## v4.1 (2026-11-13): a seat taken from the live Join page
+
+The [/join](https://sodalis-red.vercel.app/join/) page was run end to end in Chrome, with no script and no wallet. The page made a fresh implicit key in the browser, the guild drip (`api/drip.js`, a Vercel function holding `sodalis-drip.testnet`) funded it, and a Gmail-signed challenge was sent to a second inbox, saved as `.eml` and uploaded. The browser trimmed it to the signed headers, sealed it to the guild's inbox key and called `join`. The page then re-verified the run: all 11 checks passed.
+
+| Step | Result | Tx |
+|---|---|---|
+| Drip funds the fresh key `54607a20…e75d` | 0.3 NEAR from `sodalis-drip.testnet` | 4rhzwhGovniA9w2sZAQDQ317BnTYKesQScUgdNq8jqHn |
+| The key joins with the Gmail email (d=gmail.com, s=20260707) | **public**, proposal #3 approved by the guild | CyJABomVCPUED5nBGaDXx6y2kXG4mWejYWsyrtLxkRoY |
+| The new member asks the treasury for 0.05 NEAR from the page | Proposal #4, in progress: public members cannot approve it | 7pRD8Faehque3KhLNytBiBuYJzoys2BMWHQqYqfV5TTf |
+
+The drip is a visible transfer, so this seat has a funding trail to the guild's own drip account; every member funded this way shares the same one. The Gmail mailbox belongs to the builder, so this seat shows the flow works from a fresh browser key, not that a stranger used it.
