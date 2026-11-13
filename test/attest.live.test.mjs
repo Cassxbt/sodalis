@@ -2,8 +2,8 @@
 // OutLayer's attestations and Intel's collateral (needs network).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { verifyJoin, verifyPayout, verifyRefusal, verifyRefusedVote, verifySettle } from '../web/src/attest.js';
-import { GUILD, DAO, JOINS, PAYOUT, ROUND, ATTACKS } from '../web/src/receipts.js';
+import { verifyFiled, verifyJoin, verifyLeft, verifyPayout, verifyRefusal, verifyRefusedVote, verifyRejected, verifySettle } from '../web/src/attest.js';
+import { GUILD, DAO, JOINS, PAYOUT, ROUND, ROUND2, ATTACKS } from '../web/src/receipts.js';
 
 const assertAll = (checks) => { for (const c of checks) assert.ok(c.ok, `${c.group}: ${c.name}: ${c.detail}`); };
 
@@ -30,6 +30,18 @@ test('round: the guild files a request within the allowance, staff approve, the 
   assert.deepEqual(checks.map((c) => c.step), [0, 2, 2]);
   assertAll(checks);
   assertAll(await verifySettle(settled.tx, settled.signer, GUILD, ROUND.proposalId, 'approved'));
+});
+
+test('round 2: the pot binds, a rejection is returned once, and leaving ends authority', async () => {
+  const [filed, , rejected, released, left] = ROUND2.steps;
+  assertAll(await verifyFiled(filed.tx, ROUND2.member, GUILD, DAO, ROUND2.proposalId));
+  assertAll(await verifyRejected(rejected.tx, rejected.signer, DAO, ROUND2.proposalId));
+  assertAll(await verifySettle(released.tx, released.signer, GUILD, ROUND2.proposalId, 'rejected', 'released'));
+  assertAll(await verifyLeft(left.tx, left.signer, GUILD, DAO));
+  for (const step of ROUND2.steps.filter((s) => s.kind === 'refused')) {
+    const r = await verifyRefusal(step.tx, step.signer, step.expect);
+    assert.ok(r.ok, `${step.label}: expected "${step.expect}", saw "${r.text}"`);
+  }
 });
 
 test('payout: a transaction that did not file the request cannot stand in for it', async () => {

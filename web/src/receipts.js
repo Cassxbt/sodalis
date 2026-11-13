@@ -64,6 +64,21 @@ export const ROUND = {
   ],
 };
 
+/** Round 2: the pot binds while a seat still has allowance, a rejection is returned once, and a departure ends authority. */
+export const ROUND2 = {
+  proposalId: 9,
+  member: M2,
+  staff: M1,
+  steps: [
+    { kind: 'filed', label: 'A public member asks for its whole 0.1 allowance', tx: 'Gxzr384ccmPtExYsNw5fEq2xK5jqHuQRAoEb7n852CVG', signer: M2 },
+    { kind: 'refused', label: 'A staff member asks for 0.06: its own allowance allows it, the pot has 0.05 left', tx: '5nuDd6fUrj9bmavkJxahT7wfk5iTH4EAgP3kbZrFfSt2', signer: M1, expect: "exceeds the round's remaining budget" },
+    { kind: 'rejected', label: 'Staff reject the 0.1 request', tx: 'STY4fGnhYdaMkCTBjRzJ5wqMWvdHhdshnpkhDDqr9Bq', signer: M1 },
+    { kind: 'released', label: 'Anyone settles it: the 0.1 returns to the round', tx: '7hzcL4Qr8gUaYhmWDiVGj9a3zuUiQGsyiF65yBedFBeE', signer: OUTSIDER },
+    { kind: 'left', label: 'The member leaves the guild', tx: 'CmKnfQ1CKk16ZK5zKiKA1szYLTEh8HSkZXx7e5TQxuDD', signer: M2 },
+    { kind: 'refused', label: 'It asks again, without a seat', tx: 'B4JU3VFSzRg6mbyHRKqfqC61yrRmruuB4XCmAEGJxwj2', signer: M2, expect: 'only seated members may request a payout' },
+  ],
+};
+
 /** Real attempts against the live guild. `expect` is the refusal the chain must show. */
 export const ATTACKS = [
   {
@@ -135,7 +150,7 @@ export const ATTACKS = [
     id: 'bypass',
     name: 'Skip the round',
     attempt: 'A member files a transfer straight with the DAO instead of asking the guild.',
-    layer: 'Sputnik DAO policy: only the guild may file transfers',
+    layer: 'Sputnik DAO policy: members file transfers only through the guild',
     tx: 'BcBnvJMu78hz64jS7C4CM92bCHeDpLvxjkp5V3P9VYPf',
     signer: M2,
     expect: 'ERR_PERMISSION_DENIED',
@@ -147,6 +162,33 @@ export const ATTACKS = [
     layer: 'Guild contract: only seated members may ask',
     tx: 'F2FiyoQ7ZfZzuFsddeiy1yhmcF3zE3fb4FBQ2bpa155n',
     signer: OUTSIDER,
+    expect: 'only seated members may request a payout',
+  },
+  {
+    id: 'over-budget',
+    name: 'Ask past the round\'s budget',
+    attempt: 'A staff member with its whole allowance left asks for 0.06 NEAR when the round has 0.05 left.',
+    layer: 'Guild contract: the round budget binds every seat together',
+    tx: '5nuDd6fUrj9bmavkJxahT7wfk5iTH4EAgP3kbZrFfSt2',
+    signer: M1,
+    expect: "exceeds the round's remaining budget",
+  },
+  {
+    id: 'double-settle',
+    name: 'Release a reservation twice',
+    attempt: 'Settle a rejected request a second time, hoping to return its 0.1 to the round again.',
+    layer: 'Guild contract: a request settles once',
+    tx: 'BZz83MP86L1pCGxHTbZsDpgC8NvdG32JUWEHLVU2u2xX',
+    signer: OUTSIDER,
+    expect: 'this request is already settled',
+  },
+  {
+    id: 'after-leaving',
+    name: 'Ask after leaving',
+    attempt: 'A member leaves the guild, losing its DAO seat in the same transaction, then asks for a payout.',
+    layer: 'Guild contract and DAO roster: leaving ends spending authority',
+    tx: 'B4JU3VFSzRg6mbyHRKqfqC61yrRmruuB4XCmAEGJxwj2',
+    signer: M2,
     expect: 'only seated members may request a payout',
   },
   {

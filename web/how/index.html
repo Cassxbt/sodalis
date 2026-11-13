@@ -38,7 +38,7 @@
               <tr><td>Your mail host</td><td>Sign an email for any address on its domain.</td><td>Nothing. DKIM means trusting the domain's mail host, as email does today.</td></tr>
               <tr><td>OutLayer operator</td><td>Withhold or delay a run.</td><td>It cannot forge one with an approved worker image: Intel's quote binds the code, the input and the output, and the proof page checks it.</td></tr>
               <tr><td>OutLayer's register owner</td><td>Approve a malicious worker image, which could then forge results.</td><td>The approved list is public on <code>worker.outlayer.testnet</code>; the proof page shows which approved image ran. This is the deepest trust assumption.</td></tr>
-              <tr><td>The DAO council</td><td>Add or remove an approved domain, change the DAO policy.</td><td>Every change is a public proposal. Once the issuer list is sealed, no key can be added at all.</td></tr>
+              <tr><td>The DAO council</td><td>Add or remove an approved domain, change the DAO policy, open rounds, and file or approve a transfer outside any round.</td><td>Every change is a public proposal. Once the issuer list is sealed, no key can be added at all. The round limits bind members, not the council that governs the DAO.</td></tr>
               <tr><td>The builder</td><td>Redeploy the guild while its account still has a key.</td><td>Deleting that key is the last step before submission. The guild already owns its secret, so after that nobody can change the code or the master.</td></tr>
               <tr><td>Anyone reading the chain</td><td>See the domain, the wallet and a fingerprint.</td><td>The fingerprint is keyed by a master that never leaves the enclave, so a guessed address cannot be tested against it.</td></tr>
             </tbody>
@@ -57,11 +57,12 @@
               <tr><td>One mailbox, one seat</td><td><span class="state chain">On chain</span></td><td><a href="/judges/">Break it</a>, attack 01</td></tr>
               <tr><td>Public members only ask for payouts; staff approve them (the council can too)</td><td><span class="state chain">On chain</span></td><td><a href="/proof/#the-round">Proof</a>, round 1</td></tr>
               <tr><td>Per-seat allowance and round budget</td><td><span class="state chain">On chain</span></td><td><a href="/judges/">Break it</a>: past the allowance, and skipping the round</td></tr>
+              <tr><td>Leaving ends spending authority</td><td><span class="state chain">On chain</span></td><td><a href="/proof/#round-two">Proof</a>, round 2</td></tr>
               <tr><td>A staff member cannot approve their own request</td><td><span class="state not">Not provided</span></td><td>Sputnik cannot tell the receiver from the voter; this guild has one staff member</td></tr>
               <tr><td>The enclave run is attested and bound to code, input and output</td><td><span class="state chain">On chain</span></td><td>Checked in your browser on every page load</td></tr>
               <tr><td>A relayer can pay gas for a brand-new wallet</td><td><span class="state tests">In tests</span></td><td>Contract and verifier tests. The live Join page funds new keys with a visible drip transfer instead</td></tr>
               <tr><td>A member's wallet cannot be linked to their email</td><td><span class="state design">Designed</span></td><td>The demo members are the builder's own accounts</td></tr>
-              <tr><td>Independent people govern a real treasury</td><td><span class="state not">Not done</span></td><td>All three members here belong to the builder</td></tr>
+              <tr><td>Independent people govern a real treasury</td><td><span class="state not">Not done</span></td><td>Every member here belongs to the builder</td></tr>
               <tr><td>Guild code frozen, issuer list sealed</td><td><span class="state not">Not done</span></td><td>Held until the final review</td></tr>
               <tr><td>Forward secrecy for sealed letters</td><td><span class="state not">Not done</span></td><td>Letters stay on chain; a future leak of the master would open them</td></tr>
               <tr><td>Recovering a seat after losing a wallet</td><td><span class="state not">Not done</span></td><td>A spent mailbox cannot rejoin</td></tr>

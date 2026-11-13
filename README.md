@@ -1,21 +1,23 @@
 # Sodalis
 
-**Prove you work there. Never say who you are.**
+**Prove you belong. Never say who you are.**
 
-Communities that want to pay their members face a bad choice. Verifying members means a council that knows every name and employer. Staying anonymous means one person with ten wallets takes ten shares. Sodalis is a NEAR guild where **an email from an approved domain earns a seat in a Sputnik DAO treasury, one mailbox buys one seat, and the chain never learns which mailbox.** Payouts run in **rounds the chain enforces**: in round 1 on testnet, a public member asked the guild for 0.05 NEAR and staff approved it, the DAO paid exactly 0.05, and asking for 0.06 more, past the seat's 0.1 allowance, was refused on chain.
+**A guild can reimburse an eligible member without putting their email address on chain.** In our testnet round 1 the DAO paid 0.05 NEAR and refused the same seat's next 0.06 request; in round 2 the shared budget refused a seat that still had allowance, and a member who left lost the right to ask.
+
+Communities that want to pay their members face a bad choice. Verifying members means a council that knows every name and employer. Staying anonymous means one person with ten wallets takes ten shares. Sodalis is a NEAR guild where **an email from an approved domain earns a seat in a Sputnik DAO treasury, one mailbox buys one seat, and the chain never learns which mailbox.** Payouts run in **rounds the chain enforces**.
 
 An organisation domain proves membership of that organisation. A free-mail domain (Gmail, Proton) proves only control of one mailbox, so free mail reaches only the `public` tier, which can ask for payouts but not approve them.
 
 **Live:** https://sodalis-red.vercel.app · **[Verify the round](https://sodalis-red.vercel.app/proof/#the-round)** · **[Proof](https://sodalis-red.vercel.app/proof/)** · **[Join](https://sodalis-red.vercel.app/join/)** · **[Break it](https://sodalis-red.vercel.app/judges/)** · **[How it works](https://sodalis-red.vercel.app/how/)**
 
-![tracks](https://img.shields.io/badge/tracks-social%20%C2%B7%20privacy-c9a45c) ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-53-2c6b5a) ![verifier cases](https://img.shields.io/badge/verifier%20cases-43-2c6b5a) ![live checks](https://img.shields.io/badge/npm%20test-23-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
+![tracks](https://img.shields.io/badge/tracks-social%20%C2%B7%20privacy-c9a45c) ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-56-2c6b5a) ![verifier cases](https://img.shields.io/badge/verifier%20cases-43-2c6b5a) ![live checks](https://img.shields.io/badge/npm%20test-27-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
 | | |
 |---|---|
 | **Fastest proof** | Open [/proof](https://sodalis-red.vercel.app/proof/). Your browser re-verifies every admission from NEAR testnet, OutLayer's attestation API and Intel's collateral. Then press **Forge one byte** and watch the ledger turn red. |
 | **Fastest join** | Open [/join](https://sodalis-red.vercel.app/join/). The page makes a fresh key, the guild drip funds it, and one email from an approved domain seats it. [This seat](https://testnet.nearblocks.io/txns/CyJABomVCPUED5nBGaDXx6y2kXG4mWejYWsyrtLxkRoY) was taken that way. |
-| **Fastest attack** | Open [/judges](https://sodalis-red.vercel.app/judges/). Ten real attempts against the live guild, each re-read from chain with its refusal. |
-| **Status** | Live on **NEAR testnet**. Real emails (Proton, Gmail, and a custom domain on Hostinger). All three members belong to the builder: the rules are proven, independent use is not. See [What is real](#what-is-real). |
+| **Fastest attack** | Open [/judges](https://sodalis-red.vercel.app/judges/). Thirteen real attempts against the live guild, each re-read from chain with its refusal. |
+| **Status** | Live on **NEAR testnet**. Real emails (Proton, Gmail, and a custom domain on Hostinger). All members belong to the builder (three joined; one has since left): the rules are proven, independent use is not. See [What is real](#what-is-real). |
 
 ## What it does
 
@@ -28,18 +30,18 @@ the enclave       ─► checks signature, domain, subject, expiry → returns H
 sodalis.testnet   ─► fingerprint unused? record member, propose + approve the DAO seat, same transaction
 ```
 
-One mechanism: a **sealed letter opened only inside an attested enclave**. The output is a domain and a keyed fingerprint. The fingerprint admits one wallet per admission epoch. Only a `reset` signed by the guild account itself starts a new epoch with an empty spent set; v4 began the current one (see [RECEIPTS](RECEIPTS.md)). Tiers come from the domain: `staff` may approve payouts and `public` may not.
+One mechanism: a **sealed letter opened only inside an attested enclave**. The output is a domain and a keyed fingerprint. The fingerprint admits one wallet per admission epoch: one seat per normalised mailbox, not per person. Only a `reset` signed by the guild account itself starts a new epoch with an empty spent set; v4 began the current one (see [RECEIPTS](RECEIPTS.md)). Tiers come from the domain: `staff` may approve payouts and `public` may not.
 
-Money moves in **payout rounds**. The DAO opens a round with a budget and the same allowance for every seat. A member asks the guild (`request_payout`), which refuses anything past the seat's allowance or the round's budget, reserves the amount and files the DAO transfer itself; the DAO's policy lets only the guild file transfers, so a round cannot be skipped. Staff decide; anyone can `settle` a decided request, which records it as approved or returns the reservation when staff reject it, it is removed, or it outlives the proposal period.
+Money moves in **payout rounds**. The DAO opens a round with a budget and the same allowance for every seat. A member asks the guild (`request_payout`), which refuses anything past the seat's allowance or the round's budget, reserves the amount and files the DAO transfer itself; the DAO's policy lets members file transfers only through the guild, so a member cannot skip a round (the council, which governs the DAO, still can). Staff decide; anyone can `settle` a request once the DAO has recorded its decision, which books it as approved or returns the reservation when the DAO rejected, expired or removed it. An undecided request stays reserved.
 
 ## Verify it yourself
 
 ```bash
 git clone https://github.com/Cassxbt/sodalis && cd sodalis && npm ci
 
-npm test               # 23 tests: re-reads every admission, refusal and payout from testnet, plus offline sealing checks
+npm test               # 27 tests: re-reads every admission, refusal and payout from testnet, plus offline sealing checks
 npm run verify:build   # rebuilds the verifier and the guild contract; checks both against the chain
-npm run test:contract  # 53 contract tests (Rust, offline)
+npm run test:contract  # 56 contract tests (Rust, offline)
 npm run test:verifier  # 43 verifier cases: DKIM attack patterns and edge cases on signed test emails (offline)
 ```
 
@@ -51,8 +53,8 @@ verifier (runs in the enclave)
   pinned by sodalis.testnet  9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f
   served by FastFS       9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f
 guild contract
-  rebuilt from source    9NeK7DukQAedFjExsChPpHV7bCKXGhA92VosnGqETtPh
-  deployed at sodalis.testnet 9NeK7DukQAedFjExsChPpHV7bCKXGhA92VosnGqETtPh
+  rebuilt from source    B8EywgDtj7UaXmYNDknso8bZAKNjavRwi7geULrG9kak
+  deployed at sodalis.testnet B8EywgDtj7UaXmYNDknso8bZAKNjavRwi7geULrG9kak
 MATCH: the guild runs exactly this source, on chain and in the enclave.
 ```
 
@@ -88,6 +90,12 @@ Guild `sodalis.testnet` · DAO `sodalis-dao.sputnik-v2.testnet` · explorer link
 | An account with no seat asks the guild | **Refused**: `only seated members may request a payout` | [`F2FiyoQ7…`](https://testnet.nearblocks.io/txns/F2FiyoQ7ZfZzuFsddeiy1yhmcF3zE3fb4FBQ2bpa155n) |
 | Staff approve #7 | Approved; the receipt shows exactly 0.05 NEAR from the DAO | [`qLiFNjgb…`](https://testnet.nearblocks.io/txns/qLiFNjgbnNbh9sCu9HV1JG16ZgfjxzNWkhA13kKZkzd) |
 | Anyone settles #7 | The round records 0.05 approved; the seat has 0.05 left | [`GFFV57cM…`](https://testnet.nearblocks.io/txns/GFFV57cMe8FZ6qFBPCodRYCTqz1NA8uAnCjq1ctgAcft) |
+| **Round 2** (0.15 NEAR, 0.1 per seat): a public member asks for its whole 0.1 | The guild files proposal #9 | [`Gxzr384c…`](https://testnet.nearblocks.io/txns/Gxzr384ccmPtExYsNw5fEq2xK5jqHuQRAoEb7n852CVG) |
+| A staff member with its whole allowance left asks for 0.06; the pot has 0.05 | **Refused**: `exceeds the round's remaining budget` | [`5nuDd6fU…`](https://testnet.nearblocks.io/txns/5nuDd6fUrj9bmavkJxahT7wfk5iTH4EAgP3kbZrFfSt2) |
+| Staff reject #9, then anyone settles it | Rejected; settle returns the 0.1 to the round | [`STY4fGnh…`](https://testnet.nearblocks.io/txns/STY4fGnhYdaMkCTBjRzJ5wqMWvdHhdshnpkhDDqr9Bq) · [`7hzcL4Qr…`](https://testnet.nearblocks.io/txns/7hzcL4Qr8gUaYhmWDiVGj9a3zuUiQGsyiF65yBedFBeE) |
+| Settle #9 a second time | **Refused**: `this request is already settled` | [`BZz83MP8…`](https://testnet.nearblocks.io/txns/BZz83MP86L1pCGxHTbZsDpgC8NvdG32JUWEHLVU2u2xX) |
+| The member leaves the guild | Its DAO seat is removed in the same transaction | [`CmKnfQ1C…`](https://testnet.nearblocks.io/txns/CmKnfQ1CKk16ZK5zKiKA1szYLTEh8HSkZXx7e5TQxuDD) |
+| It asks again | **Refused**: `only seated members may request a payout` | [`B4JU3VFS…`](https://testnet.nearblocks.io/txns/B4JU3VFSzRg6mbyHRKqfqC61yrRmruuB4XCmAEGJxwj2) |
 | *Before rounds:* a public member proposes a 0.05 NEAR payout | Proposal #2 | [`JDzowcGA…`](https://testnet.nearblocks.io/txns/JDzowcGAH3GMVjRFGUiZVbMUBHpgMmWPqysj1NiLC2ad) |
 | They try to approve it themselves | **Refused** by the DAO: `ERR_PERMISSION_DENIED` | [`7aCd3oqj…`](https://testnet.nearblocks.io/txns/7aCd3oqjPuqGASxrCdADdcxkbLvPerzZKNtMxecEsh8G) |
 | A staff member approves it | Approved; the receipt shows exactly 0.05 NEAR from the DAO | [`4kWLrJob…`](https://testnet.nearblocks.io/txns/4kWLrJobyVEwmXN55p2SaXWPU6xeF5szhJASGBcsuGkK) |
@@ -141,13 +149,15 @@ Remove any of these and the mechanism stops working:
 | A real DKIM email from an approved domain earns a DAO seat | **On chain** |
 | One mailbox, one seat | **On chain** (Sybil attempt refused) |
 | Public members only ask for payouts; staff approve them (the council can too) | **On chain** |
-| Per-seat allowance and round budget | **On chain**: round 1, one request approved and paid, one refused past the allowance, a DAO bypass refused |
+| Per-seat allowance and round budget | **On chain**: round 1 refused a request past the allowance, round 2 one past the budget; a member's DAO bypass refused |
+| Leaving ends spending authority | **On chain**: a member left, lost its DAO seat in the same transaction, and its next request was refused |
+| An undecided or failed payout returns its reservation | **Partly**: a rejection returned exactly once on chain; an undecided request stays reserved until the DAO records an outcome, and one that ends `Failed` stays reserved |
 | A staff member cannot approve their own request | **Not provided**: Sputnik cannot tell the receiver from the voter, and this guild has one staff member. A guild with several staff should require two approvals |
 | The enclave run is attested and bound to code, input and output | **On chain**, checked in the browser |
 | A fresh browser key can join with no wallet | **On chain**: the [/join](https://sodalis-red.vercel.app/join/) page seated one, run by the builder |
 | A relayer can pay gas for a brand-new wallet | **In tests**. The live Join page funds new keys with a visible 0.3 NEAR drip from `sodalis-drip.testnet` instead |
 | A member's wallet cannot be linked to their email | **Designed**: the chain holds only a domain and a keyed fingerprint, but the demo members are the builder's own accounts |
-| Independent people govern a real treasury | **Not done**: all three members belong to the builder |
+| Independent people govern a real treasury | **Not done**: all members belong to the builder (three joined; one has since left) |
 | Guild key deleted, issuer list sealed | **Not done yet**: held until the final review, then the guild account's keys are deleted and the DAO seals the issuer list |
 | Forward secrecy for sealed letters | **Not provided**: letters stay on chain, and a future leak of the master would open them |
 | Seat recovery after a lost wallet | **Not provided**: a spent mailbox cannot rejoin |
@@ -158,7 +168,7 @@ Three lessons from testing shaped the design. Gmail does not DKIM-sign mail you 
 ## Project layout
 
 ```
-contract/   NEAR guild contract (near-sdk 5.29.1): join, tiers, DAO seating, payout rounds, sealing, 53 tests
+contract/   NEAR guild contract (near-sdk 5.29.1): join, tiers, DAO seating, payout rounds, sealing, 56 tests
 verifier/   enclave program (Rust → wasm32-wasip1): DKIM, sealing, nullifier
 web/        the site: Vite multi-page, attestation checks in the browser
 test/       live tests against testnet (npm test)

@@ -1,6 +1,6 @@
 import { el, reveal } from './shell.js';
-import { near, verifyJoin, verifyPayout, verifyRefusal, verifyRefusedVote, verifySettle, view } from './attest.js';
-import { GUILD, DAO, EXPLORER, JOINS, PAYOUT, ROUND } from './receipts.js';
+import { near, verifyFiled, verifyJoin, verifyLeft, verifyPayout, verifyRefusal, verifyRefusedVote, verifyRejected, verifySettle, view } from './attest.js';
+import { GUILD, DAO, EXPLORER, JOINS, PAYOUT, ROUND, ROUND2 } from './receipts.js';
 
 const $ = (sel) => document.querySelector(sel);
 const txLink = (hash) => { const a = el('a', 'tx', `${hash.slice(0, 8)}… ↗`); a.href = EXPLORER + hash; a.target = '_blank'; a.rel = 'noopener'; return a; };
@@ -115,6 +115,30 @@ async function runRound() {
   $('#round-4 .checks').replaceChildren(...books.map(row));
 }
 
+function round2Entries() {
+  ROUND2.steps.forEach((step, i) => {
+    const li = el('li', `entry step reveal${step.kind === 'refused' ? ' refusal' : ''}`);
+    li.id = `round2-${i}`;
+    const head = el('div', 'entry-head');
+    head.append(el('h3', null, step.label), txLink(step.tx));
+    li.append(head, el('ul', 'checks'));
+    $('#round2').append(li);
+  });
+}
+
+async function runRound2() {
+  const checkOf = (step) => {
+    switch (step.kind) {
+      case 'filed': return verifyFiled(step.tx, ROUND2.member, GUILD, DAO, ROUND2.proposalId);
+      case 'rejected': return verifyRejected(step.tx, step.signer, DAO, ROUND2.proposalId);
+      case 'released': return verifySettle(step.tx, step.signer, GUILD, ROUND2.proposalId, 'rejected', 'released');
+      case 'left': return verifyLeft(step.tx, step.signer, GUILD, DAO);
+      default: return verifyRefusal(step.tx, step.signer, step.expect).then((r) => [{ name: `Refused on chain at ${r.where ?? 'the chain'}`, ok: r.ok, detail: r.text }]);
+    }
+  };
+  await Promise.all(ROUND2.steps.map(async (step, i) => $(`#round2-${i} .checks`).replaceChildren(...(await checkOf(step)).map(row))));
+}
+
 let tampered = false;
 async function verifyAll() {
   const buttons = [$('#verify-all'), $('#tamper')];
@@ -122,6 +146,7 @@ async function verifyAll() {
   await Promise.all(JOINS.map((j) => runJoin(j, tampered)));
   await Promise.all([
     runRound().catch((e) => $('#round').append(el('p', 'status', `not verified here: ${e.message}`))),
+    runRound2().catch((e) => $('#round2').append(el('p', 'status', `not verified here: ${e.message}`))),
     runPayout().catch((e) => $('#payout').append(el('p', 'status', `not verified here: ${e.message}`))),
   ]);
   buttons.forEach((b) => (b.disabled = false));
@@ -129,6 +154,7 @@ async function verifyAll() {
 
 JOINS.forEach((j) => $('#joins').append(joinEntry(j)));
 roundEntries();
+round2Entries();
 payoutEntries();
 reveal();
 roster().catch((e) => document.querySelectorAll('.loading').forEach((n) => (n.textContent = `could not read: ${e.message}`)));

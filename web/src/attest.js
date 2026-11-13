@@ -80,6 +80,20 @@ export async function readJoin(txHash, signer) {
   return join;
 }
 
+/** OutLayer's attestation for a run; a dropped request is retried, an absent record is an error. */
+async function attestation(txHash, tries = 4) {
+  for (let i = 1; ; i++) {
+    try {
+      const r = await fetch(NETWORK.attestations + txHash);
+      if (!r.ok) throw new Error(`OutLayer attestation service answered ${r.status}`);
+      return await r.json();
+    } catch (e) {
+      if (i >= tries) throw new Error(`attestation unavailable: ${e.message}`);
+      await new Promise((res) => setTimeout(res, 400 * 2 ** i));
+    }
+  }
+}
+
 /** Intel's PCCS occasionally drops a request; a check should not fail on that alone. */
 async function collateral(quote, tries = 4) {
   for (let i = 1; ; i++) {
@@ -125,7 +139,7 @@ export async function verifyJoin(txHash, signer, guild, now = BigInt(Math.floor(
   const join = await readJoin(txHash, signer);
   // Simulates a forged record in the browser: one flipped byte must break the chain of checks.
   if (tamper && join.output) join.output = Uint8Array.from(join.output, (b, i) => (i === 3 ? b ^ 1 : b));
-  const att = await (await fetch(NETWORK.attestations + txHash)).json();
+  const att = await attestation(txHash);
   const quote = b64(att.tdx_quote);
   const m = measurements(quote);
   const requestedHash = join.request?.code_source?.WasmUrl?.hash;
@@ -195,9 +209,11 @@ export async function verifyPayout(dao, proposalId, proposeTx, approveTx, approv
   const filedAt = filed.receipts_outcome.find((o) => o.outcome.executor_id === dao)?.block_hash;
   const askerRoles = filedAt ? (await rolesAt(dao, filedAt))(asker) : [];
   const returned = filed.status?.SuccessValue ? JSON.parse(atob(filed.status.SuccessValue)) : null;
+  const asked = callOf(filed);
   const route = guild
-    ? proposal.proposer === guild && filed.transaction.receiver_id === guild && callOf(filed).method === 'request_payout' && transfer?.receiver_id === member
-    : callOf(filed).method === 'add_proposal' && filed.transaction.receiver_id === dao;
+    ? proposal.proposer === guild && filed.transaction.receiver_id === guild && asked.method === 'request_payout' && transfer?.receiver_id === member
+      && asked.args.amount === transfer?.amount && proposal.description.endsWith(`: ${asked.args.category}`)
+    : asked.method === 'add_proposal' && filed.transaction.receiver_id === dao;
   add(0, guild ? 'A member asked within the round, and the guild filed it' : 'A member filed this payout request',
     filed.transaction.signer_id === asker && route && returned === proposalId && Boolean(transfer) && ['public', 'staff'].some((r) => askerRoles.includes(r)),
     `#${proposalId} for ${asker} (${askerRoles.join(', ') || 'no role'} then)${guild ? `, filed by ${proposal.proposer}` : ''}: ${near(transfer?.amount ?? 0)} NEAR to ${transfer?.receiver_id}`);
@@ -207,7 +223,7 @@ export async function verifyPayout(dao, proposalId, proposeTx, approveTx, approv
   const votedAt = voted.receipts_outcome.find((o) => o.outcome.executor_id === dao)?.block_hash;
   const roleAtVote = votedAt ? await rolesAt(dao, votedAt) : () => [];
   const approvers = Object.entries(proposal.votes).filter(([, v]) => v === 'Approve').map(([a]) => a);
-  add(2, 'Staff approved it', voted.status?.SuccessValue != null && proposal.votes[approver] === 'Approve' && vote.method === 'act_proposal' && vote.args.id === proposalId && vote.args.action === 'VoteApprove' && proposal.status === 'Approved'
+  add(2, 'Staff approved it', voted.status?.SuccessValue != null && voted.transaction.signer_id === approver && voted.transaction.receiver_id === dao && proposal.votes[approver] === 'Approve' && vote.method === 'act_proposal' && vote.args.id === proposalId && vote.args.action === 'VoteApprove' && proposal.status === 'Approved'
     && approvers.length > 0 && approvers.every((a) => roleAtVote(a).some((r) => r === 'staff' || r === 'council')) && roleAtVote(approver).includes('staff'),
     `${approver} (${roleAtVote(approver).join(', ')} then) voted VoteApprove on #${proposalId}; status ${proposal.status}`);
 
@@ -219,14 +235,57 @@ export async function verifyPayout(dao, proposalId, proposeTx, approveTx, approv
   return checks;
 }
 
-/** The guild's round books show this proposal settled as `outcome`. */
-export async function verifySettle(txHash, signer, guild, proposalId, outcome) {
+/**
+ * The guild's round books settled this proposal: the event names the DAO's
+ * `outcome` (approved, rejected, expired, removed) for the booked member and
+ * amount, and the request now reads `state` (approved or released).
+ */
+export async function verifySettle(txHash, signer, guild, proposalId, outcome, state = outcome) {
   const tx = await txStatus(txHash, signer);
   const settled = tx.receipts_outcome.filter((o) => o.outcome.executor_id === guild).flatMap((o) => o.outcome.logs)
     .filter((l) => l.startsWith('EVENT_JSON:')).map((l) => JSON.parse(l.slice(11)))
-    .find((e) => e.standard === 'sodalis' && e.event === 'payout_settled' && e.data[0].proposal_id === proposalId);
+    .find((e) => e.standard === 'sodalis' && e.event === 'payout_settled' && e.data[0].proposal_id === proposalId)?.data[0];
   const now = await view(guild, 'get_payout_request', { proposal_id: proposalId });
-  return [{ group: 'payout', name: 'The round recorded the decision', ok: settled?.data[0].outcome === outcome && now?.state === outcome, detail: `#${proposalId}: ${settled?.data[0].outcome ?? 'no settle event'}; round ${now?.round} now says ${now?.state}` }];
+  const ok = settled?.outcome === outcome && now?.state === state && settled.account_id === now.account_id && settled.amount === now.amount && settled.round === now.round;
+  return [{ group: 'payout', name: 'The round recorded the decision', ok, detail: `#${proposalId}: ${settled?.outcome ?? 'no settle event'} · ${now ? `${near(now.amount)} NEAR for ${now.account_id}, round ${now.round}, now ${now.state}` : 'no booked request'}` }];
+}
+
+const eventsOf = (tx, emitter) => tx.receipts_outcome.filter((o) => o.outcome.executor_id === emitter).flatMap((o) => o.outcome.logs)
+  .filter((l) => l.startsWith('EVENT_JSON:')).map((l) => JSON.parse(l.slice(11))).filter((e) => e.standard === 'sodalis');
+
+/** The guild filed `proposalId` for `member` from its round request, with the amount and category asked for. */
+export async function verifyFiled(txHash, member, guild, dao, proposalId) {
+  const tx = await txStatus(txHash, member);
+  const asked = callOf(tx);
+  const proposal = await view(dao, 'get_proposal', { id: proposalId });
+  const transfer = proposal.kind?.Transfer;
+  const filed = eventsOf(tx, guild).find((e) => e.event === 'payout_requested')?.data[0];
+  const ok = tx.transaction.receiver_id === guild && asked.method === 'request_payout' && proposal.proposer === guild && transfer?.receiver_id === member
+    && transfer.amount === asked.args.amount && filed?.proposal_id === proposalId && proposal.description.endsWith(`: ${asked.args.category}`);
+  return [{ group: 'payout', name: 'The guild filed the request it was asked for', ok, detail: `#${proposalId}: ${near(transfer?.amount ?? 0)} NEAR to ${transfer?.receiver_id}, ${asked.args?.category}, round ${filed?.round}` }];
+}
+
+/** Staff `voter` rejected `proposalId`, holding the staff role when the vote ran. */
+export async function verifyRejected(txHash, voter, dao, proposalId) {
+  const tx = await txStatus(txHash, voter);
+  const vote = callOf(tx);
+  const at = tx.receipts_outcome.find((o) => o.outcome.executor_id === dao)?.block_hash;
+  const roles = at ? (await rolesAt(dao, at))(voter) : [];
+  const proposal = await view(dao, 'get_proposal', { id: proposalId });
+  const ok = tx.transaction.receiver_id === dao && vote.method === 'act_proposal' && vote.args.id === proposalId && vote.args.action === 'VoteReject'
+    && proposal.votes[voter] === 'Reject' && proposal.status === 'Rejected' && roles.includes('staff');
+  return [{ group: 'payout', name: 'Staff rejected it', ok, detail: `${voter} (${roles.join(', ') || 'no role'} then) voted VoteReject on #${proposalId}; status ${proposal.status}` }];
+}
+
+/** `member` left in this transaction, the guild removed its DAO seat, and the roster no longer lists it. */
+export async function verifyLeft(txHash, member, guild, dao) {
+  const tx = await txStatus(txHash, member);
+  const events = eventsOf(tx, guild);
+  const removed = events.find((e) => e.event === 'member_removed' && e.data[0].account_id === member && e.data[0].how === 'left');
+  const unseated = events.find((e) => e.event === 'dao_role_removed' && e.data[0].account_id === member);
+  const { roles } = await view(dao, 'get_policy');
+  const still = roles.filter((r) => r.kind?.Group?.includes(member)).map((r) => r.name);
+  return [{ group: 'payout', name: 'It lost its DAO seat in the same transaction', ok: Boolean(removed && unseated) && still.length === 0, detail: `${unseated ? `${unseated.data[0].role} seat removed by proposal #${unseated.data[0].proposal_id}` : 'no dao_role_removed event'}; roles now: ${still.join(', ') || 'none'}` }];
 }
 
 /** A vote the DAO refused, e.g. a public member approving their own payout. */

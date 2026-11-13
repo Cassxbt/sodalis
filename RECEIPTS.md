@@ -174,3 +174,24 @@ The new code is 46 KB larger, so the council first moved 1 test NEAR to the guil
 | eve settles #7 | Round 1: committed 0.05, approved 0.05; m2 has 0.05 left | GFFV57cMe8FZ6qFBPCodRYCTqz1NA8uAnCjq1ctgAcft |
 
 A staff member could approve a request paid to themselves: Sputnik does not know the receiver is the voter, and this guild has one staff member. All members still belong to the builder.
+
+## v4.3 (2026-11-13): settle only on recorded outcomes; round 2
+
+A partner review found that releasing an undecided request after the proposal period was unsafe: Sputnik judges expiry against the *current* policy, so a longer period would make a released request payable again. `settle` now reads only the proposal and acts only on outcomes the DAO has recorded (approved; rejected, expired or removed, which return the reservation), and only when the proposal's proposer, receiver, amount and token match the booked request. A filing that returns no id keeps its reservation. `reset` is refused while any request is unresolved, so a request always settles against the DAO it was filed with. Contract tests: 56. `npm run verify:build` matches the deployed code hash `B8EywgDtj7UaXmYNDknso8bZAKNjavRwi7geULrG9kak`.
+
+Round 1 had three seats of 0.1 against a 0.5 budget, so its budget could never bind. Round 2 is smaller, 0.15 NEAR with 0.1 per seat.
+
+| Case | Result | Tx |
+|---|---|---|
+| Guild code upgraded, no reset; #7's books checked after | state kept | B9DJJwtWN3KWaPBKeDspc7sKUGsdM1MGAhxhRsm69MUR |
+| DAO proposal #8 opens round 2 (round 1 closes) | Approved | 6GeBKAAFwwn3TARG3pGYgCDBeYFkEfwcREbEAep3EN9u · DxMQHcr7NEfEGfkRFFzwYbM7Wc7QXcsbVW4fuKfYZJrb |
+| m2 (public) asks for its whole 0.1 | Guild files #9 | Gxzr384ccmPtExYsNw5fEq2xK5jqHuQRAoEb7n852CVG |
+| m1 (staff, 0.1 allowance left) asks for 0.06 | Refused: `exceeds the round's remaining budget` | 5nuDd6fUrj9bmavkJxahT7wfk5iTH4EAgP3kbZrFfSt2 |
+| m1 rejects #9 | Rejected | STY4fGnhYdaMkCTBjRzJ5wqMWvdHhdshnpkhDDqr9Bq |
+| eve settles #9 | `released`; round 2 committed back to 0 | 7hzcL4Qr8gUaYhmWDiVGj9a3zuUiQGsyiF65yBedFBeE |
+| eve settles #9 again | Refused: `this request is already settled` | BZz83MP86L1pCGxHTbZsDpgC8NvdG32JUWEHLVU2u2xX |
+| m2 leaves | `member_removed`, then `dao_role_removed`: the public seat is gone in the same transaction | CmKnfQ1CKk16ZK5zKiKA1szYLTEh8HSkZXx7e5TQxuDD |
+| m2 asks again | Refused: `only seated members may request a payout` | B4JU3VFSzRg6mbyHRKqfqC61yrRmruuB4XCmAEGJxwj2 |
+
+m2's mailbox stays spent, so it cannot rejoin. Two members remain, both the builder's. A request whose proposal ends `Failed` keeps its reservation and blocks `reset` until governance resolves it.
+

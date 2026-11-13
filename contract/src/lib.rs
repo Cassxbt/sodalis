@@ -146,6 +146,7 @@ impl Guild {
         secrets_profile: String,
         dao: AccountId,
     ) -> Self {
+        require!(round::unresolved_requests() == 0, "settle every payout request before a reset");
         event("guild_reset", json!({"verifier": verifier.hash}));
         Self::new(owner, outlayer, verifier, secrets_owner, secrets_profile, dao)
     }

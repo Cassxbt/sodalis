@@ -515,26 +515,19 @@ fn ask(g: &mut Guild, who: &str, amount: u128, category: &str) {
     g.request_payout(U128(amount), category.into()).detach();
 }
 
-/// The DAO's answers to settle's two reads: the proposal page and the policy.
+/// The DAO's answer to settle's read of the proposal page.
 fn decided(page: Value) {
-    testing_env!(
-        VMContextBuilder::new()
-            .current_account_id(acct("guild.testnet"))
-            .predecessor_account_id(acct("guild.testnet"))
-            .block_timestamp(1_000)
-            .build(),
-        near_sdk::test_vm_config(),
-        RuntimeFeesConfig::test(),
-        Default::default(),
-        vec![
-            PromiseResult::Successful(page.to_string().into_bytes()).into(),
-            PromiseResult::Successful(json!({"proposal_period": "500"}).to_string().into_bytes()).into(),
-        ],
-    );
+    with_return(page.to_string().as_bytes());
 }
 
+/// Proposal `id` as the guild filed it for anon.testnet, with `status`.
 fn status_of(id: u64, status: &str) -> Value {
-    json!([{"id": id, "status": status, "submission_time": "900"}])
+    proposal(id, status, "guild.testnet", "anon.testnet", FIVE_CENTS)
+}
+
+fn proposal(id: u64, status: &str, proposer: &str, receiver: &str, amount: u128) -> Value {
+    json!([{"id": id, "status": status, "proposer": proposer, "submission_time": "900",
+            "kind": {"Transfer": {"token_id": "", "receiver_id": receiver, "amount": amount.to_string()}}}])
 }
 
 fn filed(g: &mut Guild, who: &str, amount: u128, proposal_id: u64) {
@@ -649,7 +642,7 @@ fn a_rejected_request_frees_its_allowance_and_budget() {
     let mut g = seated_guild();
     ask(&mut g, "anon.testnet", TENTH, "Equipment");
     filed(&mut g, "anon.testnet", TENTH, 12);
-    decided(status_of(12, "Rejected"));
+    decided(proposal(12, "Rejected", "guild.testnet", "anon.testnet", TENTH));
     g.on_settled(12);
     assert_eq!(g.get_payout_request(12).unwrap().state, "released");
     assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, 0);
@@ -690,7 +683,7 @@ fn a_new_round_starts_every_allowance_fresh() {
     assert_eq!(g.get_round(None).unwrap().id, 2);
     assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, 0);
     // A late release of round 1 never touches round 2's books.
-    decided(status_of(12, "Rejected"));
+    decided(proposal(12, "Rejected", "guild.testnet", "anon.testnet", TENTH));
     g.on_settled(12);
     assert_eq!(g.get_round(Some(1)).unwrap().committed.0, 0);
     assert_eq!(g.get_round(None).unwrap().committed.0, 0);
@@ -707,13 +700,52 @@ fn a_removed_proposal_frees_its_reservation() {
 }
 
 #[test]
-fn a_request_left_undecided_past_the_proposal_period_is_released() {
+fn an_undecided_request_stays_reserved_even_past_the_proposal_period() {
     let mut g = seated_guild();
     ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
     filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
-    decided(json!([{"id": 12, "status": "InProgress", "submission_time": "400"}]));
+    decided(json!([{"id": 12, "status": "InProgress", "proposer": "guild.testnet", "submission_time": "0",
+                    "kind": {"Transfer": {"token_id": "", "receiver_id": "anon.testnet", "amount": FIVE_CENTS.to_string()}}}]));
+    assert_eq!(g.on_settled(12), "pending");
+    decided(status_of(12, "Expired"));
     assert_eq!(g.on_settled(12), "released");
     assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, 0);
+}
+
+#[test]
+fn a_proposal_that_is_not_the_one_filed_changes_nothing() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
+    for page in [
+        proposal(12, "Rejected", "someone.testnet", "anon.testnet", FIVE_CENTS),
+        proposal(12, "Rejected", "guild.testnet", "other.testnet", FIVE_CENTS),
+        proposal(12, "Rejected", "guild.testnet", "anon.testnet", TENTH),
+    ] {
+        decided(page);
+        assert_eq!(g.on_settled(12), "pending");
+    }
+    assert_eq!(g.get_round(None).unwrap().committed.0, FIVE_CENTS);
+}
+
+#[test]
+fn a_filing_without_an_id_keeps_the_reservation() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    with_return(b"\"not an id\"");
+    assert_eq!(g.on_payout_proposed(acct("anon.testnet"), 1, U128(FIVE_CENTS), "Travel".into()), None);
+    assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, FIVE_CENTS);
+    assert!(get_logs().iter().any(|l| l.contains("payout_request_unrecorded")));
+}
+
+#[test]
+#[should_panic(expected = "settle every payout request before a reset")]
+fn a_reset_waits_for_open_requests() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
+    as_caller("guild.testnet", "guild.testnet");
+    Guild::reset(acct("owner.testnet"), acct("outlayer.testnet"), Verifier { url: "https://example.org/v.wasm".into(), hash: "ab".repeat(32) }, acct("owner.testnet"), "bg2".into(), acct("dao.testnet"));
 }
 
 #[test]
@@ -726,7 +758,7 @@ fn a_failed_read_changes_nothing() {
         near_sdk::test_vm_config(),
         RuntimeFeesConfig::test(),
         Default::default(),
-        vec![PromiseResult::Failed.into(), PromiseResult::Failed.into()],
+        vec![PromiseResult::Failed.into()],
     );
     assert_eq!(g.on_settled(12), "pending");
     assert_eq!(g.get_round(None).unwrap().committed.0, FIVE_CENTS);
