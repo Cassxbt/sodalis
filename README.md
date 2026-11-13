@@ -37,7 +37,7 @@ No wallet, key or funds are needed for any of this.
 ## How it works
 
 ```mermaid
-flowchart LR
+flowchart TB
   subgraph browser["Member's browser"]
     key["fresh key"]
     letter["DKIM-signed email,<br/>sealed to the guild"]
