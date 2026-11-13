@@ -6,7 +6,7 @@
 
 **Sodalis is a team fund on NEAR that people can ask for help without anyone learning who asked.** A member proves they belong with an email from an approved domain. The email is opened only inside an attested enclave; the chain records a domain and a keyed fingerprint, never the address. One mailbox earns one seat in a Sputnik DAO treasury, and money moves in rounds the chain enforces: a budget per round, an allowance per seat, a steward's approval. When a member leaves, their access ends.
 
-OutLayer is not a privacy layer added to Sodalis; it is the admission. Without it there is no private eligibility check and no seat. Sputnik is not a payout button; it is the treasury. Without it there is no vote, no refusal and no payment.
+OutLayer runs the admission: without it there is no private eligibility check and no seat. Sputnik holds the treasury: without it there is no vote, no refusal and no payment.
 
 | | |
 |---|---|
@@ -18,7 +18,7 @@ OutLayer is not a privacy layer added to Sodalis; it is the admission. Without i
 | **Demo video** | Recording; linked at submission |
 | **Tracks** | **Social Money**: a DAO treasury whose eligibility, allowance and departure rules the chain enforces. **Privacy & Private AI**: confidential computation in an OutLayer TEE (Intel TDX) decides who belongs. |
 
-> **Status, stated up front.** Live on NEAR testnet with real emails (Proton, Gmail, and a custom domain on Hostinger). Every rule above is proven on chain, and a first-time user has joined and been paid. The steward and the council are the builder's accounts, as in any single-team testnet deployment; a pilot with a real team fund is next. Everything else that is partial or missing is in [What is real](#what-is-real).
+> **Status.** Live on NEAR testnet with real emails (Proton, Gmail, and a custom domain on Hostinger). Every rule above is proven on chain, and a first-time user has joined and been paid. The steward and the council are the builder's accounts, as in any single-team testnet deployment; a pilot with a real team fund is next. Everything else that is partial or missing is in [What is real](#what-is-real).
 
 ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![npm test](https://img.shields.io/badge/npm%20test-28-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-56-2c6b5a) ![verifier checks](https://img.shields.io/badge/verifier%20checks-43-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -26,13 +26,13 @@ OutLayer is not a privacy layer added to Sodalis; it is the admission. Without i
 
 No wallet, key or funds are needed for any of this.
 
-| Open | What you see |
+| Do | See |
 |---|---|
-| [/case](https://sodalis-red.vercel.app/case/) | One member's whole journey, each step verified live: admission, request, approval, transfer, refusal, departure |
-| [/proof](https://sodalis-red.vercel.app/proof/) | Every admission and both rounds re-verified from NEAR testnet, OutLayer's attestation API and Intel's collateral. Press **Forge one byte** and the ledger turns red |
-| [/judges](https://sodalis-red.vercel.app/judges/) | Thirteen real attacks on the live guild, each re-read from chain with its refusal |
-| [/join](https://sodalis-red.vercel.app/join/) | The member flow itself: a fresh key, a sealed email, a seat, a request (about ten minutes, needs a Gmail or Proton and a second inbox) |
-| `npm test` | 28 tests: 23 re-read the admissions, refusals and payouts below from testnet, 5 check sealing offline |
+| Open [/case](https://sodalis-red.vercel.app/case/) | One member's whole journey, each step verified live: admission, request, approval, transfer, refusal, departure |
+| Open [/proof](https://sodalis-red.vercel.app/proof/) | Every admission and both rounds re-verified from NEAR testnet, OutLayer's attestation API and Intel's collateral. Press **Forge one byte** and the ledger turns red |
+| Open [/judges](https://sodalis-red.vercel.app/judges/) | Thirteen real attacks on the live guild, each re-read from chain with its refusal |
+| Open [/join](https://sodalis-red.vercel.app/join/) | The member flow itself: a fresh key, a sealed email, a seat, a request (about ten minutes, needs a Gmail or Proton and a second inbox) |
+| Run `npm test` | 28 tests: 23 re-read the admissions, refusals and payouts below from testnet, 5 check sealing offline |
 
 ## How it works
 
@@ -75,7 +75,7 @@ The fingerprint admits one wallet per admission epoch: one seat per mailbox, not
 ```bash
 git clone https://github.com/Cassxbt/sodalis && cd sodalis && npm ci
 
-npm test               # 28 tests: every admission, refusal and payout re-read from testnet, plus offline sealing checks
+npm test               # 28 tests: 23 re-read admissions, refusals and payouts from testnet; 5 check sealing offline
 npm run verify:build   # rebuilds the verifier and the guild contract; checks both against the chain
 npm run test:contract  # 56 contract tests (Rust, offline)
 npm run test:verifier  # 43 verifier checks (offline): 34 signed-email cases of DKIM attacks and edge cases, plus 9 enclave-environment checks
@@ -220,16 +220,12 @@ scripts/    the deploy, upgrade and evidence scripts that created the testnet st
 
 ## Built with
 
-All code was written during the hackathon window, from 2026-10-19. The public history was squashed on 2026-11-12 to remove a mailbox address that had leaked into a receipt, so it starts there. Libraries:
-
 - **Rust:** `near-sdk`, `rsa`, `sha2`, `hmac`, `hkdf`, `x25519-dalek`, `chacha20poly1305`, `base64`, `serde`.
 - **JS:** `near-api-js`, `@noble/curves`, `@noble/ciphers`, `@noble/hashes`, `@phala/dcap-qvl` 0.7.0 (Intel DCAP verification; patched for GHSA-796p-j2gh-9m2q), `vite`.
 - **Python (fixtures only):** `dkimpy`.
 
-The code was written with Claude Code.
-
 ## Hackathon
 
-Built at **NEAR HACKATHON** by **cassxbt** for the **Social Money** and **Privacy & Private AI** tracks. cassxbt's other entry is **Vestigia**, a separate project that shows what a NEAR Intents swap reveals about your wallets before you sign (link added when it ships).
+Built at **NEAR HACKATHON** by **cassxbt** for the **Social Money** and **Privacy & Private AI** tracks. All code was written during the hackathon window, from 2026-10-19.
 
 MIT licensed, see [LICENSE](LICENSE).
