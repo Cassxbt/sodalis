@@ -181,19 +181,26 @@ const callOf = (tx) => {
 /**
  * A payout, step by step, with roles read as they stood when each step ran:
  * the member's request (step 0), the approval (step 2) and the DAO's transfer.
+ * With `guild`, the request went through the guild's payout round: the member
+ * called request_payout and the guild filed the proposal.
  */
-export async function verifyPayout(dao, proposalId, proposeTx, approveTx, approver) {
+export async function verifyPayout(dao, proposalId, proposeTx, approveTx, approver, { member, guild } = {}) {
   const checks = [];
   const add = (step, name, ok, detail) => checks.push({ group: 'payout', step, name, ok: Boolean(ok), detail });
   const proposal = await view(dao, 'get_proposal', { id: proposalId });
   const transfer = proposal.kind?.Transfer;
+  const asker = guild ? member : proposal.proposer;
 
-  const filed = await txStatus(proposeTx, proposal.proposer);
+  const filed = await txStatus(proposeTx, asker);
   const filedAt = filed.receipts_outcome.find((o) => o.outcome.executor_id === dao)?.block_hash;
-  const proposerRoles = filedAt ? (await rolesAt(dao, filedAt))(proposal.proposer) : [];
+  const askerRoles = filedAt ? (await rolesAt(dao, filedAt))(asker) : [];
   const returned = filed.status?.SuccessValue ? JSON.parse(atob(filed.status.SuccessValue)) : null;
-  add(0, 'A member filed this payout request', filed.transaction.signer_id === proposal.proposer && callOf(filed).method === 'add_proposal' && filed.transaction.receiver_id === dao && returned === proposalId && Boolean(transfer) && ['public', 'staff'].some((r) => proposerRoles.includes(r)),
-    `#${proposalId} by ${proposal.proposer} (${proposerRoles.join(', ') || 'no role'} then): ${near(transfer?.amount ?? 0)} NEAR to ${transfer?.receiver_id}`);
+  const route = guild
+    ? proposal.proposer === guild && filed.transaction.receiver_id === guild && callOf(filed).method === 'request_payout' && transfer?.receiver_id === member
+    : callOf(filed).method === 'add_proposal' && filed.transaction.receiver_id === dao;
+  add(0, guild ? 'A member asked within the round, and the guild filed it' : 'A member filed this payout request',
+    filed.transaction.signer_id === asker && route && returned === proposalId && Boolean(transfer) && ['public', 'staff'].some((r) => askerRoles.includes(r)),
+    `#${proposalId} for ${asker} (${askerRoles.join(', ') || 'no role'} then)${guild ? `, filed by ${proposal.proposer}` : ''}: ${near(transfer?.amount ?? 0)} NEAR to ${transfer?.receiver_id}`);
 
   const voted = await txStatus(approveTx, approver);
   const vote = callOf(voted);
@@ -210,6 +217,16 @@ export async function verifyPayout(dao, proposalId, proposeTx, approveTx, approv
     .filter((t) => t.amount > 0n);
   add(2, 'The DAO transferred exactly that amount, successfully', paid.some((t) => t.ok && t.amount === BigInt(transfer?.amount ?? -1)), `${paid.map((t) => `${near(t.amount)} NEAR${t.ok ? '' : ' (failed)'}`).join(', ') || 'no transfer'} from ${dao}`);
   return checks;
+}
+
+/** The guild's round books show this proposal settled as `outcome`. */
+export async function verifySettle(txHash, signer, guild, proposalId, outcome) {
+  const tx = await txStatus(txHash, signer);
+  const settled = tx.receipts_outcome.filter((o) => o.outcome.executor_id === guild).flatMap((o) => o.outcome.logs)
+    .filter((l) => l.startsWith('EVENT_JSON:')).map((l) => JSON.parse(l.slice(11)))
+    .find((e) => e.standard === 'sodalis' && e.event === 'payout_settled' && e.data[0].proposal_id === proposalId);
+  const now = await view(guild, 'get_payout_request', { proposal_id: proposalId });
+  return [{ group: 'payout', name: 'The round recorded the decision', ok: settled?.data[0].outcome === outcome && now?.state === outcome, detail: `#${proposalId}: ${settled?.data[0].outcome ?? 'no settle event'}; round ${now?.round} now says ${now?.state}` }];
 }
 
 /** A vote the DAO refused, e.g. a public member approving their own payout. */

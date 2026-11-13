@@ -52,10 +52,11 @@
         </li>
         <li class="jstep" id="s5">
           <div class="jhead"><span class="jn">V</span><h2>Ask the treasury</h2><span class="jstate"></span></div>
-          <p>Members can propose a payout to themselves. Public members cannot approve their own; staff decide. This form stops at 1 NEAR; the DAO itself sets no cap.</p>
-          <p class="warn">Public: everything in the request. Pick a category; if you add a note, leave out names, invoice numbers and anything that identifies you.</p>
+          <p>The DAO funds a round with a total budget and the same allowance for every seat. You ask through the guild, which refuses anything over your allowance or the round's budget and files the rest for staff to decide. You cannot approve your own request.</p>
+          <p class="warn">Public: the amount, the category and every vote. There is no free-text field, so nothing else about you can be published.</p>
           <div class="jbody">
-            <div class="form"><input id="amount" type="number" min="0.01" max="1" step="0.01" value="0.05" aria-label="Amount in NEAR" /><select id="category" aria-label="Category"><option>Travel</option><option>Software</option><option>Equipment</option><option>Event costs</option><option>Other</option></select><input id="reason" type="text" maxlength="80" placeholder="Optional public note" aria-label="Optional public note" /></div>
+            <p class="mono jout" id="round">reading the round…</p>
+            <div class="form"><input id="amount" type="number" min="0.01" max="1" step="0.01" value="0.05" aria-label="Amount in NEAR" /><select id="category" aria-label="Category"><option>Travel</option><option>Software</option><option>Equipment</option><option>Event costs</option><option>Other</option></select></div>
             <p class="mono jout preview" id="preview"></p>
             <div class="btns"><button class="btn solid" id="ask" disabled>File this public request <span class="arrow">→</span></button></div>
             <p class="mono jout" id="ask-out"></p>

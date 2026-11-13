@@ -149,3 +149,28 @@ The [/join](https://sodalis-red.vercel.app/join/) page was run end to end in Chr
 | The new member asks the treasury for 0.05 NEAR from the page | Proposal #4, in progress: public members cannot approve it | 7pRD8Faehque3KhLNytBiBuYJzoys2BMWHQqYqfV5TTf |
 
 The drip is a visible transfer, so this seat has a funding trail to the guild's own drip account; every member funded this way shares the same one. The Gmail mailbox belongs to the builder, so this seat shows the flow works from a fresh browser key, not that a stranger used it.
+
+## v4.2 (2026-11-13): payout rounds
+
+Sputnik has no amount limits, so the guild now enforces them. The DAO opens a round with a budget and a per-seat allowance; members ask the guild (`request_payout`), which refuses anything past the allowance or the budget, reserves the amount and files the DAO transfer itself. A policy change lets only the guild file transfers. Requests carry a fixed category and no free text. `settle` records a decided request as approved, or returns its reservation when staff reject it, it is removed, or it outlives the proposal period. Round records live under their own storage prefix, so the upgrade kept all state (three members, three seats).
+
+The new code is 46 KB larger, so the council first moved 1 test NEAR to the guild for storage. Proposal #4, a request filed before rounds existed, was rejected by staff so nothing stays payable outside a round. `npm run verify:build` matches the deployed code hash `9NeK7DukQAedFjExsChPpHV7bCKXGhA92VosnGqETtPh`.
+
+| Step | Tx |
+|---|---|
+| Council tops the guild up for code storage | F8gj7Y66eDxMW8F6ed9KFML9ToqDaDe5XGkUs1Be1qhQ |
+| Guild code upgraded, no reset | CbCEidTiL9uuEtvVcQniBKdjkAoQWUEBxd4yotEw84wH |
+| Staff rejects #4, filed before rounds | FoQiDoJiERLXNv5JyucmaRUoSQz2qBksoHogD7ffXRw1 |
+| DAO proposal #5: only the guild files transfers | 3APi8dKeqStGUK2Lzjasfv1cEhrFu9hT4AHVmEDtR6Z2 · 5pqRcFkowfx5cv1qq29feF5Nb58RuHy6r63kgv6ixeAW |
+| DAO proposal #6: open round 1, budget 0.5 NEAR, 0.1 NEAR per seat | 2mPFWjy8QrfSxEp2SqosQmCPXw7BfMU6N1iwGCXebutS · 21sREkUZVRky9kpxZpayotYmXEq1HyVTZvshC3QSfkAk |
+
+| Case | Result | Tx |
+|---|---|---|
+| m2 (public) asks the guild for 0.05 NEAR, Travel | Guild files proposal #7 | Euo7rGtkxqSQ2VMWHEbQntjEM5FvhriGXNcdA4e6yJY9 |
+| m2 asks for 0.06 more | Refused: `exceeds your allowance in this round` | GZkwDr3bSTsR5QP3Cz8AKCbVbQjrRNvehojsxwnVv4ab |
+| m2 files a transfer straight with the DAO | Refused: `ERR_PERMISSION_DENIED` | BcBnvJMu78hz64jS7C4CM92bCHeDpLvxjkp5V3P9VYPf |
+| eve, with no seat, asks the guild | Refused: `only seated members may request a payout` | F2FiyoQ7ZfZzuFsddeiy1yhmcF3zE3fb4FBQ2bpa155n |
+| m1 (staff) approves #7 | Approved; exactly 0.05 NEAR from the DAO to m2 | qLiFNjgbnNbh9sCu9HV1JG16ZgfjxzNWkhA13kKZkzd |
+| eve settles #7 | Round 1: committed 0.05, approved 0.05; m2 has 0.05 left | GFFV57cMe8FZ6qFBPCodRYCTqz1NA8uAnCjq1ctgAcft |
+
+A staff member could approve a request paid to themselves: Sputnik does not know the receiver is the voter, and this guild has one staff member. All members still belong to the builder.

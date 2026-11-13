@@ -483,5 +483,7 @@ impl Guild {
     }
 }
 
+mod round;
+
 #[cfg(test)]
 mod tests;

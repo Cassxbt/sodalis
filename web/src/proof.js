@@ -1,6 +1,6 @@
 import { el, reveal } from './shell.js';
-import { verifyJoin, verifyPayout, verifyRefusedVote, view } from './attest.js';
-import { GUILD, DAO, EXPLORER, JOINS, PAYOUT } from './receipts.js';
+import { near, verifyJoin, verifyPayout, verifyRefusal, verifyRefusedVote, verifySettle, view } from './attest.js';
+import { GUILD, DAO, EXPLORER, JOINS, PAYOUT, ROUND } from './receipts.js';
 
 const $ = (sel) => document.querySelector(sel);
 const txLink = (hash) => { const a = el('a', 'tx', `${hash.slice(0, 8)}… ↗`); a.href = EXPLORER + hash; a.target = '_blank'; a.rel = 'noopener'; return a; };
@@ -88,16 +88,47 @@ async function runPayout() {
   $('#step-2 .checks').replaceChildren(...payout.filter((c) => c.step === 2).map(row));
 }
 
+function roundEntries() {
+  ROUND.steps.forEach((step, i) => {
+    const li = el('li', `entry step reveal${step.refused ? ' refusal' : ''}`);
+    li.id = `round-${i}`;
+    const head = el('div', 'entry-head');
+    head.append(el('h3', null, step.label), txLink(step.tx));
+    li.append(head, el('ul', 'checks'));
+    $('#round').append(li);
+  });
+}
+
+async function runRound() {
+  const [asked, , , approved, settled] = ROUND.steps;
+  const refusals = ROUND.steps.map((step, i) => [step, i]).filter(([step]) => step.refused);
+  const [payout, books, live, ...refused] = await Promise.all([
+    verifyPayout(DAO, ROUND.proposalId, asked.tx, approved.tx, approved.signer, { member: ROUND.member, guild: GUILD }),
+    verifySettle(settled.tx, settled.signer, GUILD, ROUND.proposalId, 'approved'),
+    view(GUILD, 'get_round', { round_id: 1 }),
+    ...refusals.map(([step]) => verifyRefusal(step.tx, step.signer, step.refused)),
+  ]);
+  $('#round-live').textContent = `Live: budget ${near(live.budget)} NEAR · committed ${near(live.committed)} · approved ${near(live.approved)} · ${live.open ? 'open' : 'closed'}`;
+  $('#round-0 .checks').replaceChildren(...payout.filter((c) => c.step === 0).map(row));
+  refusals.forEach(([step, i], k) => $(`#round-${i} .checks`).replaceChildren(row({ name: `Refused on chain at ${refused[k].where ?? 'the chain'}`, ok: refused[k].ok, detail: refused[k].text })));
+  $('#round-3 .checks').replaceChildren(...payout.filter((c) => c.step === 2).map(row));
+  $('#round-4 .checks').replaceChildren(...books.map(row));
+}
+
 let tampered = false;
 async function verifyAll() {
   const buttons = [$('#verify-all'), $('#tamper')];
   buttons.forEach((b) => (b.disabled = true));
   await Promise.all(JOINS.map((j) => runJoin(j, tampered)));
-  await runPayout().catch((e) => $('#payout').append(el('p', 'status', `not verified here: ${e.message}`)));
+  await Promise.all([
+    runRound().catch((e) => $('#round').append(el('p', 'status', `not verified here: ${e.message}`))),
+    runPayout().catch((e) => $('#payout').append(el('p', 'status', `not verified here: ${e.message}`))),
+  ]);
   buttons.forEach((b) => (b.disabled = false));
 }
 
 JOINS.forEach((j) => $('#joins').append(joinEntry(j)));
+roundEntries();
 payoutEntries();
 reveal();
 roster().catch((e) => document.querySelectorAll('.loading').forEach((n) => (n.textContent = `could not read: ${e.message}`)));

@@ -12,6 +12,7 @@ const GAS_RESERVE = 30n * 10n ** 21n;
 const MAX_SEALED = 24_000;
 const YOCTO = 10n ** 24n;
 const HISTORY = 'https://testnet.nearblocks.io/address/';
+const PANIC = /^Smart contract panicked:\s*/;
 const $ = (s) => document.querySelector(s);
 
 const store = {
@@ -37,7 +38,7 @@ function member(base = store.get()) {
 let generation = 0;
 let me = member();
 let letter = null;
-let status = { balance: undefined, role: undefined, pinned: new Set() };
+let status = { balance: undefined, role: undefined, pinned: new Set(), round: null, remaining: null };
 let armed = null;
 
 const account = () => new Account(me.accountId, NETWORK.rpc, me.privateKey);
@@ -92,7 +93,7 @@ async function refresh() {
     }
   } else if (role.status === 'rejected') state('#s5', 'could not read the DAO roster');
   $('#ask').disabled = !status.role;
-  preview();
+  readRound();
   requests();
 }
 
@@ -108,7 +109,7 @@ function switchTo(next) {
   clearTimeout(armed); armed = null;
   $('#forget').textContent = 'Start over';
   me = member(next);
-  status = { balance: undefined, role: undefined, pinned: status.pinned };
+  status = { balance: undefined, role: undefined, pinned: status.pinned, round: status.round, remaining: null };
   $('#ask').disabled = true;
   $('#fund').disabled = true;
   letter = null;
@@ -259,9 +260,8 @@ $('#join').addEventListener('click', async () => {
     }
   } catch (err) {
     if (g !== generation) return;
-    const panic = /^Smart contract panicked:\s*/;
-    if (panic.test(err.message)) {
-      out('#join-out', text(`refused: ${err.message.replace(panic, '')} · `), historyLink());
+    if (PANIC.test(err.message)) {
+      out('#join-out', text(`refused: ${err.message.replace(PANIC, '')} · `), historyLink());
       state('#s4', 'refused; nothing was charged but gas');
       $('#join').disabled = false;
     } else if (sent) {
@@ -276,21 +276,38 @@ $('#join').addEventListener('click', async () => {
   refresh();
 });
 
+async function readRound() {
+  const g = generation;
+  try {
+    const [round, allowance] = await Promise.all([view(GUILD, 'get_round'), view(GUILD, 'get_allowance', { account_id: me.accountId })]);
+    if (g !== generation) return;
+    status.round = round;
+    status.remaining = allowance ? BigInt(allowance.remaining) : null;
+    $('#round').textContent = !round ? 'No round has been opened yet.'
+      : `Round ${round.id}${round.open ? '' : ' (closed)'} · budget ${near(round.budget)} NEAR · committed ${near(round.committed)} · approved ${near(round.approved)} · your allowance ${near(allowance.allowance)}, ${near(allowance.remaining)} left`;
+  } catch {
+    if (g === generation) $('#round').textContent = 'The round could not be read right now.';
+  }
+  preview();
+}
+
 function request() {
   const raw = $('#amount').value.trim();
   if (!/^\d+(\.\d{1,2})?$/.test(raw)) return { error: 'amount: up to two decimals' };
   const [whole, frac = ''] = raw.split('.');
   const yocto = BigInt(whole) * YOCTO + BigInt(frac.padEnd(24, '0'));
-  if (yocto <= 0n || yocto > YOCTO) return { error: 'amount: between 0.01 and 1 NEAR' };
-  const note = $('#reason').value.trim().replace(/\s+/g, ' ');
-  return { yocto, description: `Member request: ${$('#category').value}${note ? ` · ${note}` : ''}` };
+  if (yocto < YOCTO / 100n) return { error: 'amount: at least 0.01 NEAR' };
+  return { yocto, description: `Sodalis round ${status.round?.id ?? '…'}: ${$('#category').value}` };
 }
 
 function preview() {
   const r = request();
-  $('#preview').textContent = r.error ?? `Will publish: "${r.description}" · ${near(r.yocto)} NEAR to ${me.accountId.slice(0, 8)}…${me.accountId.slice(-4)}`;
+  const over = !r.error && status.remaining != null && r.yocto > status.remaining ? ' (more than your allowance: the guild will refuse it)' : '';
+  $('#preview').textContent = r.error ?? `Will publish: "${r.description}" · ${near(r.yocto)} NEAR to ${me.accountId.slice(0, 8)}…${me.accountId.slice(-4)}${over}`;
 }
-['#amount', '#category', '#reason'].forEach((s) => $(s).addEventListener('input', preview));
+['#amount', '#category'].forEach((s) => $(s).addEventListener('input', preview));
+
+const OUTCOME = { Approved: 'approved and paid by the DAO', Rejected: 'rejected by staff', InProgress: 'waiting for staff' };
 
 async function requests() {
   const g = generation;
@@ -298,17 +315,34 @@ async function requests() {
     const last = await view(DAO, 'get_last_proposal_id');
     const from = Math.max(0, last - 100);
     const all = await view(DAO, 'get_proposals', { from_index: from, limit: last - from });
+    const mine = all.filter((p) => p.kind?.Transfer?.receiver_id === me.accountId).reverse();
+    const booked = await Promise.all(mine.map((p) => (p.proposer === GUILD ? view(GUILD, 'get_payout_request', { proposal_id: p.id }).catch(() => null) : null)));
     if (g !== generation) return;
-    const mine = all.filter((p) => p.proposer === me.accountId && p.kind?.Transfer);
-    $('#requests').replaceChildren(...mine.reverse().map((p) => {
+    $('#requests').replaceChildren(...mine.map((p, i) => {
       const li = el('li');
-      const kind = p.status === 'Approved' ? 'ok' : ['Rejected', 'Removed', 'Expired', 'Failed'].includes(p.status) ? 'bad' : '';
-      const label = p.status === 'Approved' ? 'approved and paid by the DAO' : p.status === 'InProgress' ? 'waiting for staff' : p.status.toLowerCase();
-      li.append(text(`#${p.id} · ${near(p.kind.Transfer.amount)} NEAR`), el('span', `st ${kind}`, label));
+      const kind = p.status === 'Approved' ? 'ok' : p.status === 'InProgress' ? '' : 'bad';
+      li.append(text(`#${p.id} · ${near(p.kind.Transfer.amount)} NEAR · ${p.description}`), el('span', `st ${kind}`, OUTCOME[p.status] ?? p.status.toLowerCase()));
+      const book = booked[i];
+      if (book?.state === 'pending' && p.status !== 'InProgress') {
+        const b = el('button', 'btn', 'Record the outcome in the round');
+        b.addEventListener('click', () => settle(p.id, b));
+        li.append(b);
+      } else if (book && book.state !== 'pending') li.append(el('span', 'st', `round ${book.round}: ${book.state}`));
       if (p.status === 'Approved') li.append(historyLink());
       return li;
     }));
-  } catch { /* the list is a convenience; the request itself is on chain */ }
+  } catch { /* the list is a convenience; every request is on chain */ }
+}
+
+async function settle(id, button) {
+  button.disabled = true;
+  try {
+    await account().callFunction({ contractId: GUILD, methodName: 'settle', args: { proposal_id: id }, gas: 80n * 10n ** 12n });
+  } catch (err) {
+    out('#ask-out', text(`not recorded: ${err.message.replace(PANIC, '')}`));
+  }
+  readRound();
+  requests();
 }
 
 $('#ask').addEventListener('click', async () => {
@@ -317,13 +351,17 @@ $('#ask').addEventListener('click', async () => {
   const g = generation;
   $('#ask').disabled = true;
   try {
-    const kind = { Transfer: { token_id: '', receiver_id: me.accountId, amount: r.yocto.toString() } };
-    const id = await account().callFunction({ contractId: DAO, methodName: 'add_proposal', args: { proposal: { description: r.description, kind } }, gas: 50n * 10n ** 12n });
-    if (g === generation) out('#ask-out', text(`Proposal #${id} filed. Staff decide; you cannot approve it yourself.`));
+    const tx = await account().callFunctionRaw({ contractId: GUILD, methodName: 'request_payout', args: { amount: r.yocto.toString(), category: $('#category').value }, gas: 60n * 10n ** 12n, waitUntil: 'FINAL' });
+    const id = tx.status?.SuccessValue ? JSON.parse(atob(tx.status.SuccessValue)) : null;
+    if (g !== generation) return;
+    out('#ask-out', ...(id != null
+      ? [text(`Proposal #${id} filed by the guild. Staff decide; you cannot approve it yourself. `), txLink(tx.transaction.hash)]
+      : [text('The DAO did not accept the filing; your allowance was returned. '), txLink(tx.transaction.hash)]));
   } catch (err) {
-    if (g === generation) out('#ask-out', text(`not confirmed: ${err.message}. Check your requests below before trying again.`));
+    if (g !== generation) return;
+    out('#ask-out', text(PANIC.test(err.message) ? `refused by the guild: ${err.message.replace(PANIC, '')}` : `not confirmed: ${err.message}. Check your requests below before trying again.`));
   }
-  if (g === generation) { $('#ask').disabled = false; requests(); }
+  if (g === generation) { $('#ask').disabled = false; readRound(); requests(); }
 });
 
 reveal();

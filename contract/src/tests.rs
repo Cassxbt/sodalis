@@ -494,3 +494,240 @@ fn revoking_waits_for_the_seat_being_granted() {
     as_caller("owner.testnet", "owner.testnet");
     g.revoke(acct("anon.testnet")).detach();
 }
+
+const TENTH: u128 = 100_000_000_000_000_000_000_000;
+const HALF: u128 = 5 * TENTH;
+const FIVE_CENTS: u128 = TENTH / 2;
+
+/// A guild with `anon.testnet` admitted and confirmed in the DAO's public role.
+fn seated_guild() -> Guild {
+    let mut g = guild();
+    settle(&mut g, "anon.testnet", verified("anon.testnet", NULLIFIER));
+    with_status("Approved");
+    g.on_voted(acct("anon.testnet"), "public".into(), true, 7);
+    as_caller("owner.testnet", "owner.testnet");
+    g.open_round(U128(HALF), U128(TENTH));
+    g
+}
+
+fn ask(g: &mut Guild, who: &str, amount: u128, category: &str) {
+    as_caller(who, who);
+    g.request_payout(U128(amount), category.into()).detach();
+}
+
+/// The DAO's answers to settle's two reads: the proposal page and the policy.
+fn decided(page: Value) {
+    testing_env!(
+        VMContextBuilder::new()
+            .current_account_id(acct("guild.testnet"))
+            .predecessor_account_id(acct("guild.testnet"))
+            .block_timestamp(1_000)
+            .build(),
+        near_sdk::test_vm_config(),
+        RuntimeFeesConfig::test(),
+        Default::default(),
+        vec![
+            PromiseResult::Successful(page.to_string().into_bytes()).into(),
+            PromiseResult::Successful(json!({"proposal_period": "500"}).to_string().into_bytes()).into(),
+        ],
+    );
+}
+
+fn status_of(id: u64, status: &str) -> Value {
+    json!([{"id": id, "status": status, "submission_time": "900"}])
+}
+
+fn filed(g: &mut Guild, who: &str, amount: u128, proposal_id: u64) {
+    with_return(proposal_id.to_string().as_bytes());
+    g.on_payout_proposed(acct(who), 1, U128(amount), "Travel".into());
+}
+
+#[test]
+fn a_seated_member_requests_through_the_guild_and_the_guild_files_the_transfer() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    let calls = calls();
+    let (to, _, args) = calls.iter().find(|c| c.1 == "add_proposal").expect("no add_proposal");
+    assert_eq!(to, "dao.testnet");
+    assert_eq!(args["proposal"]["kind"], json!({"Transfer": {"token_id": "", "receiver_id": "anon.testnet", "amount": FIVE_CENTS.to_string()}}));
+    assert_eq!(args["proposal"]["description"], json!("Sodalis round 1: Travel"));
+    let a = g.get_allowance(acct("anon.testnet")).unwrap();
+    assert_eq!((a.used.0, a.remaining.0), (FIVE_CENTS, TENTH - FIVE_CENTS));
+}
+
+#[test]
+#[should_panic(expected = "exceeds your allowance in this round")]
+fn a_request_over_the_seat_allowance_is_refused() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    ask(&mut g, "anon.testnet", FIVE_CENTS + 1, "Software");
+}
+
+#[test]
+#[should_panic(expected = "exceeds the round's remaining budget")]
+fn a_request_over_the_round_budget_is_refused() {
+    let mut g = seated_guild();
+    settle(&mut g, "two.testnet", verified("two.testnet", &"7".repeat(64)));
+    with_status("Approved");
+    g.on_voted(acct("two.testnet"), "public".into(), true, 8);
+    as_caller("owner.testnet", "owner.testnet");
+    g.open_round(U128(TENTH), U128(TENTH));
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    ask(&mut g, "two.testnet", FIVE_CENTS + 1, "Travel");
+}
+
+#[test]
+#[should_panic(expected = "only seated members")]
+fn an_unseated_member_cannot_request() {
+    let mut g = guild();
+    settle(&mut g, "anon.testnet", verified("anon.testnet", NULLIFIER));
+    as_caller("owner.testnet", "owner.testnet");
+    g.open_round(U128(HALF), U128(TENTH));
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+}
+
+#[test]
+#[should_panic(expected = "only seated members")]
+fn a_stranger_cannot_request() {
+    let mut g = seated_guild();
+    ask(&mut g, "stranger.testnet", FIVE_CENTS, "Travel");
+}
+
+#[test]
+#[should_panic(expected = "category must be one of")]
+fn free_text_cannot_ride_in_the_category() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Invoice 4411 for Jane");
+}
+
+#[test]
+#[should_panic(expected = "no round is open")]
+fn nothing_is_requested_outside_a_round() {
+    let mut g = seated_guild();
+    as_caller("owner.testnet", "owner.testnet");
+    g.close_round();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+}
+
+#[test]
+#[should_panic(expected = "owner only")]
+fn only_the_owner_opens_rounds() {
+    let mut g = seated_guild();
+    as_caller("anon.testnet", "anon.testnet");
+    g.open_round(U128(HALF), U128(HALF));
+}
+
+#[test]
+fn a_failed_filing_returns_the_reservation() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    with_result(PromiseResult::Failed);
+    assert_eq!(g.on_payout_proposed(acct("anon.testnet"), 1, U128(FIVE_CENTS), "Travel".into()), None);
+    assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, 0);
+    assert_eq!(g.get_round(None).unwrap().committed.0, 0);
+}
+
+#[test]
+fn an_approved_request_is_settled_as_approved() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
+    assert_eq!(g.get_payout_request(12).unwrap().state, "pending");
+    as_caller("stranger.testnet", "stranger.testnet");
+    g.settle(12).detach();
+    assert!(calls().iter().any(|c| c.1 == "get_proposals" && c.2["from_index"] == json!(12) && c.2["limit"] == json!(1)));
+    decided(status_of(12, "Approved"));
+    g.on_settled(12);
+    assert_eq!(g.get_payout_request(12).unwrap().state, "approved");
+    let r = g.get_round(None).unwrap();
+    assert_eq!((r.committed.0, r.approved.0), (FIVE_CENTS, FIVE_CENTS));
+    assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, FIVE_CENTS);
+}
+
+#[test]
+fn a_rejected_request_frees_its_allowance_and_budget() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", TENTH, "Equipment");
+    filed(&mut g, "anon.testnet", TENTH, 12);
+    decided(status_of(12, "Rejected"));
+    g.on_settled(12);
+    assert_eq!(g.get_payout_request(12).unwrap().state, "released");
+    assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, 0);
+    assert_eq!(g.get_round(None).unwrap().committed.0, 0);
+    ask(&mut g, "anon.testnet", TENTH, "Equipment");
+}
+
+#[test]
+fn an_undecided_request_stays_reserved() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
+    decided(status_of(12, "InProgress"));
+    g.on_settled(12);
+    assert_eq!(g.get_payout_request(12).unwrap().state, "pending");
+    assert_eq!(g.get_round(None).unwrap().committed.0, FIVE_CENTS);
+}
+
+#[test]
+#[should_panic(expected = "already settled")]
+fn a_request_settles_once() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
+    decided(status_of(12, "Approved"));
+    g.on_settled(12);
+    as_caller("stranger.testnet", "stranger.testnet");
+    g.settle(12).detach();
+}
+
+#[test]
+fn a_new_round_starts_every_allowance_fresh() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", TENTH, "Travel");
+    filed(&mut g, "anon.testnet", TENTH, 12);
+    as_caller("owner.testnet", "owner.testnet");
+    g.open_round(U128(HALF), U128(TENTH));
+    assert_eq!(g.get_round(None).unwrap().id, 2);
+    assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, 0);
+    // A late release of round 1 never touches round 2's books.
+    decided(status_of(12, "Rejected"));
+    g.on_settled(12);
+    assert_eq!(g.get_round(Some(1)).unwrap().committed.0, 0);
+    assert_eq!(g.get_round(None).unwrap().committed.0, 0);
+}
+
+#[test]
+fn a_removed_proposal_frees_its_reservation() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
+    decided(json!([{"id": 13, "status": "InProgress", "submission_time": "900"}]));
+    assert_eq!(g.on_settled(12), "released");
+    assert_eq!(g.get_round(None).unwrap().committed.0, 0);
+}
+
+#[test]
+fn a_request_left_undecided_past_the_proposal_period_is_released() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
+    decided(json!([{"id": 12, "status": "InProgress", "submission_time": "400"}]));
+    assert_eq!(g.on_settled(12), "released");
+    assert_eq!(g.get_allowance(acct("anon.testnet")).unwrap().used.0, 0);
+}
+
+#[test]
+fn a_failed_read_changes_nothing() {
+    let mut g = seated_guild();
+    ask(&mut g, "anon.testnet", FIVE_CENTS, "Travel");
+    filed(&mut g, "anon.testnet", FIVE_CENTS, 12);
+    testing_env!(
+        VMContextBuilder::new().current_account_id(acct("guild.testnet")).predecessor_account_id(acct("guild.testnet")).build(),
+        near_sdk::test_vm_config(),
+        RuntimeFeesConfig::test(),
+        Default::default(),
+        vec![PromiseResult::Failed.into(), PromiseResult::Failed.into()],
+    );
+    assert_eq!(g.on_settled(12), "pending");
+    assert_eq!(g.get_round(None).unwrap().committed.0, FIVE_CENTS);
+}

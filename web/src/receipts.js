@@ -51,6 +51,19 @@ export const PAYOUT = {
   ],
 };
 
+/** Round 1: a public member asks the guild, which enforces the allowance; staff decide. */
+export const ROUND = {
+  proposalId: 7,
+  member: M2,
+  steps: [
+    { label: 'A public member asks the guild for 0.05 NEAR from round 1', tx: 'Euo7rGtkxqSQ2VMWHEbQntjEM5FvhriGXNcdA4e6yJY9', signer: M2 },
+    { label: 'They ask for 0.06 more, past their 0.1 allowance', tx: 'GZkwDr3bSTsR5QP3Cz8AKCbVbQjrRNvehojsxwnVv4ab', signer: M2, refused: 'exceeds your allowance in this round' },
+    { label: 'They ask the DAO directly, skipping the guild', tx: 'BcBnvJMu78hz64jS7C4CM92bCHeDpLvxjkp5V3P9VYPf', signer: M2, refused: 'ERR_PERMISSION_DENIED' },
+    { label: 'A staff member approves, and the DAO pays', tx: 'qLiFNjgbnNbh9sCu9HV1JG16ZgfjxzNWkhA13kKZkzd', signer: M1 },
+    { label: 'Anyone records the decision in the round', tx: 'GFFV57cMe8FZ6qFBPCodRYCTqz1NA8uAnCjq1ctgAcft', signer: OUTSIDER },
+  ],
+};
+
 /** Real attempts against the live guild. `expect` is the refusal the chain must show. */
 export const ATTACKS = [
   {
@@ -108,6 +121,33 @@ export const ATTACKS = [
     tx: 'FvyF4rdu6NweHTG5VPQi4SuXX8aaUQh2eRWWriCfxCa1',
     signer: FORMER_OWNER,
     expect: 'owner only',
+  },
+  {
+    id: 'over-allowance',
+    name: 'Ask past your allowance',
+    attempt: 'A public member who already asked for 0.05 NEAR in round 1 asks for 0.06 more; each seat may ask for 0.1.',
+    layer: 'Guild contract: per-seat allowance and round budget',
+    tx: 'GZkwDr3bSTsR5QP3Cz8AKCbVbQjrRNvehojsxwnVv4ab',
+    signer: M2,
+    expect: 'exceeds your allowance in this round',
+  },
+  {
+    id: 'bypass',
+    name: 'Skip the round',
+    attempt: 'A member files a transfer straight with the DAO instead of asking the guild.',
+    layer: 'Sputnik DAO policy: only the guild may file transfers',
+    tx: 'BcBnvJMu78hz64jS7C4CM92bCHeDpLvxjkp5V3P9VYPf',
+    signer: M2,
+    expect: 'ERR_PERMISSION_DENIED',
+  },
+  {
+    id: 'outsider-request',
+    name: 'Ask without a seat',
+    attempt: 'An account with no seat asks the guild for a payout.',
+    layer: 'Guild contract: only seated members may ask',
+    tx: 'F2FiyoQ7ZfZzuFsddeiy1yhmcF3zE3fb4FBQ2bpa155n',
+    signer: OUTSIDER,
+    expect: 'only seated members may request a payout',
   },
   {
     id: 'self-approve',

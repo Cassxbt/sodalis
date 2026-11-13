@@ -2,8 +2,8 @@
 // OutLayer's attestations and Intel's collateral (needs network).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { verifyJoin, verifyPayout, verifyRefusal, verifyRefusedVote } from '../web/src/attest.js';
-import { GUILD, DAO, JOINS, PAYOUT, ATTACKS } from '../web/src/receipts.js';
+import { verifyJoin, verifyPayout, verifyRefusal, verifyRefusedVote, verifySettle } from '../web/src/attest.js';
+import { GUILD, DAO, JOINS, PAYOUT, ROUND, ATTACKS } from '../web/src/receipts.js';
 
 const assertAll = (checks) => { for (const c of checks) assert.ok(c.ok, `${c.group}: ${c.name}: ${c.detail}`); };
 
@@ -22,6 +22,14 @@ test('payout: a public member cannot approve their own request; staff can, and e
   const checks = await verifyPayout(DAO, PAYOUT.proposalId, proposed.tx, approved.tx, approved.signer);
   assert.deepEqual(checks.map((c) => c.step), [0, 2, 2]);
   assertAll(checks);
+});
+
+test('round: the guild files a request within the allowance, staff approve, the DAO pays, the round records it', async () => {
+  const [asked, , , approved, settled] = ROUND.steps;
+  const checks = await verifyPayout(DAO, ROUND.proposalId, asked.tx, approved.tx, approved.signer, { member: ROUND.member, guild: GUILD });
+  assert.deepEqual(checks.map((c) => c.step), [0, 2, 2]);
+  assertAll(checks);
+  assertAll(await verifySettle(settled.tx, settled.signer, GUILD, ROUND.proposalId, 'approved'));
 });
 
 test('payout: a transaction that did not file the request cannot stand in for it', async () => {
