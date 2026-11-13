@@ -20,7 +20,7 @@ OutLayer verifies private eligibility: without it there is no private admission 
 
 > **Status.** Live on NEAR testnet with real emails (Proton, Gmail, and a custom domain on Hostinger). Each outcome in the table above is a linked testnet transaction, and a first-time user has joined and been paid. The steward and the council are the builder's accounts; a pilot with a real team fund is next. Everything else that is partial or missing is in [What is real](#what-is-real).
 
-![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![npm test](https://img.shields.io/badge/npm%20test-28-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-56-2c6b5a) ![verifier checks](https://img.shields.io/badge/verifier%20checks-43-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
+![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![npm test](https://img.shields.io/badge/npm%20test-29-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-56-2c6b5a) ![verifier checks](https://img.shields.io/badge/verifier%20checks-43-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
 ## Judge it in 90 seconds
 
@@ -28,11 +28,11 @@ No wallet, key or funds are needed for any of this.
 
 | Do | See |
 |---|---|
-| Open [/case](https://sodalis-red.vercel.app/case/?case=first-user) | A first-time user's admission, request, approval and transfer, each verified live. The [departure case](https://sodalis-red.vercel.app/case/?case=departure) adds two refusals and loss of the seat |
+| Open [/case](https://sodalis-red.vercel.app/case/?case=first-user) | A first-time user's admission, request, approval and transfer, each verified live. The [removal case](https://sodalis-red.vercel.app/case/?case=removed) adds a refusal past the allowance, a DAO vote that removes the member, and a refused request after |
 | Open [/proof](https://sodalis-red.vercel.app/proof/) | Four recorded admissions and both rounds re-verified from NEAR testnet, OutLayer's attestation API and Intel's collateral. Press **Forge one byte** and the ledger turns red |
 | Open [/judges](https://sodalis-red.vercel.app/judges/) | Thirteen real attacks on the live guild, each re-read from chain with its refusal |
 | Open [/join](https://sodalis-red.vercel.app/join/) | The member flow itself. Using it creates and funds a real testnet key and sends transactions; viewing it does not. About ten minutes, with a Gmail or Proton and a second inbox |
-| Run `npm test` | 28 tests: 23 re-read the admissions, refusals and payouts below from testnet, 5 check sealing offline |
+| Run `npm test` | 29 tests: 24 re-read the admissions, refusals and payouts below from testnet, 5 check sealing offline |
 
 ## How it works
 
@@ -75,7 +75,7 @@ The fingerprint admits one wallet per admission epoch: one seat per mailbox, not
 ```bash
 git clone https://github.com/Cassxbt/sodalis && cd sodalis && npm ci
 
-npm test               # 28 tests: 23 re-read admissions, refusals and payouts from testnet; 5 check sealing offline
+npm test               # 29 tests: 24 re-read admissions, refusals and payouts from testnet; 5 check sealing offline
 npm run verify:build   # rebuilds the verifier and the guild contract; checks both against the chain
 npm run test:contract  # 56 contract tests (Rust, offline)
 npm run test:verifier  # 43 verifier checks (offline): 34 signed-email cases of DKIM attacks and edge cases, plus 9 enclave-environment checks
@@ -139,6 +139,8 @@ Guild `sodalis.testnet` · DAO `sodalis-dao.sputnik-v2.testnet`. Every row is re
 
 | What happened | Result | Tx |
 |---|---|---|
+| The DAO votes to remove a member (proposal #14 calls the guild's `revoke`) | The member and its DAO seat are removed in the same transaction | [`GKzbpFS4…`](https://testnet.nearblocks.io/txns/GKzbpFS44G64UZ9gwU4tBosW2qq2zL7EDfrsYdsdqrub) |
+| It asks for a payout again | **Refused**: `only seated members may request a payout` | [`BTt76nHA…`](https://testnet.nearblocks.io/txns/BTt76nHAjSXQVraBGAqmcvt3eTSbcpTWyaJv7MJnQiW7) |
 | A member leaves | Its DAO seat is removed in the same transaction | [`CmKnfQ1C…`](https://testnet.nearblocks.io/txns/CmKnfQ1CKk16ZK5zKiKA1szYLTEh8HSkZXx7e5TQxuDD) |
 | It asks for a payout again | **Refused**: `only seated members may request a payout` | [`B4JU3VFS…`](https://testnet.nearblocks.io/txns/B4JU3VFSzRg6mbyHRKqfqC61yrRmruuB4XCmAEGJxwj2) |
 | An outside account calls the guild's one-time `reset` | **Refused**: `Method reset is private` | [`DP9VHiGR…`](https://testnet.nearblocks.io/txns/DP9VHiGRGerz8G6HNpnqY2GHggQXpZhfRp85wsGDKj6k) |
@@ -191,7 +193,7 @@ A check that cannot run says *not verified here*; it never counts as a pass.
 | The enclave run is attested and bound to code, input and output | **On chain**, checked in the browser |
 | Public members only ask; staff approve (the council can too) | **On chain** |
 | Per-seat allowance and round budget | **On chain**: one refusal past the allowance, one past the budget, and a DAO bypass refused |
-| Leaving ends spending authority | **On chain, one recorded case**: after leaving, the member's next request was refused |
+| Leaving, or removal by a DAO vote, ends spending authority | **On chain, one recorded case each**: the member's next request was refused |
 | A rejected request returns to the round, once | **On chain**. An undecided request stays reserved until the DAO records an outcome; one that ends `Failed` stays reserved |
 | A brand-new member can join from a browser with no wallet | **On chain**, twice: once by the builder, once by a first-time user |
 | Someone outside the builder completes the flow | **Done once, with a guide**: a first-time user the builder reached out to joined and was paid, following an eight-step written guide and no other help. They found the page alone confusing; the guide is now on the page |

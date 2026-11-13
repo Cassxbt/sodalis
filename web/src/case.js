@@ -1,5 +1,5 @@
 import { el, reveal } from './shell.js';
-import { near, verifyFiled, verifyJoin, verifyLeft, verifyPayout, verifyRefusal, verifyRejected, verifySettle, view } from './attest.js';
+import { near, verifyFiled, verifyJoin, verifyLeft, verifyPayout, verifyRefusal, verifyRejected, verifyRevoked, verifySettle, view } from './attest.js';
 import { GUILD, DAO, EXPLORER, CASES } from './receipts.js';
 
 const $ = (s) => document.querySelector(s);
@@ -37,6 +37,9 @@ const CHECKS = {
       verifySettle(step.settle, step.settler, GUILD, step.proposalId, 'rejected', 'released'),
     ])).flat();
     return { checks, txs: [step.ask, step.reject, step.settle] };
+  },
+  async revoked(step) {
+    return { checks: await verifyRevoked(step.tx, step.signer, GUILD, DAO, step.proposalId, chosen.member), txs: [step.tx] };
   },
   async left(step) {
     return { checks: await verifyLeft(step.tx, step.signer, GUILD, DAO), txs: [step.tx] };

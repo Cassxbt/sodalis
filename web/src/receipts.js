@@ -10,6 +10,7 @@ const M2 = 'm2.kibble-pf-03c8a9.testnet';
 const BROWSER = '54607a20b449611cb00929830d9f2da11a79457844e538deb5aff803bc53e75d';
 const OUTSIDER = 'eve.sodalis-council.testnet';
 const FORMER_OWNER = 'sodalis-council.testnet';
+const COUNCIL = FORMER_OWNER;
 
 export const JOINS = [
   {
@@ -216,6 +217,21 @@ export const CASES = [
     steps: [
       { kind: 'join', label: 'Proves they belong, with a Gmail email, from their own browser', tx: '9hJoh9YGNR8ZZ59pExrGoDW5qP37ZepcpUxJUwBU3fGe', signer: '12c54c6e4b43340db6f6a7fe7189ca76e21bbd5077f9f9e12ba278de7c0603e5' },
       { kind: 'paid', label: 'Round 2: asks for 0.05 NEAR for travel; a steward approves; the DAO pays', proposalId: 12, ask: '8UcMF6PqYaWNmzB4oh3Uwkr4t7wGnRLnffuiHWar95uC', approve: '8MW1nWsLU6tY5bcJ6d3EuVLkCxZP69mnAJs8FxFUxqb3', approver: M1, settle: '8Er7qb6E5niGp4nvX5QJzAa3r7UaRbpDSHf2v8DynboB', settler: OUTSIDER },
+    ],
+  },
+  {
+    id: 'removed',
+    title: 'Paid, refused, then removed by a DAO vote',
+    who: 'A builder test account that joined on /join',
+    member: BROWSER,
+    summary: 'A fresh key joined from the Join page with a Gmail-signed email. It asked round 2 for 0.05 NEAR and was paid, then asked for 0.06 more and was refused for going past its allowance. The DAO then voted to remove it, as a team would when someone leaves, and its next request was refused.',
+    linked: 'This seat was created by the builder on /join, so it is the builder\'s; its key is fresh, funded by the guild drip, which is public.',
+    steps: [
+      { kind: 'join', label: 'Proves it belongs, with a Gmail email, from the Join page', tx: JOINS[2].tx, signer: BROWSER },
+      { kind: 'paid', label: 'Round 2: asks for 0.05 NEAR; a steward approves; the DAO pays', proposalId: 13, ask: '8SJKMYRHusij7fzxt9DLrZrSjpQmZzZQXa6BmMHyhxSB', approve: 'EvhEeqUY32eAZt443urNZJ3SmQyQhsXYLe9LoRdVZVhd', approver: M1, settle: 'CxbLn74ZcWmJE7Q5Sc5NZmm5Ux1odaL1fRjWf3nCq21R', settler: OUTSIDER },
+      { kind: 'refused', label: 'Asks for 0.06 more, past its 0.1 allowance', tx: 'BXNAcKrKsZjuBAUr9Ny79NKQp6VS5qeHDgbz7QKcvV8p', signer: BROWSER, expect: 'exceeds your allowance in this round' },
+      { kind: 'revoked', label: 'The DAO votes to remove it; the seat goes in the same transaction', proposalId: 14, tx: 'GKzbpFS44G64UZ9gwU4tBosW2qq2zL7EDfrsYdsdqrub', signer: COUNCIL },
+      { kind: 'refused', label: 'Asks again, without a seat', tx: 'BTt76nHAjSXQVraBGAqmcvt3eTSbcpTWyaJv7MJnQiW7', signer: BROWSER, expect: 'only seated members may request a payout' },
     ],
   },
   {

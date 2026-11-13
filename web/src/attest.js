@@ -299,6 +299,32 @@ export async function verifyLeft(txHash, member, guild, dao) {
   return [{ group: 'payout', name: 'It lost its DAO seat in the same transaction', ok: Boolean(removed && unseated) && still.length === 0, detail: `${unseated ? `${unseated.data[0].role} seat removed by proposal #${unseated.data[0].proposal_id}` : 'no dao_role_removed event'}; roles right after: ${still.join(', ') || 'none'}` }];
 }
 
+/**
+ * A DAO vote by `voter` approved proposal `proposalId`, a call to the guild's
+ * revoke for `member`; in that transaction the guild removed the member and its
+ * seat, and the roster right after no longer lists it.
+ */
+export async function verifyRevoked(txHash, voter, guild, dao, proposalId, member) {
+  const tx = await txStatus(txHash, voter);
+  const vote = callOf(tx);
+  const proposal = await view(dao, 'get_proposal', { id: proposalId });
+  const action = proposal.kind?.FunctionCall?.actions?.[0];
+  const target = action ? JSON.parse(atob(action.args)).account_id : null;
+  const votedAt = tx.receipts_outcome.find((o) => o.outcome.executor_id === dao)?.block_hash;
+  const voterRoles = votedAt ? (await rolesAt(dao, votedAt))(voter) : [];
+  const decided = tx.transaction.receiver_id === dao && vote.method === 'act_proposal' && vote.args.id === proposalId && vote.args.action === 'VoteApprove'
+    && proposal.status === 'Approved' && proposal.kind.FunctionCall.receiver_id === guild && action.method_name === 'revoke' && target === member && voterRoles.includes('council');
+  const events = eventsOf(tx, guild);
+  const removed = events.find((e) => e.event === 'member_removed' && e.data[0].account_id === member && e.data[0].how === 'revoked');
+  const unseated = events.find((e) => e.event === 'dao_role_removed' && e.data[0].account_id === member);
+  const at = tx.receipts_outcome.filter((o) => o.outcome.executor_id === dao).at(-1)?.block_hash;
+  const still = at ? (await rolesAt(dao, at))(member) : ['unknown'];
+  return [
+    { group: 'payout', name: 'The DAO voted to revoke this member', ok: decided, detail: `proposal #${proposalId}: ${guild}.revoke(${target ? `${target.slice(0, 8)}…` : '?'}), approved by ${voter} (${voterRoles.join(', ') || 'no role'} then)` },
+    { group: 'payout', name: 'The guild removed it, and its DAO seat, in the same transaction', ok: Boolean(removed && unseated) && still.length === 0, detail: `${unseated ? `${unseated.data[0].role} seat removed by proposal #${unseated.data[0].proposal_id}` : 'no dao_role_removed event'}; roles right after: ${still.join(', ') || 'none'}` },
+  ];
+}
+
 /** A vote the DAO refused, e.g. a public member approving their own payout. */
 export async function verifyRefusedVote(txHash, signer) {
   const tx = await txStatus(txHash, signer);

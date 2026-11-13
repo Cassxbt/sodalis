@@ -213,3 +213,17 @@ The builder reached out to someone who had never used Sodalis and sent them an e
 
 The steward and the council are the builder's. This is one first-time completion with a guide, not independent adoption.
 
+## Removal by a DAO vote (2026-11-13)
+
+The camera member, the fresh key the builder seated on /join (`54607a20…e75d`), runs the rest of a member's life in round 2. The removal is the DAO's own decision: a council proposal calls the guild's `revoke`, which the guild accepts only from its owner, the DAO.
+
+| Step | Result | Tx |
+|---|---|---|
+| Asks for 0.05 NEAR, Equipment | Guild files #13 | 8SJKMYRHusij7fzxt9DLrZrSjpQmZzZQXa6BmMHyhxSB |
+| Steward m1 approves | 0.05 NEAR from the DAO to the member | EvhEeqUY32eAZt443urNZJ3SmQyQhsXYLe9LoRdVZVhd |
+| Anyone settles #13 | Round 2: approved | CxbLn74ZcWmJE7Q5Sc5NZmm5Ux1odaL1fRjWf3nCq21R |
+| Asks for 0.06 more | Refused: `exceeds your allowance in this round` | BXNAcKrKsZjuBAUr9Ny79NKQp6VS5qeHDgbz7QKcvV8p |
+| Council files proposal #14: `revoke` this member | Filed | D9a74R8nxBXqYwEPpp252N4vGtotrZU4LDYoQziZGZw7 |
+| Council approves #14 | `member_removed` (revoked) and `dao_role_removed` in the same transaction; the member holds no DAO role after | GKzbpFS44G64UZ9gwU4tBosW2qq2zL7EDfrsYdsdqrub |
+| Asks again | Refused: `only seated members may request a payout` | BTt76nHAjSXQVraBGAqmcvt3eTSbcpTWyaJv7MJnQiW7 |
+

@@ -2,7 +2,7 @@
 // OutLayer's attestations and Intel's collateral (needs network).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { verifyFiled, verifyJoin, verifyLeft, verifyPayout, verifyRefusal, verifyRefusedVote, verifyRejected, verifySettle } from '../web/src/attest.js';
+import { verifyFiled, verifyJoin, verifyLeft, verifyPayout, verifyRefusal, verifyRefusedVote, verifyRejected, verifyRevoked, verifySettle } from '../web/src/attest.js';
 import { GUILD, DAO, JOINS, PAYOUT, ROUND, ROUND2, ATTACKS, CASES } from '../web/src/receipts.js';
 
 const assertAll = (checks) => { for (const c of checks) assert.ok(c.ok, `${c.group}: ${c.name}: ${c.detail}`); };
@@ -50,6 +50,18 @@ test('a first-time user joined from their own browser and was paid from round 2'
   assertAll((await verifyJoin(join.tx, join.signer, GUILD)).checks);
   assertAll(await verifyPayout(DAO, paid.proposalId, paid.ask, paid.approve, paid.approver, { member: user.member, guild: GUILD }));
   assertAll(await verifySettle(paid.settle, paid.settler, GUILD, paid.proposalId, 'approved'));
+});
+
+test('a member is paid, refused past its allowance, removed by a DAO vote, and refused after', async () => {
+  const c = CASES.find((x) => x.id === 'removed');
+  const [, paid, over, revoked, after] = c.steps;
+  assertAll(await verifyPayout(DAO, paid.proposalId, paid.ask, paid.approve, paid.approver, { member: c.member, guild: GUILD }));
+  assertAll(await verifySettle(paid.settle, paid.settler, GUILD, paid.proposalId, 'approved'));
+  assertAll(await verifyRevoked(revoked.tx, revoked.signer, GUILD, DAO, revoked.proposalId, c.member));
+  for (const step of [over, after]) {
+    const r = await verifyRefusal(step.tx, step.signer, step.expect);
+    assert.ok(r.ok, `${step.label}: expected "${step.expect}", saw "${r.text}"`);
+  }
 });
 
 test('payout: a transaction that did not file the request cannot stand in for it', async () => {
