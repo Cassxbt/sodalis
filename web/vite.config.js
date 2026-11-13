@@ -10,6 +10,7 @@ export default defineConfig({
         judges: resolve(import.meta.dirname, 'judges/index.html'),
         how: resolve(import.meta.dirname, 'how/index.html'),
         join: resolve(import.meta.dirname, 'join/index.html'),
+        case: resolve(import.meta.dirname, 'case/index.html'),
       },
     },
   },

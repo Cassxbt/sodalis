@@ -6,8 +6,9 @@ import dcap from '@phala/dcap-qvl';
 
 export const NETWORK = {
   rpc: 'https://rpc.testnet.fastnear.com',
-  // Regular nodes drop transactions and old state after a few epochs; history is read here.
-  archive: 'https://archival-rpc.testnet.fastnear.com',
+  // Regular nodes drop transactions and old state after a few epochs; history is read
+  // from archives. Two operators, because each rate-limits a busy page on its own.
+  archives: ['https://archival-rpc.testnet.fastnear.com', 'https://archival-rpc.testnet.near.org'],
   attestations: 'https://testnet-api.outlayer.ai/attestations/by-tx/',
   pccs: dcap.PHALA_PCCS_URL,
   register: 'worker.outlayer.testnet',
@@ -24,39 +25,46 @@ export const near = (yocto) => {
   return frac ? `${whole}.${frac}` : `${whole}`;
 };
 
-async function rpc(method, params, { url = NETWORK.rpc, tries = 4 } = {}) {
-  for (let i = 1; ; i++) {
+/** Tries each endpoint in turn, backing off between rounds; a rate limit counts as a failure. */
+async function rpc(method, params, urls = [NETWORK.rpc, ...NETWORK.archives], rounds = 3) {
+  let last;
+  for (let i = 0; i < rounds * urls.length; i++) {
     try {
-      const r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
+      const r = await fetch(urls[i % urls.length], { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
       const d = await r.json();
-      if (d.error) throw new Error(d.error.message ?? JSON.stringify(d.error));
+      if (d.error) throw new Error(d.error.cause?.name ?? d.error.message ?? JSON.stringify(d.error));
       return d.result;
     } catch (e) {
-      if (i >= tries) throw e;
-      await new Promise((res) => setTimeout(res, 300 * 2 ** i));
+      last = e;
+      if ((i + 1) % urls.length === 0) await new Promise((res) => setTimeout(res, 500 * 2 ** ((i + 1) / urls.length)));
     }
   }
+  throw last;
 }
 
-/** A view call against current state, or against the state at `block` (a hash or height) from the archive. */
+// History never changes, so one page asks for each transaction, block and old state once.
+const memo = new Map();
+const once = (key, load) => {
+  if (!memo.has(key)) memo.set(key, load().catch((e) => { memo.delete(key); throw e; }));
+  return memo.get(key);
+};
+
+/**
+ * Archives first, then the regular node: an archive trails the head by a few
+ * blocks, and the regular node has dropped anything older than a few epochs.
+ */
+const fromHistory = (method, params) => rpc(method, params, [...NETWORK.archives, NETWORK.rpc]);
+
+/** A view call against current state, or against the state at `block` (a hash or height). */
 export async function view(contract, method, args = {}, block) {
   const at = block == null ? { finality: 'final' } : { block_id: block };
   const params = { request_type: 'call_function', ...at, account_id: contract, method_name: method, args_base64: btoa(JSON.stringify(args)) };
-  const r = block == null ? await rpc('query', params) : await fromArchive('query', params);
+  const r = block == null ? await rpc('query', params) : await once(`view:${block}:${contract}:${method}:${params.args_base64}`, () => fromHistory('query', params));
   return JSON.parse(new TextDecoder().decode(Uint8Array.from(r.result)));
 }
 
-/** The archive holds old history but trails the head by a few blocks; the regular node covers the newest. */
-async function fromArchive(method, params) {
-  try {
-    return await rpc(method, params, { url: NETWORK.archive, tries: 2 });
-  } catch {
-    return rpc(method, params);
-  }
-}
-
-const txStatus = (hash, signer) => fromArchive('EXPERIMENTAL_tx_status', { tx_hash: hash, sender_account_id: signer, wait_until: 'FINAL' });
-const blockHeight = async (hash) => (await fromArchive('block', { block_id: hash })).header.height;
+const txStatus = (hash, signer) => once(`tx:${hash}:${signer}`, () => fromHistory('EXPERIMENTAL_tx_status', { tx_hash: hash, sender_account_id: signer, wait_until: 'FINAL' }));
+const blockHeight = (hash) => once(`block:${hash}`, async () => (await fromHistory('block', { block_id: hash })).header.height);
 
 /** Everything a join transaction recorded: the guild's request, OutLayer's answer and the guild's events. */
 export async function readJoin(txHash, signer) {

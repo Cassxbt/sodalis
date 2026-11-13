@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sodalis · One member</title>
+    <meta name="description" content="Follow one Sodalis member from the email that earned a seat to the day it ended, every step re-checked from NEAR testnet in your browser." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Fragment+Mono&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="page-head">
+        <p class="eyebrow">Case file · re-checked in your browser</p>
+        <h1>One Member</h1>
+        <p class="lead">Follow one seat from the email that earned it to the day it ended. Every line is read from NEAR testnet and checked now; nothing on this page is pre-computed.</p>
+      </header>
+
+      <nav class="case-tabs" id="cases" aria-label="Cases"></nav>
+
+      <section class="case-head" style="padding-top:44px">
+        <p class="eyebrow" id="case-who"></p>
+        <h2 class="h-section" id="case-title"></h2>
+        <p class="sub" id="case-summary"></p>
+        <p class="mono jout" id="case-tally">checking…</p>
+      </section>
+
+      <section style="padding-top:40px">
+        <div class="seen">
+          <div class="card"><h3>Anyone can see</h3><ul class="plain" id="seen"><li class="loading">reading…</li></ul></div>
+          <div class="card"><h3>Nobody can see</h3><ul class="plain" id="unseen">
+            <li>The email address that proved it belongs</li>
+            <li>The email itself: it was sealed in the browser and opened only inside the enclave</li>
+          </ul><p class="fine" id="linked"></p></div>
+          <div class="card"><h3>Where it stands now</h3><ul class="plain" id="now"><li class="loading">reading…</li></ul></div>
+        </div>
+      </section>
+
+      <section style="padding-top:60px">
+        <h2 class="h-section reveal">The record</h2>
+        <ol class="ledger" id="steps"></ol>
+      </section>
+    </main>
+    <script type="module" src="../src/case.js"></script>
+  </body>
+</html>

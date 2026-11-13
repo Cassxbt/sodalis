@@ -1,6 +1,6 @@
 import { countUp } from './shell.js';
-import { view, verifyRefusal } from './attest.js';
-import { GUILD, DAO, ATTACKS } from './receipts.js';
+import { view, verifyPayout, verifyRefusal } from './attest.js';
+import { GUILD, DAO, ATTACKS, ROUND, ROUND2 } from './receipts.js';
 
 const steps = [...document.querySelectorAll('.mech-step')];
 const nodes = [...document.querySelectorAll('.diagram .node')];
@@ -29,3 +29,13 @@ Promise.all([view(DAO, 'get_policy'), view(GUILD, 'get_domain_keys')])
 
 Promise.all(ATTACKS.map((a) => verifyRefusal(a.tx, a.signer, a.expect).then((r) => r.ok).catch(() => false)))
   .then((oks) => countUp(stat('attacks'), oks.filter(Boolean).length));
+
+// The three outcomes in the hero, each re-read from chain rather than asserted.
+const outcome = (k, ok, text) => { const s = document.querySelector(`.outcome[data-o="${k}"] .o-s`); s.textContent = ok ? text : 'could not verify now'; s.classList.toggle('ok', ok); };
+const [asked, , , approved] = ROUND.steps;
+verifyPayout(DAO, ROUND.proposalId, asked.tx, approved.tx, approved.signer, { member: ROUND.member, guild: GUILD })
+  .then((checks) => outcome('paid', checks.every((c) => c.ok), 'verified on chain · transfer receipt'))
+  .catch(() => outcome('paid', false));
+const [over, left] = [ROUND.steps[1], ROUND2.steps[5]];
+verifyRefusal(over.tx, over.signer, over.refused).then((r) => outcome('over', r.ok, 'verified on chain · refused by the guild')).catch(() => outcome('over', false));
+verifyRefusal(left.tx, left.signer, left.expect).then((r) => outcome('left', r.ok, 'verified on chain · refused by the guild')).catch(() => outcome('left', false));

@@ -201,3 +201,28 @@ export const ATTACKS = [
     expect: 'ERR_PERMISSION_DENIED',
   },
 ];
+
+/**
+ * One member's whole journey, step by step. Each step is checked live on the
+ * case page; `kind` picks the check.
+ */
+export const CASES = [
+  {
+    id: 'departure',
+    title: 'From first seat to departure',
+    who: 'A builder test account',
+    member: M2,
+    // A named subaccount links back to the builder; a member who joins on /join gets a fresh key instead.
+    linked: 'This test seat is a named subaccount of the builder\'s account, so it is linked to the builder. A member who joins on /join gets a fresh key with no such link.',
+    summary: 'Proved membership with a Proton email. Asked for help twice: paid once, refused once for going past its allowance. Tried to skip the round. Asked for its whole allowance in round 2 and was turned down. Then left, and lost the right to ask.',
+    steps: [
+      { kind: 'join', label: 'Proves it belongs, with a Proton email', tx: JOINS[1].tx, signer: M2 },
+      { kind: 'paid', label: 'Round 1: asks for 0.05 NEAR; staff approve; the DAO pays', proposalId: ROUND.proposalId, ask: ROUND.steps[0].tx, approve: ROUND.steps[3].tx, approver: M1, settle: ROUND.steps[4].tx, settler: OUTSIDER },
+      { kind: 'refused', label: 'Asks for 0.06 more, past its 0.1 allowance', tx: ROUND.steps[1].tx, signer: M2, expect: ROUND.steps[1].refused },
+      { kind: 'refused', label: 'Tries to skip the guild and ask the DAO directly', tx: ROUND.steps[2].tx, signer: M2, expect: ROUND.steps[2].refused },
+      { kind: 'rejected', label: 'Round 2: asks for its whole 0.1; staff turn it down; the 0.1 returns to the round', proposalId: ROUND2.proposalId, ask: ROUND2.steps[0].tx, reject: ROUND2.steps[2].tx, approver: M1, settle: ROUND2.steps[3].tx, settler: OUTSIDER },
+      { kind: 'left', label: 'Leaves the guild; the DAO seat goes with it', tx: ROUND2.steps[4].tx, signer: M2 },
+      { kind: 'refused', label: 'Asks again, without a seat', tx: ROUND2.steps[5].tx, signer: M2, expect: ROUND2.steps[5].expect },
+    ],
+  },
+];

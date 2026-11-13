@@ -2,13 +2,15 @@
 
 **Prove you belong. Never say who you are.**
 
-**A guild can reimburse an eligible member without putting their email address on chain.** In our testnet round 1 the DAO paid 0.05 NEAR and refused the same seat's next 0.06 request; in round 2 the shared budget refused a seat that still had allowance, and a member who left lost the right to ask.
+> *An illustration.* Maya's car breaks down three days before payday. Her team keeps a small fund for exactly this. But asking means telling the colleagues who run it that she's short this month. So she doesn't ask.
 
-Communities that want to pay their members face a bad choice. Verifying members means a council that knows every name and employer. Staying anonymous means one person with ten wallets takes ten shares. Sodalis is a NEAR guild where **an email from an approved domain earns a seat in a Sputnik DAO treasury, one mailbox buys one seat, and the chain never learns which mailbox.** Payouts run in **rounds the chain enforces**.
+**Sodalis is a team fund on NEAR that people can ask for help without anyone learning who asked.** A member proves they belong with an email from an approved domain; the email is opened only inside an attested enclave, and the chain records a domain and a keyed fingerprint, never the address. One mailbox earns one seat in a Sputnik DAO treasury. Payouts run in **rounds the chain enforces**: a budget per round, an allowance per seat, a steward's approval, and every payment on chain. When a member leaves, their access ends.
+
+On testnet, one member's whole journey (a builder test account) is on chain and re-checked live at **[/case](https://sodalis-red.vercel.app/case/)**: it joined privately, asked for 0.05 NEAR and was paid, was refused 0.06 more for going past its allowance, was refused for trying to skip the round, had a request turned down and returned to the round, then left, lost its DAO seat, and was refused when it asked again.
 
 An organisation domain proves membership of that organisation. A free-mail domain (Gmail, Proton) proves only control of one mailbox, so free mail reaches only the `public` tier, which can ask for payouts but not approve them.
 
-**Live:** https://sodalis-red.vercel.app · **[Verify the round](https://sodalis-red.vercel.app/proof/#the-round)** · **[Proof](https://sodalis-red.vercel.app/proof/)** · **[Join](https://sodalis-red.vercel.app/join/)** · **[Break it](https://sodalis-red.vercel.app/judges/)** · **[How it works](https://sodalis-red.vercel.app/how/)**
+**Live:** https://sodalis-red.vercel.app · **[Follow one member](https://sodalis-red.vercel.app/case/)** · **[Verify the round](https://sodalis-red.vercel.app/proof/#the-round)** · **[Proof](https://sodalis-red.vercel.app/proof/)** · **[Join](https://sodalis-red.vercel.app/join/)** · **[Break it](https://sodalis-red.vercel.app/judges/)** · **[How it works](https://sodalis-red.vercel.app/how/)**
 
 ![tracks](https://img.shields.io/badge/tracks-social%20%C2%B7%20privacy-c9a45c) ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-56-2c6b5a) ![verifier cases](https://img.shields.io/badge/verifier%20cases-43-2c6b5a) ![live checks](https://img.shields.io/badge/npm%20test-27-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
