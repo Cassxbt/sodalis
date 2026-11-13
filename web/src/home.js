@@ -27,15 +27,15 @@ Promise.all([view(DAO, 'get_policy'), view(GUILD, 'get_domain_keys')])
   })
   .catch(() => ['seats', 'domains', 'attacks'].forEach((k) => (stat(k).textContent = '?')));
 
-Promise.all(ATTACKS.map((a) => verifyRefusal(a.tx, a.signer, a.expect).then((r) => r.ok).catch(() => false)))
-  .then((oks) => countUp(stat('attacks'), oks.filter(Boolean).length));
-
 // The three outcomes in the hero, each re-read from chain rather than asserted.
+// They go first; the attack count below the fold waits for them.
 const outcome = (k, ok, text) => { const s = document.querySelector(`.outcome[data-o="${k}"] .o-s`); s.textContent = ok ? text : 'could not verify now'; s.classList.toggle('ok', ok); };
 const [asked, , , approved] = ROUND.steps;
-verifyPayout(DAO, ROUND.proposalId, asked.tx, approved.tx, approved.signer, { member: ROUND.member, guild: GUILD })
-  .then((checks) => outcome('paid', checks.every((c) => c.ok), 'verified on chain · transfer receipt'))
-  .catch(() => outcome('paid', false));
 const [over, left] = [ROUND.steps[1], ROUND2.steps[5]];
-verifyRefusal(over.tx, over.signer, over.refused).then((r) => outcome('over', r.ok, 'verified on chain · refused by the guild')).catch(() => outcome('over', false));
-verifyRefusal(left.tx, left.signer, left.expect).then((r) => outcome('left', r.ok, 'verified on chain · refused by the guild')).catch(() => outcome('left', false));
+Promise.allSettled([
+  verifyPayout(DAO, ROUND.proposalId, asked.tx, approved.tx, approved.signer, { member: ROUND.member, guild: GUILD })
+    .then((checks) => outcome('paid', checks.every((c) => c.ok), 'verified on chain · transfer receipt'), () => outcome('paid', false)),
+  verifyRefusal(over.tx, over.signer, over.refused).then((r) => outcome('over', r.ok, 'verified on chain · refused by the guild'), () => outcome('over', false)),
+  verifyRefusal(left.tx, left.signer, left.expect).then((r) => outcome('left', r.ok, 'verified on chain · refused by the guild'), () => outcome('left', false)),
+]).then(() => Promise.all(ATTACKS.map((a) => verifyRefusal(a.tx, a.signer, a.expect).then((r) => r.ok).catch(() => false))))
+  .then((oks) => countUp(stat('attacks'), oks.filter(Boolean).length));

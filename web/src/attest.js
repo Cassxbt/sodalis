@@ -50,10 +50,10 @@ const once = (key, load) => {
 };
 
 /**
- * Archives first, then the regular node: an archive trails the head by a few
- * blocks, and the regular node has dropped anything older than a few epochs.
+ * The regular node first: it holds the last few epochs at generous limits and
+ * answers at once when it has dropped something older, which the archives then serve.
  */
-const fromHistory = (method, params) => rpc(method, params, [...NETWORK.archives, NETWORK.rpc]);
+const fromHistory = (method, params) => rpc(method, params, [NETWORK.rpc, ...NETWORK.archives]);
 
 /** A view call against current state, or against the state at `block` (a hash or height). */
 export async function view(contract, method, args = {}, block) {
