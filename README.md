@@ -4,9 +4,11 @@
 
 Communities that want to pay their members face a bad choice. Verifying members means a council that knows every name and employer. Staying anonymous means one person with ten wallets takes ten shares. Sodalis is a NEAR guild where **an email from an approved domain earns a seat in a Sputnik DAO treasury, one mailbox buys one seat, and the chain never learns which mailbox.**
 
+An organisation domain proves membership of that organisation. A free-mail domain (Gmail, Proton) proves only control of one mailbox, so free mail reaches only the `public` tier, which can propose payouts but not approve them.
+
 **Live:** https://sodalis-red.vercel.app · **[Proof](https://sodalis-red.vercel.app/proof/)** · **[Break it](https://sodalis-red.vercel.app/judges/)** · **[How it works](https://sodalis-red.vercel.app/how/)**
 
-![tracks](https://img.shields.io/badge/tracks-social%20%C2%B7%20privacy-c9a45c) ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-33-2c6b5a) ![verifier cases](https://img.shields.io/badge/verifier%20cases-43-2c6b5a) ![live checks](https://img.shields.io/badge/live%20chain%20tests-17-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
+![tracks](https://img.shields.io/badge/tracks-social%20%C2%B7%20privacy-c9a45c) ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-36-2c6b5a) ![verifier cases](https://img.shields.io/badge/verifier%20cases-43-2c6b5a) ![live checks](https://img.shields.io/badge/live%20chain%20tests-17-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
 | | |
 |---|---|
@@ -34,7 +36,7 @@ git clone https://github.com/Cassxbt/sodalis && cd sodalis && npm ci
 
 npm test               # 17 live tests: re-reads every admission, refusal and payout from testnet
 npm run verify:build   # rebuilds the verifier and checks it is byte-identical to what the guild pins
-npm run test:contract  # 33 contract tests (Rust, offline)
+npm run test:contract  # 36 contract tests (Rust, offline)
 npm run test:verifier  # 43 verifier cases: DKIM attack patterns and edge cases on signed test emails (offline)
 ```
 
@@ -131,7 +133,7 @@ Three lessons from testing shaped the design. Gmail does not DKIM-sign mail you 
 ## Project layout
 
 ```
-contract/   NEAR guild contract (near-sdk 5.29.1): join, tiers, DAO seating, sealing, 33 tests
+contract/   NEAR guild contract (near-sdk 5.29.1): join, tiers, DAO seating, sealing, 36 tests
 verifier/   enclave program (Rust → wasm32-wasip1): DKIM, sealing, nullifier
 web/        the site: Vite multi-page, attestation checks in the browser
 test/       live tests against testnet (npm test)

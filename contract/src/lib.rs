@@ -271,7 +271,7 @@ impl Guild {
 
     /// Public repair path for a failed DAO call.
     pub fn sync_dao_role(&mut self, account_id: AccountId) -> Promise {
-        require!(!self.pending.contains(&account_id), "a DAO role change is already in flight");
+        self.assert_settled(&account_id);
         let wanted = self.members.get(&account_id).map(|m| m.role.clone());
         let held = self.seated.get(&account_id).cloned();
         match (wanted, held) {
@@ -336,6 +336,7 @@ impl Guild {
     /// The nullifier stays spent, so the address cannot readmit anyone.
     pub fn revoke(&mut self, account_id: AccountId) -> Promise {
         self.assert_owner();
+        self.assert_settled(&account_id);
         let role = self.remove_member(&account_id, "revoked");
         self.dao_role_change(account_id, role, false)
     }
@@ -343,6 +344,7 @@ impl Guild {
     /// Final: the nullifier stays spent.
     pub fn leave(&mut self) -> Promise {
         let account_id = env::predecessor_account_id();
+        self.assert_settled(&account_id);
         let role = self.remove_member(&account_id, "left");
         self.dao_role_change(account_id, role, false)
     }
@@ -384,6 +386,12 @@ fn role_kind(account_id: &AccountId, role: &str, add: bool) -> Value {
 }
 
 impl Guild {
+    /// Two in-flight changes for one account can land in either order in the DAO,
+    /// leaving a seat the guild no longer tracks; so changes run one at a time.
+    fn assert_settled(&self, account_id: &AccountId) {
+        require!(!self.pending.contains(account_id), "a DAO role change is already in flight; retry once it lands");
+    }
+
     fn assert_owner(&self) {
         require!(env::predecessor_account_id() == self.owner, "owner only");
     }

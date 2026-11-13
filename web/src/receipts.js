@@ -105,7 +105,7 @@ export const ATTACKS = [
     id: 'self-approve',
     name: 'Approve your own payout',
     attempt: 'A public-tier member votes to approve the payout they proposed.',
-    layer: 'Sputnik DAO policy: only staff may approve transfers',
+    layer: 'Sputnik DAO policy: public members cannot approve transfers',
     tx: '7aCd3oqjPuqGASxrCdADdcxkbLvPerzZKNtMxecEsh8G',
     signer: M2,
     expect: 'ERR_PERMISSION_DENIED',

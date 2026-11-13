@@ -156,6 +156,8 @@ fn a_too_long_answer_is_refused_without_a_run_refund() {
 fn revoked_member_cannot_rejoin_with_the_same_address() {
     let mut g = guild();
     settle(&mut g, "anon.testnet", verified("anon.testnet", NULLIFIER));
+    with_status("Approved");
+    g.on_voted(acct("anon.testnet"), "public".into(), true, 7);
     as_caller("owner.testnet", "owner.testnet");
     g.revoke(acct("anon.testnet")).detach();
     assert!(g.get_member(acct("anon.testnet")).is_none());
@@ -167,6 +169,8 @@ fn revoked_member_cannot_rejoin_with_the_same_address() {
 fn a_member_can_leave() {
     let mut g = guild();
     settle(&mut g, "anon.testnet", verified("anon.testnet", NULLIFIER));
+    with_status("Approved");
+    g.on_voted(acct("anon.testnet"), "public".into(), true, 7);
     as_caller("anon.testnet", "anon.testnet");
     g.leave().detach();
     assert!(g.get_member(acct("anon.testnet")).is_none());
@@ -471,4 +475,22 @@ fn a_reset_never_reads_the_previous_versions_records() {
     assert!(new.get_domain_keys().is_empty(), "a reset starts empty");
     new.set_domain_key("acme-test.org".into(), "s1".into(), "MIIB".into(), "public".into());
     assert_eq!(new.get_domain_keys().len(), 1, "a key pinned again after a reset must be listed");
+}
+
+#[test]
+#[should_panic(expected = "already in flight")]
+fn leaving_waits_for_the_seat_being_granted() {
+    let mut g = guild();
+    settle(&mut g, "anon.testnet", verified("anon.testnet", NULLIFIER));
+    as_caller("anon.testnet", "anon.testnet");
+    g.leave().detach();
+}
+
+#[test]
+#[should_panic(expected = "already in flight")]
+fn revoking_waits_for_the_seat_being_granted() {
+    let mut g = guild();
+    settle(&mut g, "anon.testnet", verified("anon.testnet", NULLIFIER));
+    as_caller("owner.testnet", "owner.testnet");
+    g.revoke(acct("anon.testnet")).detach();
 }
