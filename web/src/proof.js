@@ -81,11 +81,11 @@ function payoutEntries() {
 }
 
 async function runPayout() {
-  const refused = PAYOUT.steps[1], approved = PAYOUT.steps[2];
-  const [refusal, payout] = await Promise.all([verifyRefusedVote(refused.tx, refused.signer), verifyPayout(DAO, PAYOUT.proposalId, approved.tx, approved.signer)]);
-  $('#step-0 .checks').replaceChildren(row(payout[0]));
+  const [proposed, refused, approved] = PAYOUT.steps;
+  const [refusal, payout] = await Promise.all([verifyRefusedVote(refused.tx, refused.signer), verifyPayout(DAO, PAYOUT.proposalId, proposed.tx, approved.tx, approved.signer)]);
+  $('#step-0 .checks').replaceChildren(...payout.filter((c) => c.step === 0).map(row));
   $('#step-1 .checks').replaceChildren(...refusal.map(row));
-  $('#step-2 .checks').replaceChildren(row(payout[1]), row(payout[2]));
+  $('#step-2 .checks').replaceChildren(...payout.filter((c) => c.step === 2).map(row));
 }
 
 let tampered = false;

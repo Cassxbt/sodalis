@@ -2,13 +2,13 @@
 
 **Prove you work there. Never say who you are.**
 
-Communities that want to pay their members face a bad choice. Verifying members means a council that knows every name and employer. Staying anonymous means one person with ten wallets takes ten shares. Sodalis is a NEAR guild where **an email from an approved domain earns a seat in a Sputnik DAO treasury, one mailbox buys one seat, and the chain never learns which mailbox.**
+Communities that want to pay their members face a bad choice. Verifying members means a council that knows every name and employer. Staying anonymous means one person with ten wallets takes ten shares. Sodalis is a NEAR guild where **an email from an approved domain earns a seat in a Sputnik DAO treasury, one mailbox buys one seat, and the chain never learns which mailbox.** On testnet, a public member asked the treasury for 0.05 NEAR, was refused when they tried to approve it themselves, and a staff member approved it: the DAO paid exactly 0.05 NEAR.
 
 An organisation domain proves membership of that organisation. A free-mail domain (Gmail, Proton) proves only control of one mailbox, so free mail reaches only the `public` tier, which can propose payouts but not approve them.
 
-**Live:** https://sodalis-red.vercel.app · **[Proof](https://sodalis-red.vercel.app/proof/)** · **[Break it](https://sodalis-red.vercel.app/judges/)** · **[How it works](https://sodalis-red.vercel.app/how/)**
+**Live:** https://sodalis-red.vercel.app · **[Verify the payout](https://sodalis-red.vercel.app/proof/#the-payout)** · **[Proof](https://sodalis-red.vercel.app/proof/)** · **[Join](https://sodalis-red.vercel.app/join/)** · **[Break it](https://sodalis-red.vercel.app/judges/)** · **[How it works](https://sodalis-red.vercel.app/how/)**
 
-![tracks](https://img.shields.io/badge/tracks-social%20%C2%B7%20privacy-c9a45c) ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-36-2c6b5a) ![verifier cases](https://img.shields.io/badge/verifier%20cases-43-2c6b5a) ![live checks](https://img.shields.io/badge/npm%20test-18-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
+![tracks](https://img.shields.io/badge/tracks-social%20%C2%B7%20privacy-c9a45c) ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-36-2c6b5a) ![verifier cases](https://img.shields.io/badge/verifier%20cases-43-2c6b5a) ![live checks](https://img.shields.io/badge/npm%20test-19-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
 | | |
 |---|---|
@@ -28,15 +28,15 @@ the enclave       ─► checks signature, domain, subject, expiry → returns H
 sodalis.testnet   ─► fingerprint unused? record member, propose + approve the DAO seat, same transaction
 ```
 
-One mechanism: a **sealed letter opened only inside an attested enclave**. The output is a domain and a keyed fingerprint. The fingerprint admits one wallet, ever. Tiers come from the domain: `staff` may approve payouts and `public` may only propose them.
+One mechanism: a **sealed letter opened only inside an attested enclave**. The output is a domain and a keyed fingerprint. The fingerprint admits one wallet per admission epoch. Only a `reset` signed by the guild account itself starts a new epoch with an empty spent set; v4 began the current one (see [RECEIPTS](RECEIPTS.md)). Tiers come from the domain: `staff` may approve payouts and `public` may only propose them.
 
 ## Verify it yourself
 
 ```bash
 git clone https://github.com/Cassxbt/sodalis && cd sodalis && npm ci
 
-npm test               # 18 tests: re-reads every admission, refusal and payout from testnet, plus offline sealing checks
-npm run verify:build   # rebuilds the verifier and checks it is byte-identical to what the guild pins
+npm test               # 19 tests: re-reads every admission, refusal and payout from testnet, plus offline sealing checks
+npm run verify:build   # rebuilds the verifier and the guild contract; checks both against the chain
 npm run test:contract  # 36 contract tests (Rust, offline)
 npm run test:verifier  # 43 verifier cases: DKIM attack patterns and edge cases on signed test emails (offline)
 ```
@@ -44,13 +44,26 @@ npm run test:verifier  # 43 verifier cases: DKIM attack patterns and edge cases 
 `npm run verify:build` exits non-zero if the source and the chain disagree. Expected output:
 
 ```
-rebuilt from source   9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f
-pinned by sodalis.testnet  9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f
-served by FastFS       9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f
-MATCH: the guild runs exactly this source.
+verifier (runs in the enclave)
+  rebuilt from source    9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f
+  pinned by sodalis.testnet  9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f
+  served by FastFS       9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f
+guild contract
+  rebuilt from source    BQDDNtdx7R9zw7rnGohu2noK59Ra1Lg51HNfuCBdBR9w
+  deployed at sodalis.testnet BQDDNtdx7R9zw7rnGohu2noK59Ra1Lg51HNfuCBdBR9w
+MATCH: the guild runs exactly this source, on chain and in the enclave.
 ```
 
 Requirements: Node 22+ and Rust (the toolchain is pinned to 1.99.1 in `rust-toolchain.toml` with the `wasm32-wasip1` and `wasm32-unknown-unknown` targets). The live tests need network access. No keys, wallet or funds are needed for anything above.
+
+## What a member reveals
+
+| Step on [/join](https://sodalis-red.vercel.app/join/) | Public on testnet | Seen by |
+|---|---|---|
+| Fund the key | The guild drip funded this key, and when | The site's host sees the visitor's IP address |
+| Send the challenge | Nothing | The member's mail provider and the inbox it was sent to |
+| Join | The key, the domain, a keyed fingerprint of the address, the sealed bytes, the tier and the time | Only the enclave opens the email |
+| Ask the treasury | Amount, category, any note, and every vote | Everyone: the page shows the exact public text before filing |
 
 ## Evidence: allowed and refused
 
@@ -60,7 +73,7 @@ Guild `sodalis.testnet` · DAO `sodalis-dao.sputnik-v2.testnet` · explorer link
 |---|---|---|
 | A real email from a custom domain (`d=trendtwin.xyz`) joins | Seated as **staff**, DAO proposal #0 approved by the guild | [`AkSAiijE…`](https://testnet.nearblocks.io/txns/AkSAiijEq17NBYu1Heh82hU8uEXpR5t2quhBhXefqYUk) |
 | A real Proton email (`d=proton.me`) joins | Seated as **public**, proposal #1 | [`B4aqUCYV…`](https://testnet.nearblocks.io/txns/B4aqUCYVAytpX6Tv25YcFQhNc7UMSedmb5YED6CRifkL) |
-| A fresh browser key joins from the live [/join](https://sodalis-red.vercel.app/join/) page with a Gmail-signed email | Seated as **public**, proposal #3; all 11 checks pass in the page | [`CyJABomV…`](https://testnet.nearblocks.io/txns/CyJABomVCPUED5nBGaDXx6y2kXG4mWejYWsyrtLxkRoY) |
+| A fresh browser key joins from the live [/join](https://sodalis-red.vercel.app/join/) page with a Gmail-signed email | Seated as **public**, proposal #3; every check passes in the page | [`CyJABomV…`](https://testnet.nearblocks.io/txns/CyJABomVCPUED5nBGaDXx6y2kXG4mWejYWsyrtLxkRoY) |
 | The same mailbox signs a fresh, valid challenge for a second wallet | **Refused**: `this email address already admitted a member` | [`FdBzomLr…`](https://testnet.nearblocks.io/txns/FdBzomLry7UaV3jLiNdVFJPUKVcjNgqZS38aYQonPWio) |
 | Another wallet replays a member's sealed email | **Refused**: `challenge is bound to a different wallet or guild` | [`9Xtf5tXu…`](https://testnet.nearblocks.io/txns/9Xtf5tXumh1jyaPvJ45Dk93QcQufiEfYFbM6T7AZStLC) |
 | A join names a domain the DAO never approved | **Refused** by the contract before any TEE run | [`6voLAUxc…`](https://testnet.nearblocks.io/txns/6voLAUxcoQkpJs35SGKfpocwqvMmczfQJ94FqBAQqKYN) |
@@ -123,7 +136,7 @@ Remove any of these and the mechanism stops working:
 | The enclave run is attested and bound to code, input and output | **On chain**, checked in the browser |
 | A fresh browser key can join with no wallet | **On chain**: the [/join](https://sodalis-red.vercel.app/join/) page seated one, run by the builder |
 | A relayer can pay gas for a brand-new wallet | **In tests**. The live Join page funds new keys with a visible 0.3 NEAR drip from `sodalis-drip.testnet` instead |
-| A member's wallet cannot be linked to their email | **Designed**: the chain holds only a domain and a keyed fingerprint, but the demo members are the builder's own subaccounts |
+| A member's wallet cannot be linked to their email | **Designed**: the chain holds only a domain and a keyed fingerprint, but the demo members are the builder's own accounts |
 | Independent people govern a real treasury | **Not done**: all three members belong to the builder |
 | Guild key deleted, issuer list sealed | **Not done yet**: held until the final review, then the guild account's keys are deleted and the DAO seals the issuer list |
 | Forward secrecy for sealed letters | **Not provided**: letters stay on chain, and a future leak of the master would open them |

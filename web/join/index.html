@@ -21,12 +21,13 @@
         <li class="jstep" id="s1">
           <div class="jhead"><span class="jn">I</span><h2>Your member key</h2><span class="jstate"></span></div>
           <p>A brand-new NEAR account that exists only in this browser. It is not linked to any wallet you already use.</p>
-          <div class="jbody"><p class="mono jout" id="account">—</p><div class="btns"><button class="btn" id="download">Save my key</button><button class="btn danger" id="forget">Start over</button></div></div>
+          <div class="jbody"><p class="mono jout" id="account">—</p><div class="btns"><button class="btn" id="download">Save my key</button><label class="btn" for="restore">Restore a saved key</label><input type="file" id="restore" accept="application/json,.json" hidden /><button class="btn danger" id="forget">Start over</button></div><p class="fine" id="key-note"></p></div>
         </li>
         <li class="jstep" id="s2">
           <div class="jhead"><span class="jn">II</span><h2>Gas from the guild</h2><span class="jstate"></span></div>
-          <p>The guild's drip sends 0.3 test NEAR to every new key, so every member's funding looks the same. Most of it is a gas reserve and comes back.</p>
-          <div class="jbody"><div class="btns"><button class="btn solid" id="fund">Fund my key <span class="arrow">→</span></button></div><p class="mono jout" id="fund-out"></p></div>
+          <p>The guild's drip sends 0.3 test NEAR to each new key, so you never move funds from a wallet you already own. Joining and one request spent about 0.01 in our run; the rest stays in your key.</p>
+          <p class="warn">Public: anyone can see that this key was funded by the guild's drip, and when.</p>
+          <div class="jbody"><div class="btns"><button class="btn solid" id="fund" disabled>Fund my key <span class="arrow">→</span></button></div><p class="mono jout" id="fund-out"></p></div>
         </li>
         <li class="jstep" id="s3">
           <div class="jhead"><span class="jn">III</span><h2>Send the challenge</h2><span class="jstate"></span></div>
@@ -38,20 +39,27 @@
         </li>
         <li class="jstep" id="s4">
           <div class="jhead"><span class="jn">IV</span><h2>Seal it and join</h2><span class="jstate"></span></div>
-          <p>Your browser keeps only the signed headers, encrypts the email to the guild's inbox key and sends it. The enclave checks it; the chain only ever sees your domain and a fingerprint.</p>
+          <p>Your browser keeps only the signed headers and encrypts the email to the guild's inbox key before it leaves this page. Only the enclave can open it.</p>
+          <p class="warn">Public: your key, the domain, a keyed fingerprint of the address, the sealed bytes and the time. Not public: the address itself.</p>
           <div class="jbody">
             <label class="drop"><input type="file" id="eml" accept=".eml,message/rfc822,text/plain" /><span id="drop-label">Choose the saved email (.eml)</span></label>
             <div class="btns"><button class="btn solid" id="join" disabled>Seal and join <span class="arrow">→</span></button></div>
             <p class="mono jout" id="join-out"></p>
+            <p class="fine" id="verify-note"></p>
+            <div class="btns"><button class="btn" id="reverify" hidden>Verify again</button></div>
             <ul class="checks" id="join-checks"></ul>
           </div>
         </li>
         <li class="jstep" id="s5">
           <div class="jhead"><span class="jn">V</span><h2>Ask the treasury</h2><span class="jstate"></span></div>
-          <p>Members can propose a payout. Public members cannot approve their own; staff decide.</p>
+          <p>Members can propose a payout to themselves. Public members cannot approve their own; staff decide. This form stops at 1 NEAR; the DAO itself sets no cap.</p>
+          <p class="warn">Public: everything in the request. Pick a category; if you add a note, leave out names, invoice numbers and anything that identifies you.</p>
           <div class="jbody">
-            <div class="form"><input id="amount" type="number" min="0.01" max="1" step="0.01" value="0.05" aria-label="Amount in NEAR" /><input id="reason" type="text" maxlength="140" placeholder="What is it for?" aria-label="Reason" /><button class="btn" id="ask">Request</button></div>
+            <div class="form"><input id="amount" type="number" min="0.01" max="1" step="0.01" value="0.05" aria-label="Amount in NEAR" /><select id="category" aria-label="Category"><option>Travel</option><option>Software</option><option>Equipment</option><option>Event costs</option><option>Other</option></select><input id="reason" type="text" maxlength="80" placeholder="Optional public note" aria-label="Optional public note" /></div>
+            <p class="mono jout preview" id="preview"></p>
+            <div class="btns"><button class="btn solid" id="ask" disabled>File this public request <span class="arrow">→</span></button></div>
             <p class="mono jout" id="ask-out"></p>
+            <ul class="requests" id="requests"></ul>
           </div>
         </li>
       </ol>

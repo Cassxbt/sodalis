@@ -312,4 +312,12 @@ footer a:hover { color: var(--gold); }
 .form input { font: 15px var(--serif); background: var(--bg-2); color: var(--text); border: 1px solid var(--rule-strong); padding: 12px 14px; }
 .form input[type='number'] { width: 110px; }
 .form input[type='text'] { flex: 1; min-width: 200px; }
+.form select { font: 15px var(--serif); background: var(--bg-2); color: var(--text); border: 1px solid var(--rule-strong); padding: 12px 14px; }
+.warn { font-size: 14px; color: var(--text-2); border-left: 2px solid var(--gold); padding: 2px 0 2px 12px; margin: 10px 0 0; }
+.preview { font-size: 13px; margin-top: 12px; }
+.requests { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 8px; }
+.requests li { font: 13px var(--mono); color: var(--text-2); display: flex; gap: 10px; flex-wrap: wrap; }
+.requests .st { color: var(--text-3); }
+.requests .st.ok { color: var(--verdigris); }
+.requests .st.bad { color: var(--oxblood); }
 @media (max-width: 640px) { .jstep > p, .jbody { margin-left: 0; } }

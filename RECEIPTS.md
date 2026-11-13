@@ -140,7 +140,7 @@ While the attacks ran, OutLayer testnet gave no answer to four consecutive guild
 
 ## v4.1 (2026-11-13): a seat taken from the live Join page
 
-The [/join](https://sodalis-red.vercel.app/join/) page was run end to end in Chrome, with no script and no wallet. The page made a fresh implicit key in the browser, the guild drip (`api/drip.js`, a Vercel function holding `sodalis-drip.testnet`) funded it, and a Gmail-signed challenge was sent to a second inbox, saved as `.eml` and uploaded. The browser trimmed it to the signed headers, sealed it to the guild's inbox key and called `join`. The page then re-verified the run: all 11 checks passed.
+The [/join](https://sodalis-red.vercel.app/join/) page was run end to end in Chrome, with no script and no wallet. The page made a fresh implicit key in the browser, the guild drip (`api/drip.js`, a Vercel function holding `sodalis-drip.testnet`) funded it, and a Gmail-signed challenge was sent to a second inbox, saved as `.eml` and uploaded. The browser trimmed it to the signed headers, sealed it to the guild's inbox key and called `join`. The page then re-verified the run: all 11 checks it ran at the time passed.
 
 | Step | Result | Tx |
 |---|---|---|

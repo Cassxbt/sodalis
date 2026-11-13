@@ -6,6 +6,8 @@ import dcap from '@phala/dcap-qvl';
 
 export const NETWORK = {
   rpc: 'https://rpc.testnet.fastnear.com',
+  // Regular nodes drop transactions and old state after a few epochs; history is read here.
+  archive: 'https://archival-rpc.testnet.fastnear.com',
   attestations: 'https://testnet-api.outlayer.ai/attestations/by-tx/',
   pccs: dcap.PHALA_PCCS_URL,
   register: 'worker.outlayer.testnet',
@@ -22,10 +24,10 @@ export const near = (yocto) => {
   return frac ? `${whole}.${frac}` : `${whole}`;
 };
 
-async function rpc(method, params, tries = 4) {
+async function rpc(method, params, { url = NETWORK.rpc, tries = 4 } = {}) {
   for (let i = 1; ; i++) {
     try {
-      const r = await fetch(NETWORK.rpc, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
+      const r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
       const d = await r.json();
       if (d.error) throw new Error(d.error.message ?? JSON.stringify(d.error));
       return d.result;
@@ -36,25 +38,39 @@ async function rpc(method, params, tries = 4) {
   }
 }
 
-export async function view(contract, method, args = {}) {
-  const r = await rpc('query', { request_type: 'call_function', finality: 'final', account_id: contract, method_name: method, args_base64: btoa(JSON.stringify(args)) });
+/** A view call against current state, or against the state at `block` (a hash or height) from the archive. */
+export async function view(contract, method, args = {}, block) {
+  const at = block == null ? { finality: 'final' } : { block_id: block };
+  const params = { request_type: 'call_function', ...at, account_id: contract, method_name: method, args_base64: btoa(JSON.stringify(args)) };
+  const r = block == null ? await rpc('query', params) : await fromArchive('query', params);
   return JSON.parse(new TextDecoder().decode(Uint8Array.from(r.result)));
 }
 
-const txStatus = (hash, signer) => rpc('EXPERIMENTAL_tx_status', { tx_hash: hash, sender_account_id: signer, wait_until: 'FINAL' });
+/** The archive holds old history but trails the head by a few blocks; the regular node covers the newest. */
+async function fromArchive(method, params) {
+  try {
+    return await rpc(method, params, { url: NETWORK.archive, tries: 2 });
+  } catch {
+    return rpc(method, params);
+  }
+}
+
+const txStatus = (hash, signer) => fromArchive('EXPERIMENTAL_tx_status', { tx_hash: hash, sender_account_id: signer, wait_until: 'FINAL' });
+const blockHeight = async (hash) => (await fromArchive('block', { block_id: hash })).header.height;
 
 /** Everything a join transaction recorded: the guild's request, OutLayer's answer and the guild's events. */
 export async function readJoin(txHash, signer) {
   const tx = await txStatus(txHash, signer);
-  const join = { request: null, requestedBy: null, output: null, events: [] };
+  const join = { request: null, requestedBy: null, requestBlock: null, output: null, events: [] };
   for (const o of tx.receipts_outcome) {
     for (const log of o.outcome.logs) {
       if (!log.startsWith('EVENT_JSON:')) continue;
       const e = JSON.parse(log.slice(11));
-      if (e.event === 'execution_requested') {
+      if (e.event === 'execution_requested' && o.outcome.executor_id === NETWORK.outlayer) {
         const r = JSON.parse(e.data[0].request_data);
         join.request = r;
         join.requestedBy = r.predecessor_id;
+        join.requestBlock = o.block_hash;
       } else if (e.standard === 'sodalis') {
         join.events.push({ event: e.event, ...e.data[0], emitter: o.outcome.executor_id });
       }
@@ -123,6 +139,9 @@ export async function verifyJoin(txHash, signer, guild, now = BigInt(Math.floor(
   const approved = await view(NETWORK.register, 'is_measurements_approved', { measurements: { mrtd: m.mrtd, rtmr0: m.rtmr0, rtmr1: m.rtmr1, rtmr2: m.rtmr2, rtmr3: m.rtmr3 } });
   add('execution', 'The worker image is on OutLayer\'s approved list', approved === true, `${NETWORK.register}.is_measurements_approved = ${approved}`);
   add('execution', 'The quote commits to this exact task', m.reportData === taskHash(att) + '0'.repeat(64), `report_data ${short(m.reportData)}`);
+  const height = join.requestBlock ? await blockHeight(join.requestBlock) : null;
+  add('execution', 'The quote is for the request recorded on chain', height != null && Number(att.block_height) === height && att.caller_account_id === join.request?.sender_id && Number(att.request_id) === join.request?.request_id,
+    `signed block ${att.block_height} and caller match OutLayer's request #${join.request?.request_id}`);
   add('execution', 'The guild itself requested this run', join.requestedBy === guild, `predecessor ${join.requestedBy}`);
   add('execution', 'The code that ran is the verifier the guild requested', requestedHash && att.wasm_hash === requestedHash && att.executed_wasm_sha256 === requestedHash, `${short(requestedHash)}`);
   add('execution', 'It ran on the request recorded on chain', join.request && sha(join.request.input_data) === att.input_hash, `sha256(input) ${short(att.input_hash)}`);
@@ -150,19 +169,46 @@ export async function verifyJoin(txHash, signer, guild, now = BigInt(Math.floor(
   return { checks, outcome: joined ? { joined: true, ...joined, role: joined.role ?? seat?.role } : { joined: false, reason: refused?.reason }, attestation: { taskId: att.task_id, blockHeight: att.block_height } };
 }
 
-/** A payout proposal: who proposed, who voted, and the transfer the DAO actually made. */
-export async function verifyPayout(dao, proposalId, approveTx, approver) {
+const rolesAt = async (dao, block) => {
+  const { roles } = await view(dao, 'get_policy', {}, block);
+  return (account) => roles.filter((r) => r.kind?.Group?.includes(account)).map((r) => r.name);
+};
+const callOf = (tx) => {
+  const call = tx.transaction.actions.find((a) => a.FunctionCall)?.FunctionCall;
+  return call ? { method: call.method_name, args: JSON.parse(atob(call.args)) } : {};
+};
+
+/**
+ * A payout, step by step, with roles read as they stood when each step ran:
+ * the member's request (step 0), the approval (step 2) and the DAO's transfer.
+ */
+export async function verifyPayout(dao, proposalId, proposeTx, approveTx, approver) {
   const checks = [];
-  const add = (name, ok, detail) => checks.push({ group: 'payout', name, ok: Boolean(ok), detail });
+  const add = (step, name, ok, detail) => checks.push({ group: 'payout', step, name, ok: Boolean(ok), detail });
   const proposal = await view(dao, 'get_proposal', { id: proposalId });
   const transfer = proposal.kind?.Transfer;
-  const policy = await view(dao, 'get_policy');
-  const roleOf = (account) => policy.roles.filter((r) => r.kind?.Group?.includes(account)).map((r) => r.name);
-  add('A member proposed a payout', Boolean(transfer), `#${proposalId} by ${proposal.proposer} (${roleOf(proposal.proposer).join(', ')}): ${near(transfer?.amount ?? 0)} NEAR to ${transfer?.receiver_id}`);
-  add('It was approved by staff alone', proposal.status === 'Approved' && Object.keys(proposal.votes).every((v) => roleOf(v).includes('staff')), `votes ${JSON.stringify(proposal.votes)}`);
-  const tx = await txStatus(approveTx, approver);
-  const paid = tx.receipts.flatMap((r) => (r.receipt.Action?.actions ?? []).filter((a) => a.Transfer && r.predecessor_id === dao && r.receiver_id === transfer?.receiver_id).map((a) => BigInt(a.Transfer.deposit)).filter((d) => d > 0n));
-  add('The DAO transferred exactly that amount', paid.some((d) => d === BigInt(transfer?.amount ?? -1)), `${paid.map(near).join(', ')} NEAR from ${dao}`);
+
+  const filed = await txStatus(proposeTx, proposal.proposer);
+  const filedAt = filed.receipts_outcome.find((o) => o.outcome.executor_id === dao)?.block_hash;
+  const proposerRoles = filedAt ? (await rolesAt(dao, filedAt))(proposal.proposer) : [];
+  const returned = filed.status?.SuccessValue ? JSON.parse(atob(filed.status.SuccessValue)) : null;
+  add(0, 'A member filed this payout request', filed.transaction.signer_id === proposal.proposer && callOf(filed).method === 'add_proposal' && filed.transaction.receiver_id === dao && returned === proposalId && Boolean(transfer) && ['public', 'staff'].some((r) => proposerRoles.includes(r)),
+    `#${proposalId} by ${proposal.proposer} (${proposerRoles.join(', ') || 'no role'} then): ${near(transfer?.amount ?? 0)} NEAR to ${transfer?.receiver_id}`);
+
+  const voted = await txStatus(approveTx, approver);
+  const vote = callOf(voted);
+  const votedAt = voted.receipts_outcome.find((o) => o.outcome.executor_id === dao)?.block_hash;
+  const roleAtVote = votedAt ? await rolesAt(dao, votedAt) : () => [];
+  const approvers = Object.entries(proposal.votes).filter(([, v]) => v === 'Approve').map(([a]) => a);
+  add(2, 'Staff approved it', voted.status?.SuccessValue != null && proposal.votes[approver] === 'Approve' && vote.method === 'act_proposal' && vote.args.id === proposalId && vote.args.action === 'VoteApprove' && proposal.status === 'Approved'
+    && approvers.length > 0 && approvers.every((a) => roleAtVote(a).some((r) => r === 'staff' || r === 'council')) && roleAtVote(approver).includes('staff'),
+    `${approver} (${roleAtVote(approver).join(', ')} then) voted VoteApprove on #${proposalId}; status ${proposal.status}`);
+
+  const outcomes = new Map(voted.receipts_outcome.map((o) => [o.id, o.outcome.status]));
+  const paid = voted.receipts.filter((r) => r.predecessor_id === dao && r.receiver_id === transfer?.receiver_id)
+    .flatMap((r) => (r.receipt.Action?.actions ?? []).filter((a) => a.Transfer).map((a) => ({ amount: BigInt(a.Transfer.deposit), ok: Boolean(outcomes.get(r.receipt_id)) && !outcomes.get(r.receipt_id).Failure })))
+    .filter((t) => t.amount > 0n);
+  add(2, 'The DAO transferred exactly that amount, successfully', paid.some((t) => t.ok && t.amount === BigInt(transfer?.amount ?? -1)), `${paid.map((t) => `${near(t.amount)} NEAR${t.ok ? '' : ' (failed)'}`).join(', ') || 'no transfer'} from ${dao}`);
   return checks;
 }
 

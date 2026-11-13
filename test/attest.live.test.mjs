@@ -17,9 +17,17 @@ for (const join of JOINS) {
 }
 
 test('payout: a public member cannot approve their own request; staff can, and exactly 0.05 NEAR moves', async () => {
-  const [, refused, approved] = PAYOUT.steps;
+  const [proposed, refused, approved] = PAYOUT.steps;
   assertAll(await verifyRefusedVote(refused.tx, refused.signer));
-  assertAll(await verifyPayout(DAO, PAYOUT.proposalId, approved.tx, approved.signer));
+  const checks = await verifyPayout(DAO, PAYOUT.proposalId, proposed.tx, approved.tx, approved.signer);
+  assert.deepEqual(checks.map((c) => c.step), [0, 2, 2]);
+  assertAll(checks);
+});
+
+test('payout: a transaction that did not file the request cannot stand in for it', async () => {
+  const [, refused, approved] = PAYOUT.steps;
+  const checks = await verifyPayout(DAO, PAYOUT.proposalId, refused.tx, approved.tx, approved.signer);
+  assert.equal(checks.find((c) => c.step === 0).ok, false);
 });
 
 for (const attack of ATTACKS) {
