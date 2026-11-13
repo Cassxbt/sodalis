@@ -9,6 +9,7 @@ export default defineConfig({
         proof: resolve(import.meta.dirname, 'proof/index.html'),
         judges: resolve(import.meta.dirname, 'judges/index.html'),
         how: resolve(import.meta.dirname, 'how/index.html'),
+        join: resolve(import.meta.dirname, 'join/index.html'),
       },
     },
   },

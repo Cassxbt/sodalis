@@ -290,3 +290,26 @@ footer a:hover { color: var(--gold); }
   .reveal, .hero-title span { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
 }
+
+/* Join */
+.steps { list-style: none; margin: 60px 0 0; padding: 0; display: grid; gap: 14px; }
+.jstep { border: 1px solid var(--rule); padding: 26px 28px 28px; background: var(--bg); transition: border-color .5s, background .5s; }
+.jstep:hover { border-color: var(--rule-strong); }
+.jhead { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.jn { font: 500 20px var(--display); color: var(--gold); min-width: 34px; }
+.jhead h2 { font: 500 24px/1.2 var(--serif); margin: 0; flex: 1; }
+.jstate { font: 12px var(--mono); color: var(--text-3); }
+.jstate.ok { color: var(--verdigris); }
+.jstep > p { color: var(--text-2); margin: 10px 0 18px 50px; max-width: 700px; }
+.jbody { margin-left: 50px; display: grid; gap: 14px; }
+.jout { color: var(--text-2); overflow-wrap: anywhere; margin: 0; min-height: 1em; }
+.subject { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--bg-2); border: 1px dashed var(--gold); padding: 14px 16px; }
+.subject code { flex: 1; overflow-wrap: anywhere; color: var(--text); font-size: 13px; }
+.drop { display: block; border: 1px dashed var(--rule-strong); padding: 22px; text-align: center; cursor: pointer; color: var(--text-2); font: 13px var(--mono); transition: border-color .3s, background .3s; }
+.drop:hover { border-color: var(--gold); background: var(--gold-soft); }
+.drop input { display: none; }
+.form { display: flex; gap: 10px; flex-wrap: wrap; }
+.form input { font: 15px var(--serif); background: var(--bg-2); color: var(--text); border: 1px solid var(--rule-strong); padding: 12px 14px; }
+.form input[type='number'] { width: 110px; }
+.form input[type='text'] { flex: 1; min-width: 200px; }
+@media (max-width: 640px) { .jstep > p, .jbody { margin-left: 0; } }

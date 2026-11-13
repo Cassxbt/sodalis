@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sodalis · Join</title>
+    <meta name="description" content="Join the Sodalis guild with one email. Your browser makes a fresh key, seals the email, and an enclave decides." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Fragment+Mono&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="page-head">
+        <p class="eyebrow">NEAR testnet · about five minutes</p>
+        <h1>Join</h1>
+        <p class="lead">One email from an approved domain earns a seat. Your browser makes a fresh key, seals the email so only the enclave can read it, and the guild seats you in the DAO. No wallet to install.</p>
+      </header>
+
+      <ol class="steps">
+        <li class="jstep" id="s1">
+          <div class="jhead"><span class="jn">I</span><h2>Your member key</h2><span class="jstate"></span></div>
+          <p>A brand-new NEAR account that exists only in this browser. It is not linked to any wallet you already use.</p>
+          <div class="jbody"><p class="mono jout" id="account">—</p><div class="btns"><button class="btn" id="download">Save my key</button><button class="btn danger" id="forget">Start over</button></div></div>
+        </li>
+        <li class="jstep" id="s2">
+          <div class="jhead"><span class="jn">II</span><h2>Gas from the guild</h2><span class="jstate"></span></div>
+          <p>The guild's drip sends 0.3 test NEAR to every new key, so every member's funding looks the same. Most of it is a gas reserve and comes back.</p>
+          <div class="jbody"><div class="btns"><button class="btn solid" id="fund">Fund my key <span class="arrow">→</span></button></div><p class="mono jout" id="fund-out"></p></div>
+        </li>
+        <li class="jstep" id="s3">
+          <div class="jhead"><span class="jn">III</span><h2>Send the challenge</h2><span class="jstate"></span></div>
+          <p>From your mailbox, send an email with exactly this subject to <em>any other</em> address you can read. Gmail does not sign mail you send to yourself, so use a second inbox.</p>
+          <div class="jbody">
+            <div class="subject"><code id="subject">—</code><button class="btn" id="copy">Copy</button></div>
+            <p class="fine">Approved domains: <span id="domains">reading…</span>. Then open the copy that arrived and save it as a file. In Gmail: the ⋮ menu on the message → <em>Download message</em>. Elsewhere, look for <em>Show original</em> or <em>Download message</em>.</p>
+          </div>
+        </li>
+        <li class="jstep" id="s4">
+          <div class="jhead"><span class="jn">IV</span><h2>Seal it and join</h2><span class="jstate"></span></div>
+          <p>Your browser keeps only the signed headers, encrypts the email to the guild's inbox key and sends it. The enclave checks it; the chain only ever sees your domain and a fingerprint.</p>
+          <div class="jbody">
+            <label class="drop"><input type="file" id="eml" accept=".eml,message/rfc822,text/plain" /><span id="drop-label">Choose the saved email (.eml)</span></label>
+            <div class="btns"><button class="btn solid" id="join" disabled>Seal and join <span class="arrow">→</span></button></div>
+            <p class="mono jout" id="join-out"></p>
+            <ul class="checks" id="join-checks"></ul>
+          </div>
+        </li>
+        <li class="jstep" id="s5">
+          <div class="jhead"><span class="jn">V</span><h2>Ask the treasury</h2><span class="jstate"></span></div>
+          <p>Members can propose a payout. Public members cannot approve their own; staff decide.</p>
+          <div class="jbody">
+            <div class="form"><input id="amount" type="number" min="0.01" max="1" step="0.01" value="0.05" aria-label="Amount in NEAR" /><input id="reason" type="text" maxlength="140" placeholder="What is it for?" aria-label="Reason" /><button class="btn" id="ask">Request</button></div>
+            <p class="mono jout" id="ask-out"></p>
+          </div>
+        </li>
+      </ol>
+    </main>
+    <script type="module" src="../src/join.js"></script>
+  </body>
+</html>

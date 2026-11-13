@@ -5,6 +5,7 @@ const SEAL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 const PAGES = [
   ['/', 'Home', ''],
   ['/proof/', 'Proof', ''],
+  ['/join/', 'Join', ''],
   ['/judges/', 'Break it', ''],
   ['/how/', 'How it works', 'hide-sm'],
 ];
