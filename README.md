@@ -19,7 +19,7 @@ An organisation domain proves membership of that organisation. A free-mail domai
 | **Fastest proof** | Open [/proof](https://sodalis-red.vercel.app/proof/). Your browser re-verifies every admission from NEAR testnet, OutLayer's attestation API and Intel's collateral. Then press **Forge one byte** and watch the ledger turn red. |
 | **Fastest join** | Open [/join](https://sodalis-red.vercel.app/join/). The page makes a fresh key, the guild drip funds it, and one email from an approved domain seats it. [This seat](https://testnet.nearblocks.io/txns/CyJABomVCPUED5nBGaDXx6y2kXG4mWejYWsyrtLxkRoY) was taken that way. |
 | **Fastest attack** | Open [/judges](https://sodalis-red.vercel.app/judges/). Thirteen real attempts against the live guild, each re-read from chain with its refusal. |
-| **Status** | Live on **NEAR testnet**. Real emails (Proton, Gmail, and a custom domain on Hostinger). Apart from one first-time user the builder reached out to, every member belongs to the builder: the rules are proven, independent use is not. See [What is real](#what-is-real). |
+| **Status** | Live on **NEAR testnet**. Real emails (Proton, Gmail, and a custom domain on Hostinger). Every rule is proven on chain, and a first-time user has joined and been paid; the stewards and council are the builder's, as in any single-team testnet deployment, and a pilot with a real team fund is next. See [What is real](#what-is-real). |
 
 ## What it does
 
@@ -162,7 +162,9 @@ Remove any of these and the mechanism stops working:
 | Someone new can complete the flow | **Done once, with a guide**: a first-time user the builder reached out to joined and was paid, following an eight-step written guide and no other help. They found the page alone confusing; that guide is now on the page. See [/case](https://sodalis-red.vercel.app/case/) |
 | A relayer can pay gas for a brand-new wallet | **In tests**. The live Join page funds new keys with a visible 0.3 NEAR drip from `sodalis-drip.testnet` instead |
 | A member's wallet cannot be linked to their email | **Designed**: the chain holds only a domain and a keyed fingerprint, but the demo members are the builder's own accounts |
-| Independent people govern a real treasury | **Not done**: the stewards and the council are the builder's; one member is a first-time user the builder reached out to |
+| Who runs this deployment | **Demo setup**: the steward and the council are the builder's accounts, as in any single-team testnet deployment |
+| People outside the builder using it | **Started**: one first-time user joined and was paid, following a written guide ([/case](https://sodalis-red.vercel.app/case/)) |
+| A real team or community running its own fund | **Next**: a pilot with an existing team fund; not yet done |
 | Guild key deleted, issuer list sealed | **Not done yet**: held until the final review, then the guild account's keys are deleted and the DAO seals the issuer list |
 | Forward secrecy for sealed letters | **Not provided**: letters stay on chain, and a future leak of the master would open them |
 | Seat recovery after a lost wallet | **Not provided**: a spent mailbox cannot rejoin |
