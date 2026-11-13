@@ -81,7 +81,8 @@ code, .mono { font-family: var(--mono); font-size: .78em; letter-spacing: -.01em
 .links a:hover::after, .links a[aria-current='page']::after { transform: scaleX(1); }
 .progress { position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; background: var(--gold); transform-origin: left; transform: scaleX(var(--p, 0)); }
 @media (max-width: 640px) {
-  .links { gap: 14px; font-size: 11px; }
+  .links { gap: 14px; font-size: 11px; overflow-x: auto; scrollbar-width: none; max-width: 68vw; white-space: nowrap; }
+  .links::-webkit-scrollbar { display: none; }
   .links .hide-sm { display: none; }
 }
 

@@ -111,7 +111,7 @@ tabs();
 $('#case-who').textContent = chosen.who;
 $('#case-title').textContent = chosen.title;
 $('#case-summary').textContent = chosen.summary;
-$('#linked').textContent = chosen.linked ?? 'Any wallet the person already owned: the seat is a fresh key.';
+$('#linked').textContent = chosen.linked ?? 'A transfer from a wallet the person already owned: the seat is a fresh key, funded by the guild drip, which is public.';
 chosen.steps.forEach((step, i) => $('#steps').append(entry(step, i)));
 reveal();
 now().catch((e) => $('#now').replaceChildren(el('li', null, `could not read: ${e.message}`)));

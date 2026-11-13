@@ -239,7 +239,9 @@ export async function verifyPayout(dao, proposalId, proposeTx, approveTx, approv
   const paid = voted.receipts.filter((r) => r.predecessor_id === dao && r.receiver_id === transfer?.receiver_id)
     .flatMap((r) => (r.receipt.Action?.actions ?? []).filter((a) => a.Transfer).map((a) => ({ amount: BigInt(a.Transfer.deposit), ok: Boolean(outcomes.get(r.receipt_id)) && !outcomes.get(r.receipt_id).Failure })))
     .filter((t) => t.amount > 0n);
-  add(2, 'The DAO transferred exactly that amount, successfully', paid.some((t) => t.ok && t.amount === BigInt(transfer?.amount ?? -1)), `${paid.map((t) => `${near(t.amount)} NEAR${t.ok ? '' : ' (failed)'}`).join(', ') || 'no transfer'} from ${dao}`);
+  const landed = paid.filter((t) => t.ok);
+  add(2, 'The DAO transferred exactly that amount, once, successfully', transfer?.token_id === '' && landed.length === 1 && landed[0].amount === BigInt(transfer.amount),
+    `${paid.map((t) => `${near(t.amount)} NEAR${t.ok ? '' : ' (failed)'}`).join(', ') || 'no transfer'} from ${dao}`);
   return checks;
 }
 
@@ -291,9 +293,10 @@ export async function verifyLeft(txHash, member, guild, dao) {
   const events = eventsOf(tx, guild);
   const removed = events.find((e) => e.event === 'member_removed' && e.data[0].account_id === member && e.data[0].how === 'left');
   const unseated = events.find((e) => e.event === 'dao_role_removed' && e.data[0].account_id === member);
-  const { roles } = await view(dao, 'get_policy');
-  const still = roles.filter((r) => r.kind?.Group?.includes(member)).map((r) => r.name);
-  return [{ group: 'payout', name: 'It lost its DAO seat in the same transaction', ok: Boolean(removed && unseated) && still.length === 0, detail: `${unseated ? `${unseated.data[0].role} seat removed by proposal #${unseated.data[0].proposal_id}` : 'no dao_role_removed event'}; roles now: ${still.join(', ') || 'none'}` }];
+  // The roster as it stood when the removal ran, so a later, legitimate role change cannot rewrite this record.
+  const at = tx.receipts_outcome.filter((o) => o.outcome.executor_id === dao).at(-1)?.block_hash;
+  const still = at ? (await rolesAt(dao, at))(member) : ['unknown'];
+  return [{ group: 'payout', name: 'It lost its DAO seat in the same transaction', ok: Boolean(removed && unseated) && still.length === 0, detail: `${unseated ? `${unseated.data[0].role} seat removed by proposal #${unseated.data[0].proposal_id}` : 'no dao_role_removed event'}; roles right after: ${still.join(', ') || 'none'}` }];
 }
 
 /** A vote the DAO refused, e.g. a public member approving their own payout. */

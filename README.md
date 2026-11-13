@@ -4,9 +4,9 @@
 
 > *An illustration.* Maya's car breaks down three days before payday. Her team keeps a small fund for exactly this. But asking means telling the colleagues who run it that she's short this month. So she doesn't ask.
 
-**Sodalis is a team fund on NEAR that people can ask for help without anyone learning who asked.** A member proves they belong with an email from an approved domain. The email is opened only inside an attested enclave; the chain records a domain and a keyed fingerprint, never the address. One mailbox earns one seat in a Sputnik DAO treasury, and money moves in rounds the chain enforces: a budget per round, an allowance per seat, a steward's approval. When a member leaves, their access ends.
+**Sodalis is a team fund on NEAR that a member can ask for help without their email address ever being published.** A member proves they belong with an email from an approved domain. The email is opened only inside an attested enclave; the public record holds a domain and a keyed fingerprint, never the address. One mailbox earns one seat in a Sputnik DAO treasury, and money moves in rounds the chain enforces: a budget per round, an allowance per seat, a steward's approval. When a member leaves, their access ends.
 
-OutLayer runs the admission: without it there is no private eligibility check and no seat. Sputnik holds the treasury: without it there is no vote, no refusal and no payment.
+OutLayer verifies private eligibility: without it there is no private admission and no seat. The guild contract enforces each round's limits. Sputnik governs membership and executes approved transfers: without it there is no vote and no payment.
 
 | | |
 |---|---|
@@ -18,7 +18,7 @@ OutLayer runs the admission: without it there is no private eligibility check an
 | **Demo video** | Recording; linked at submission |
 | **Tracks** | **Social Money**: a DAO treasury whose eligibility, allowance and departure rules the chain enforces. **Privacy & Private AI**: confidential computation in an OutLayer TEE (Intel TDX) decides who belongs. |
 
-> **Status.** Live on NEAR testnet with real emails (Proton, Gmail, and a custom domain on Hostinger). Every rule above is proven on chain, and a first-time user has joined and been paid. The steward and the council are the builder's accounts, as in any single-team testnet deployment; a pilot with a real team fund is next. Everything else that is partial or missing is in [What is real](#what-is-real).
+> **Status.** Live on NEAR testnet with real emails (Proton, Gmail, and a custom domain on Hostinger). Each outcome in the table above is a linked testnet transaction, and a first-time user has joined and been paid. The steward and the council are the builder's accounts; a pilot with a real team fund is next. Everything else that is partial or missing is in [What is real](#what-is-real).
 
 ![network](https://img.shields.io/badge/network-NEAR%20testnet-2c6b5a) ![npm test](https://img.shields.io/badge/npm%20test-28-2c6b5a) ![contract tests](https://img.shields.io/badge/contract%20tests-56-2c6b5a) ![verifier checks](https://img.shields.io/badge/verifier%20checks-43-2c6b5a) ![license](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -28,10 +28,10 @@ No wallet, key or funds are needed for any of this.
 
 | Do | See |
 |---|---|
-| Open [/case](https://sodalis-red.vercel.app/case/) | One member's whole journey, each step verified live: admission, request, approval, transfer, refusal, departure |
-| Open [/proof](https://sodalis-red.vercel.app/proof/) | Every admission and both rounds re-verified from NEAR testnet, OutLayer's attestation API and Intel's collateral. Press **Forge one byte** and the ledger turns red |
+| Open [/case](https://sodalis-red.vercel.app/case/?case=first-user) | A first-time user's admission, request, approval and transfer, each verified live. The [departure case](https://sodalis-red.vercel.app/case/?case=departure) adds two refusals and loss of the seat |
+| Open [/proof](https://sodalis-red.vercel.app/proof/) | Four recorded admissions and both rounds re-verified from NEAR testnet, OutLayer's attestation API and Intel's collateral. Press **Forge one byte** and the ledger turns red |
 | Open [/judges](https://sodalis-red.vercel.app/judges/) | Thirteen real attacks on the live guild, each re-read from chain with its refusal |
-| Open [/join](https://sodalis-red.vercel.app/join/) | The member flow itself: a fresh key, a sealed email, a seat, a request (about ten minutes, needs a Gmail or Proton and a second inbox) |
+| Open [/join](https://sodalis-red.vercel.app/join/) | The member flow itself. Using it creates and funds a real testnet key and sends transactions; viewing it does not. About ten minutes, with a Gmail or Proton and a second inbox |
 | Run `npm test` | 28 tests: 23 re-read the admissions, refusals and payouts below from testnet, 5 check sealing offline |
 
 ## How it works
@@ -191,11 +191,12 @@ A check that cannot run says *not verified here*; it never counts as a pass.
 | The enclave run is attested and bound to code, input and output | **On chain**, checked in the browser |
 | Public members only ask; staff approve (the council can too) | **On chain** |
 | Per-seat allowance and round budget | **On chain**: one refusal past the allowance, one past the budget, and a DAO bypass refused |
-| Leaving ends spending authority | **On chain** |
+| Leaving ends spending authority | **On chain, one recorded case**: after leaving, the member's next request was refused |
 | A rejected request returns to the round, once | **On chain**. An undecided request stays reserved until the DAO records an outcome; one that ends `Failed` stays reserved |
 | A brand-new member can join from a browser with no wallet | **On chain**, twice: once by the builder, once by a first-time user |
 | Someone outside the builder completes the flow | **Done once, with a guide**: a first-time user the builder reached out to joined and was paid, following an eight-step written guide and no other help. They found the page alone confusing; the guide is now on the page |
 | Who runs this deployment | **Demo setup**: the steward and the council are the builder's accounts |
+| A filing whose callback never records a proposal id | **Not handled**: the amount stays reserved with no record to reconcile; this has not occurred, and the guild key is kept partly for this repair |
 | A real team or community running its own fund | **Next**: a pilot with an existing team fund |
 | A staff member cannot approve their own request | **Not provided**: Sputnik cannot tell the receiver from the voter, and this guild has one staff member. With several staff, require two approvals |
 | A member's wallet cannot be linked to their email | **Designed**: the chain holds a domain and a keyed fingerprint; a /join member's key is fresh, though the drip's funding is public. The builder's test seats are named subaccounts and are linked to the builder |
