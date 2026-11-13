@@ -446,3 +446,29 @@ fn a_key_removed_mid_join_admits_nobody() {
     assert!(out["reason"].as_str().unwrap().contains("removed or changed"));
     assert!(!g.is_nullifier_used(NULLIFIER.into()));
 }
+
+fn at_height(height: u64) {
+    testing_env!(VMContextBuilder::new()
+        .current_account_id(acct("guild.testnet"))
+        .predecessor_account_id(acct("guild.testnet"))
+        .block_height(height)
+        .build());
+}
+
+#[test]
+fn a_reset_never_reads_the_previous_versions_records() {
+    at_height(1);
+    let mut old = Guild::new(acct("guild.testnet"), acct("outlayer.testnet"), Verifier { url: "https://example.org/v.wasm".into(), hash: "ab".repeat(32) },
+        acct("guild.testnet"), "p".into(), acct("dao.testnet"));
+    old.set_domain_key("acme-test.org".into(), "s1".into(), "MIIB".into(), "public".into());
+    // The runtime flushes collections at the end of every call; mirror that.
+    old.domain_keys.flush();
+    near_sdk::env::state_write(&old);
+
+    at_height(2);
+    let mut new = Guild::reset(acct("guild.testnet"), acct("outlayer.testnet"), Verifier { url: "https://example.org/v.wasm".into(), hash: "ab".repeat(32) },
+        acct("guild.testnet"), "p".into(), acct("dao.testnet"));
+    assert!(new.get_domain_keys().is_empty(), "a reset starts empty");
+    new.set_domain_key("acme-test.org".into(), "s1".into(), "MIIB".into(), "public".into());
+    assert_eq!(new.get_domain_keys().len(), 1, "a key pinned again after a reset must be listed");
+}

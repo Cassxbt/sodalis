@@ -2,12 +2,12 @@
 // OutLayer's attestation, Intel's collateral and the DAO's own records.
 import { sha256 } from '@noble/hashes/sha2.js';
 import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils.js';
-import { js_get_collateral, js_verify } from '@phala/dcap-qvl-web';
+import dcap from '@phala/dcap-qvl';
 
 export const NETWORK = {
   rpc: 'https://rpc.testnet.fastnear.com',
   attestations: 'https://testnet-api.outlayer.ai/attestations/by-tx/',
-  pccs: 'https://pccs.phala.network/tdx/certification/v4',
+  pccs: dcap.PHALA_PCCS_URL,
   register: 'worker.outlayer.testnet',
   outlayer: 'outlayer.testnet',
 };
@@ -22,11 +22,18 @@ export const near = (yocto) => {
   return frac ? `${whole}.${frac}` : `${whole}`;
 };
 
-async function rpc(method, params) {
-  const r = await fetch(NETWORK.rpc, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error.message ?? JSON.stringify(d.error));
-  return d.result;
+async function rpc(method, params, tries = 4) {
+  for (let i = 1; ; i++) {
+    try {
+      const r = await fetch(NETWORK.rpc, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) });
+      const d = await r.json();
+      if (d.error) throw new Error(d.error.message ?? JSON.stringify(d.error));
+      return d.result;
+    } catch (e) {
+      if (i >= tries) throw e;
+      await new Promise((res) => setTimeout(res, 300 * 2 ** i));
+    }
+  }
 }
 
 export async function view(contract, method, args = {}) {
@@ -61,7 +68,7 @@ export async function readJoin(txHash, signer) {
 async function collateral(quote, tries = 4) {
   for (let i = 1; ; i++) {
     try {
-      return await js_get_collateral(NETWORK.pccs, quote);
+      return await dcap.getCollateral(NETWORK.pccs, quote);
     } catch (e) {
       if (i >= tries) throw e;
       await new Promise((r) => setTimeout(r, 400 * 2 ** i));
@@ -108,7 +115,7 @@ export async function verifyJoin(txHash, signer, guild, now = BigInt(Math.floor(
   const requestedHash = join.request?.code_source?.WasmUrl?.hash;
 
   try {
-    const report = js_verify(quote, await collateral(quote), now);
+    const report = dcap.verify(quote, await collateral(quote), Number(now));
     add('execution', 'Intel signed this TDX quote (DCAP chain, TCB status)', report.status === 'UpToDate', `status ${report.status}${report.advisory_ids?.length ? `, advisories ${report.advisory_ids.join(', ')}` : ''}`);
   } catch (e) {
     add('execution', 'Intel signed this TDX quote (DCAP chain, TCB status)', false, String(e));

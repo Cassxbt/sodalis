@@ -1,11 +1,8 @@
-import init from '@phala/dcap-qvl-web';
-import dcapWasm from '@phala/dcap-qvl-web/dcap-qvl-web_bg.wasm?url';
 import { el, reveal } from './shell.js';
 import { verifyJoin, verifyRefusal } from './attest.js';
 import { GUILD, EXPLORER, ATTACKS } from './receipts.js';
 
 const $ = (sel) => document.querySelector(sel);
-const ready = init({ module_or_path: dcapWasm });
 
 function card(attack, i) {
   const c = el('article', 'attack reveal');
@@ -44,7 +41,6 @@ async function check(attack) {
 async function teeRun(attack, c, button) {
   button.disabled = true;
   button.textContent = 'Recomputing…';
-  await ready;
   const { checks, outcome } = await verifyJoin(attack.tx, attack.signer, GUILD);
   const execution = checks.filter((x) => x.group === 'execution');
   const passed = execution.filter((x) => x.ok).length;

@@ -9,7 +9,7 @@
     "@noble/ciphers": "2.4.0",
     "@noble/curves": "2.4.0",
     "@noble/hashes": "2.4.0",
-    "@phala/dcap-qvl-web": "0.3.3",
+    "@phala/dcap-qvl": "0.7.0",
     "near-api-js": "7.2.0"
   },
   "scripts": {
@@ -18,7 +18,8 @@
     "test:verifier": "cargo build --release --target wasm32-wasip1 --manifest-path verifier/Cargo.toml && node scripts/local_test.mjs verifier/target/wasm32-wasip1/release/guild-verifier-v2.wasm fixtures/cases.json",
     "verify:build": "node scripts/verify_build.mjs",
     "dev": "vite web",
-    "build": "vite build web --outDir ../dist --emptyOutDir"
+    "build": "vite build web --outDir ../dist --emptyOutDir",
+    "pretest": "cargo build --release --target wasm32-wasip1 --manifest-path verifier/Cargo.toml"
   },
   "devDependencies": {
     "vite": "8.3.5"

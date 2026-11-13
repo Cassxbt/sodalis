@@ -114,8 +114,9 @@ impl Guild {
             "verifier hash must be 64 lowercase hex characters"
         );
         require!(verifier.url.starts_with("https://"), "verifier url must be https");
-        // Fresh prefixes: a reset leaves the previous version's records behind
-        // under the old ones, and they must never be read as current.
+        // Each init gets its own prefixes: a reset leaves the previous version's
+        // records in storage, and reusing a prefix would read them as current.
+        let p = |tag: &str| format!("{}{tag}", env::block_height()).into_bytes();
         Self {
             owner,
             outlayer,
@@ -123,14 +124,14 @@ impl Guild {
             secrets_owner,
             secrets_profile,
             inbox: None,
-            domain_keys: IterableMap::new(b"v2k".to_vec()),
+            domain_keys: IterableMap::new(p("k")),
             issuers_sealed: false,
-            members: LookupMap::new(b"v2m".to_vec()),
-            nullifiers: LookupSet::new(b"v2n".to_vec()),
+            members: LookupMap::new(p("m")),
+            nullifiers: LookupSet::new(p("n")),
             member_count: 0,
             dao,
-            seated: LookupMap::new(b"v2s".to_vec()),
-            pending: LookupSet::new(b"v2p".to_vec()),
+            seated: LookupMap::new(p("s")),
+            pending: LookupSet::new(p("p")),
         }
     }
 

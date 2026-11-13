@@ -1,11 +1,8 @@
-import init from '@phala/dcap-qvl-web';
-import dcapWasm from '@phala/dcap-qvl-web/dcap-qvl-web_bg.wasm?url';
 import { el, reveal } from './shell.js';
 import { verifyJoin, verifyPayout, verifyRefusedVote, view } from './attest.js';
 import { GUILD, DAO, EXPLORER, JOINS, PAYOUT } from './receipts.js';
 
 const $ = (sel) => document.querySelector(sel);
-const ready = init({ module_or_path: dcapWasm });
 const txLink = (hash) => { const a = el('a', 'tx', `${hash.slice(0, 8)}… ↗`); a.href = EXPLORER + hash; a.target = '_blank'; a.rel = 'noopener'; return a; };
 
 async function roster() {
@@ -56,7 +53,6 @@ async function runJoin(join, tamper) {
   li.querySelectorAll('.checks').forEach((u) => u.replaceChildren());
   li.querySelector('.status').textContent = tamper ? 'recomputing a forged record…' : 'recomputing…';
   try {
-    await ready;
     const { checks, outcome } = await verifyJoin(join.tx, join.signer, GUILD, undefined, { tamper });
     checks.forEach((c, i) => setTimeout(() => li.querySelector(`.stage[data-group="${c.group}"] .checks`).append(row(c)), i * 110));
     const ok = checks.every((c) => c.ok);

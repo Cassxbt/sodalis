@@ -103,3 +103,37 @@ OutLayer lets a secret's owner replace it. A replaced master would derive new nu
 | Ownership to the DAO | 2XyoktRfSphZ5beRqcKFkEHez4SBJw2Qffw4SwceNx4v |
 | m2 rejoins with the real Proton email: **public**, proposal #10 | 85pPVVqYoymT4GJSiqi1Rzne81EihdWschTPtueyrTmJ |
 | m1 rejoins with the real trendtwin.xyz email: **staff**, proposal #11 | DaVFDQDR1pAzdDywJTfhGEFKZGq9VjsbmqxtV9dR5h77 |
+
+## v4 (2026-11-13): new DAO, fresh storage, patched attestation check
+
+Why:
+- **The v3 DAO lost its council.** The only council key, for `kibble-pf-03c8a9.testnet`, was kept in a temporary folder and deleted, so `sodalis.sputnik-v2.testnet` can no longer change its policy. It is retired.
+- **A partner review found that v3's issuer list read empty.** The v3 `reset` reused v2's storage prefixes, so the re-pinned keys were stored but not indexed. Each init now stamps its prefixes with its block height. A contract test reproduces the bug and pins the fix.
+- **The browser attestation library `@phala/dcap-qvl-web` ≤0.3.3 has a critical advisory** (GHSA-796p-j2gh-9m2q: missing QE identity verification). It is replaced by `@phala/dcap-qvl` 0.7.0. All admissions were re-verified with it, in Node and in the browser.
+
+The verifier build (`9c0ef7f3…`) and the guild-owned secret (`sodalis-v3`) did not change, so the inbox key is the same.
+
+| Step | Tx |
+|---|---|
+| m1 and m2 leave the v3 guild (seats removed from the old DAO) | 9YfgwqsiE4pTu21qu3Jbonxi4VxDiPEjtk9SAtLN1bPw · 75Qkp2cGLGYdWc5yvGMYCuJuT3HYLx3i4Be5PX7RdUwp |
+| New DAO `sodalis-dao.sputnik-v2.testnet`, council `sodalis-council.testnet` (a faucet-funded account; key kept in `.keys/`) | DMtDu6zWhYf9J9kWRwTBPwsst941Pc3ZhqTPFT1tut3n |
+| Guild redeployed and reset onto fresh prefixes, signed by the guild account | 5MZuzQi3PtFu6yUej49cgcgTXNLtB6KVx2osg4KkX8nd |
+| Pin gmail.com, proton.me (public) and trendtwin.xyz (staff) from live DNS; `get_domain_keys` lists all three | 32pXq6KkYtp3ZHfQ2Ytn3R7GJ9DGu6nKVqJeMVy2DGa3 · 9hTai7osZyDssBx8WAMv6SyNM2txyGXPk4ydzQFuu2jT · CPJz6RaUjBsBqfaPfUwEJN8cXWfym1cGRUVBZikh8Cq3 |
+| Inbox key | GwqRZb7QhJmDLffjjgTzRSRCHc38pfLoD5MxedP1cfMd |
+| Ownership to the new DAO | 2dkjuqnojDERn5yyqy91grpZdMbATG9JgfvEc17KyP1j |
+
+| Case | Result | Tx |
+|---|---|---|
+| m1 rejoins with the real trendtwin.xyz email | **staff**, proposal #0 | AkSAiijEq17NBYu1Heh82hU8uEXpR5t2quhBhXefqYUk |
+| m2 rejoins with a new real Proton email (one earlier attempt got no OutLayer answer and was refunded: BSDJcYH8pBHr3NTonoJtLnKm5m6kjdY51TpkBbyTSgr) | **public**, proposal #1 | B4aqUCYVAytpX6Tv25YcFQhNc7UMSedmb5YED6CRifkL |
+| m2 proposes a 0.05 NEAR payout | proposal #2 | JDzowcGAH3GMVjRFGUiZVbMUBHpgMmWPqysj1NiLC2ad |
+| m2 tries to approve it | Refused: `ERR_PERMISSION_DENIED` | 7aCd3oqjPuqGASxrCdADdcxkbLvPerzZKNtMxecEsh8G |
+| m1 (staff) approves | Approved; exactly 0.05 NEAR moves | 4kWLrJobyVEwmXN55p2SaXWPU6xeF5szhJASGBcsuGkK |
+| Outsider `eve.sodalis-council.testnet` sends a fresh, valid Proton challenge for itself from m2's mailbox | Refused: `this email address already admitted a member` | FdBzomLry7UaV3jLiNdVFJPUKVcjNgqZS38aYQonPWio |
+| eve replays m2's sealed letter | Refused: `challenge is bound to a different wallet or guild` | 9Xtf5tXumh1jyaPvJ45Dk93QcQufiEfYFbM6T7AZStLC |
+| eve joins with an unapproved domain | Refused: `has not pinned a key for that domain and selector` | 6voLAUxcoQkpJs35SGKfpocwqvMmczfQJ94FqBAQqKYN |
+| eve calls OutLayer directly with the guild's secret | Refused: `Access denied by access condition` | 2R1cfdGXAFoPRNTMLLtsTA2QaJji7j8oJ9vzvgH44NpW |
+| eve calls `reset` | Refused: `Method reset is private` | DP9VHiGRGerz8G6HNpnqY2GHggQXpZhfRp85wsGDKj6k |
+| The former owner (`sodalis-council.testnet`) pins a key after handing the guild to the DAO | Refused: `owner only` | FvyF4rdu6NweHTG5VPQi4SuXX8aaUQh2eRWWriCfxCa1 |
+
+While the attacks ran, OutLayer testnet gave no answer to four consecutive guild runs (88RynFVf…, DrqXxqrM…, Feq2nUTn…, 2HWSePWb…). Each one was refunded and admitted nobody. A run without a secret, and a guild run from another account, answered minutes later, and the retries above succeeded.
