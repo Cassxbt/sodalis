@@ -1,6 +1,10 @@
 # Sodalis receipts (NEAR testnet)
 
-Guild `sodalis.testnet` · DAO `sodalis.sputnik-v2.testnet` (Sputnik v2.0.0, the factory Trezu uses on testnet) · verifier sha256 `dea3b17844cf50145f89aacb56bc14fdb65a426f8eaf94957f82ac1e9bdfab40`. The verifier rebuilds from `verifier/` to the same hash.
+A dated log, oldest first. **Current state:** guild `sodalis.testnet` (code hash `B8EywgDtj7UaXmYNDknso8bZAKNjavRwi7geULrG9kak`), DAO `sodalis-dao.sputnik-v2.testnet`, verifier sha256 `9c0ef7f327e5eebb38540f15ea773c70dc63977b267bdb0d28c696ca5aad291f`; `npm run verify:build` checks all three. The guild account still holds one full-access key, disclosed in the README's trust model. Sections before v4 describe retired deployments and are kept as history.
+
+## v1 (2026-11-11)
+
+Guild `sodalis.testnet` · DAO `sodalis.sputnik-v2.testnet` (Sputnik v2.0.0, retired in v4) · verifier sha256 `dea3b17844cf50145f89aacb56bc14fdb65a426f8eaf94957f82ac1e9bdfab40`.
 
 ## Setup
 
@@ -27,7 +31,7 @@ Guild `sodalis.testnet` · DAO `sodalis.sputnik-v2.testnet` (Sputnik v2.0.0, the
 | m2 joins with a real Proton-signed email (sent to a Gmail inbox; dkimpy verifies it against live DNS) | Joined, domain proton.me, seated through proposal #2, 0.0089 NEAR | 4UtpbLqmxWyn8h3hVJDA5JmUxCSaEJ8E3BN7QAJPE13e |
 | m1 leaves | `member_removed` and `dao_role_removed` in one tx; DAO members = [m2] | 4cMYXRNYU9MKg3PNw2PZtPXHyQ4sVE5QsKVbD1YnJBpc |
 
-## Open
+## Open (as of v1)
 
 - The guild account still has a full-access key, and the owner is still the admin account. Whoever can change the guild code can unmask members: forge a key, feed the verifier fake emails "from" guessed addresses, and match the fingerprints. The final state must be owner = DAO, no keys, no upgrade method.
 - The council can change the DAO policy, including the member list. Such changes are public proposals.
@@ -44,7 +48,7 @@ Guild `sodalis.testnet` · DAO `sodalis.sputnik-v2.testnet` (Sputnik v2.0.0, the
 | Guild ownership moved to the DAO (`sodalis.sputnik-v2.testnet`) | bRtxP8eLTsWzc5ENhyTmBXS25zGQVBE68YAHurR98Vg |
 | Former owner tries to pin a key | Refused: "owner only" — 7y4NYEPncA6jc7evZjhRXh4gyN8zcsAduvVHAyb2mCPm |
 
-Agreed with cassxbt: the guild account's full-access key is deleted as the last step before submission, after the final review. Until then it still exists, and this file says so.
+Agreed with cassxbt: the guild account's full-access key is deleted as the last step before submission, after the final review. Until then it still exists, and this file says so. *Superseded 2026-11-13:* a partner review advised keeping the key until a failed seat removal and its repair are rehearsed on chain, and sealing would block a mail provider's key rotation; the key is still held.
 
 ## TEE attestation for the real-email join (checked 2026-11-12)
 
