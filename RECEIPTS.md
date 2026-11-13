@@ -195,3 +195,17 @@ Round 1 had three seats of 0.1 against a 0.5 budget, so its budget could never b
 
 m2's mailbox stays spent, so it cannot rejoin. Two members remain, both the builder's. A request whose proposal ends `Failed` keeps its reservation and blocks `reset` until governance resolves it.
 
+## A first-time user (2026-11-13)
+
+The builder reached out to someone who had never used Sodalis and sent them an eight-step written guide. They agreed to try it and completed it from their own Android tablet with no other help: a fresh key made in their browser, funded by the drip, a Gmail-signed challenge sent to a second inbox, downloaded and uploaded, sealed and joined; then a request from round 2. Their verdict: the page alone was confusing, and the guide was what made it possible. The guide's points are now on the Join page (what you need, paste the line as the subject, who decides and what "waiting" means).
+
+| Step | Result | Tx |
+|---|---|---|
+| Drip funds the fresh key `12c54c6e…03e5` | 0.3 NEAR | HzNhdN2rb1Np8nS7WXAJe4LxcTZfTeciSFTUNLT9BBGS |
+| Join with a Gmail-signed email | **public**, proposal #11; 12 of 12 checks passed in their browser | 9hJoh9YGNR8ZZ59pExrGoDW5qP37ZepcpUxJUwBU3fGe |
+| Ask round 2 for 0.05 NEAR, Travel | Guild files #12 | 8UcMF6PqYaWNmzB4oh3Uwkr4t7wGnRLnffuiHWar95uC |
+| Steward m1 approves #12 | Approved; 0.05 NEAR from the DAO to the key | 8MW1nWsLU6tY5bcJ6d3EuVLkCxZP69mnAJs8FxFUxqb3 |
+| Anyone settles #12 | Round 2: approved 0.05 | 8Er7qb6E5niGp4nvX5QJzAa3r7UaRbpDSHf2v8DynboB |
+
+The steward and the council are the builder's. This is one first-time completion with a guide, not independent adoption.
+

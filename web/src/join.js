@@ -307,7 +307,7 @@ function preview() {
 }
 ['#amount', '#category'].forEach((s) => $(s).addEventListener('input', preview));
 
-const OUTCOME = { Approved: 'approved by the DAO; the transfer is in your key\'s history', Rejected: 'rejected', Expired: 'expired', InProgress: 'waiting for a decision' };
+const OUTCOME = { Approved: 'approved by the DAO; the transfer is in your key\'s history', Rejected: 'rejected', Expired: 'expired', InProgress: 'waiting for a steward to decide' };
 
 async function requests() {
   const g = generation;
@@ -355,7 +355,7 @@ $('#ask').addEventListener('click', async () => {
     const id = tx.status?.SuccessValue ? JSON.parse(atob(tx.status.SuccessValue)) : null;
     if (g !== generation) return;
     out('#ask-out', ...(id != null
-      ? [text(`Proposal #${id} filed by the guild. ${status.role === 'staff' ? 'Staff decide. As staff, the DAO would accept your own vote here; see the limits on How it works. ' : 'Staff decide; public members cannot approve. '}`), txLink(tx.transaction.hash)]
+      ? [text(`Proposal #${id} filed by the guild. ${status.role === 'staff' ? 'Staff decide. As staff, the DAO would accept your own vote here; see the limits on How it works. ' : 'A steward decides; this list updates when they do, and there is nothing else to do. '}`), txLink(tx.transaction.hash)]
       : [text('The guild could not confirm a filing. Check your requests below before asking again. '), txLink(tx.transaction.hash)]));
   } catch (err) {
     if (g !== generation) return;

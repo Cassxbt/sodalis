@@ -208,6 +208,17 @@ export const ATTACKS = [
  */
 export const CASES = [
   {
+    id: 'first-user',
+    title: 'A first-time user, from email to payment',
+    who: 'Someone the builder reached out to, who agreed to try it',
+    member: '12c54c6e4b43340db6f6a7fe7189ca76e21bbd5077f9f9e12ba278de7c0603e5',
+    summary: 'Joined from their own tablet with a Gmail-signed email, following an eight-step written guide from the builder and no other help. Asked round 2 for 0.05 NEAR for travel; a steward approved it and the DAO paid. Their verdict on the page alone: confusing without the guide, which is now built into the Join page.',
+    steps: [
+      { kind: 'join', label: 'Proves they belong, with a Gmail email, from their own browser', tx: '9hJoh9YGNR8ZZ59pExrGoDW5qP37ZepcpUxJUwBU3fGe', signer: '12c54c6e4b43340db6f6a7fe7189ca76e21bbd5077f9f9e12ba278de7c0603e5' },
+      { kind: 'paid', label: 'Round 2: asks for 0.05 NEAR for travel; a steward approves; the DAO pays', proposalId: 12, ask: '8UcMF6PqYaWNmzB4oh3Uwkr4t7wGnRLnffuiHWar95uC', approve: '8MW1nWsLU6tY5bcJ6d3EuVLkCxZP69mnAJs8FxFUxqb3', approver: M1, settle: '8Er7qb6E5niGp4nvX5QJzAa3r7UaRbpDSHf2v8DynboB', settler: OUTSIDER },
+    ],
+  },
+  {
     id: 'departure',
     title: 'From first seat to departure',
     who: 'A builder test account',

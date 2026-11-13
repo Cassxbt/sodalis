@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { verifyFiled, verifyJoin, verifyLeft, verifyPayout, verifyRefusal, verifyRefusedVote, verifyRejected, verifySettle } from '../web/src/attest.js';
-import { GUILD, DAO, JOINS, PAYOUT, ROUND, ROUND2, ATTACKS } from '../web/src/receipts.js';
+import { GUILD, DAO, JOINS, PAYOUT, ROUND, ROUND2, ATTACKS, CASES } from '../web/src/receipts.js';
 
 const assertAll = (checks) => { for (const c of checks) assert.ok(c.ok, `${c.group}: ${c.name}: ${c.detail}`); };
 
@@ -42,6 +42,14 @@ test('round 2: the pot binds, a rejection is returned once, and leaving ends aut
     const r = await verifyRefusal(step.tx, step.signer, step.expect);
     assert.ok(r.ok, `${step.label}: expected "${step.expect}", saw "${r.text}"`);
   }
+});
+
+test('a first-time user joined from their own browser and was paid from round 2', async () => {
+  const user = CASES.find((c) => c.id === 'first-user');
+  const [join, paid] = user.steps;
+  assertAll((await verifyJoin(join.tx, join.signer, GUILD)).checks);
+  assertAll(await verifyPayout(DAO, paid.proposalId, paid.ask, paid.approve, paid.approver, { member: user.member, guild: GUILD }));
+  assertAll(await verifySettle(paid.settle, paid.settler, GUILD, paid.proposalId, 'approved'));
 });
 
 test('payout: a transaction that did not file the request cannot stand in for it', async () => {
