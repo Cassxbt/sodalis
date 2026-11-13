@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # rust-toolchain.toml pins 1.99.1 and both wasm targets; rustup installs them on first use.
+      - run: rustup show
+      - run: npm ci
+      - name: Contract tests
+        run: npm run test:contract
+      - name: Verifier checks
+        run: npm run test:verifier
+      - name: Live chain checks
+        run: npm test
+      - name: Site build
+        run: npm run build
