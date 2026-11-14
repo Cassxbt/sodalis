@@ -16,13 +16,13 @@
 
 Teams keep small funds for members who need help, but asking usually means telling the people who run the fund that you are short. Sodalis lets a member prove they belong with an email checked inside an **OutLayer** TEE, then ask a **Sputnik DAO** treasury for help within an allowance the chain enforces, without their email address ever being published.
 
-**[ ▶ Watch the demo ](#-demo)** · **[ Live site ↗ ](https://sodalis-red.vercel.app)** · **[ The case ↗ ](https://sodalis-red.vercel.app/case/)** · **[ Attacks ↗ ](https://sodalis-red.vercel.app/judges/)** · **[ Proof ↗ ](https://sodalis-red.vercel.app/proof/)** · **[ Judge it in 90 seconds ](#judge-it-in-90-seconds)** · **[ hackathon.md ](hackathon.md)**
+**[ ▶ Watch the demo (2:12) ↗ ](https://youtu.be/Obe4K6lmxzU)** · **[ Live site ↗ ](https://sodalis-red.vercel.app)** · **[ The case ↗ ](https://sodalis-red.vercel.app/case/)** · **[ Attacks ↗ ](https://sodalis-red.vercel.app/judges/)** · **[ Proof ↗ ](https://sodalis-red.vercel.app/proof/)** · **[ Judge it in 90 seconds ](#judge-it-in-90-seconds)** · **[ hackathon.md ](hackathon.md)**
 
 </div>
 
 ## ▶ Demo
 
-The walkthrough video is being recorded; its link is added here at submission.
+**[Watch the 2:12 walkthrough on YouTube](https://youtu.be/Obe4K6lmxzU)**. Every screen is the live site on NEAR testnet; the terminal shows the recorded output of `npm run verify:build` on a fresh clone. Maya is an illustration, labelled as one.
 
 > A first-time user proves they belong with a Gmail-signed email that only an OutLayer enclave opens, asks the team fund for 0.05 NEAR, and a steward approves: the DAO pays it, and the public record never shows their address. Then the rules hold. A request past the seat's allowance is refused on chain, the DAO votes a member out and its next request is refused, and one forged byte turns the proof page red.
 

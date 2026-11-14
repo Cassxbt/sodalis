@@ -2,7 +2,7 @@
 
 The judge's file: how Sodalis fits its two tracks, how to check that it runs and does what the README says, and where each judging dimension can be checked. Every claim points to a page, a command or a file.
 
-**Live** https://sodalis-red.vercel.app · **Repo** https://github.com/Cassxbt/sodalis · **Demo video** linked in the [README](README.md#-demo) at submission · **Network** NEAR testnet
+**Live** https://sodalis-red.vercel.app · **Repo** https://github.com/Cassxbt/sodalis · **Demo video** https://youtu.be/Obe4K6lmxzU · **Network** NEAR testnet
 
 ## Tracks
 
